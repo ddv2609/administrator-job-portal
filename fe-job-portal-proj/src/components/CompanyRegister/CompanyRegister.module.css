@@ -1,0 +1,7 @@
+.icon {
+  color: var(--title-color);
+}
+
+.field input {
+  font-size: 14px;
+}
