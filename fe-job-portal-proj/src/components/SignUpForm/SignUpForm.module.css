@@ -1,0 +1,44 @@
+.signUp .lbSignUpFrm {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.signUp .lbSignUpFrm {
+  font-weight: 500;
+}
+
+.signUp .forgotPassword {
+  text-align: right;
+  margin-bottom: 24px;
+}
+
+.signUp .icon, 
+.signUp .forgotPassword a {
+  color: var(--title-color);
+}
+
+.signUp .btnSignUp, 
+.signUp .btnSignUp:hover {
+  background-color: var(--title-color) !important;
+}
+
+.signUp .btnSignUp {
+  font-size: 14px;
+}
+
+.signUp .btnSignUp:hover {
+  opacity: 0.8;
+}
+
+.signUp .btnSignUp:disabled {
+  color: #FFF;
+  opacity: .7;
+}
+
+.signUp .confirmPolicy {
+  margin: 16px 0;
+}
+
+.signUp .field input {
+  font-size: 14px;
+}
