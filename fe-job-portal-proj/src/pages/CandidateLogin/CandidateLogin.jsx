@@ -3,9 +3,9 @@ import clsx from "clsx";
 import { Col, Divider, Row } from "antd";
 
 import LoginForm from "../../components/Login/LoginForm/LoginForm";
-import styles from "./CandidateLogin.module.css";
 import OAuthLogin from "../../components/Login/OAuthLogin/OAuthLogin";
 import { useNavigate } from "react-router-dom";
+import styles from "./CandidateLogin.module.css";
 
 function CandidateLogin() {
   const nav = useNavigate();
