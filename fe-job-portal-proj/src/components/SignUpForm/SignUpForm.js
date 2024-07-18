@@ -11,7 +11,7 @@ function SignUpForm({ children }) {
   // console.log(props.children);
 
   const [confirmPolicy, setConfirmPolicy] = useState(false);
-  
+
   const validateRetypePassword = ({ getFieldValue }) => ({
     validator(_, value) {
       if (value) {
@@ -20,7 +20,7 @@ function SignUpForm({ children }) {
         else
           return Promise.reject(new Error('Mật khẩu nhập lại không khớp với mật khẩu đã nhập'));
       }
-      
+
       return Promise.resolve();
     }
   });
@@ -82,7 +82,7 @@ function SignUpForm({ children }) {
               message: 'Mật khẩu phải chứa từ 6 đến 25 ký tự',
             },
             {
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&].{6,25}$/,
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*?&].{6,25}$/,
               message: 'Mật khẩu phải bao gồm ít nhất 1 chữ hoa, chữ thường, ký tự số và ký tự đặc biệt'
             }
           ]}
@@ -116,8 +116,8 @@ function SignUpForm({ children }) {
               setConfirmPolicy(!confirmPolicy);
             }}
           >
-            Tôi đã đọc và đồng ý với 
-            <a href="/terms-of-service"> Điều khoản dịch vụ</a> và 
+            Tôi đã đọc và đồng ý với
+            <a href="/terms-of-service"> Điều khoản dịch vụ</a> và
             <a href="/privacy-policy"> Chính sách bảo mật của PTIT</a>
           </Checkbox>
         </div>
