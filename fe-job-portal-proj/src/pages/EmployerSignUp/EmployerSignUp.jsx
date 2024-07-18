@@ -18,8 +18,8 @@ function EmployerSignUp() {
             <div className={styles.signUpForm}>
               <div className={styles.mainForm}>
                 <div className={styles.header}>
-                  <h2 className={styles.title}>Chào mừng bạn đến với PTIT Job Portal</h2>
-                  <div className={styles.desc}>Cùng xây dựng một hồ sơ nổi bật và nhận được các cơ hội sự nghiệp lý tưởng</div>
+                  <h2 className={styles.title}>Đăng ký tài khoản Nhà tuyển dụng</h2>
+                  <div className={styles.desc}>Cùng tạo dựng lợi thế cho doanh nghiệp bằng trải nghiệm công nghệ tuyển dụng ứng dụng sâu AI & Hiring Funnel.</div>
                 </div>
 
                 <div className={styles.account}>

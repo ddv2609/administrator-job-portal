@@ -358,6 +358,7 @@ template {
   --facebook-color: #1877f2;
   --linkedin-color: #0a66c2;
   --ptit-color: #CC0D00;
+  --bg-blur: #00b14f0a;
 }
 
 * {
@@ -376,14 +377,4 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-.ant-checkbox-checked:hover .ant-checkbox-inner, 
-.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: var(--title-color) !important;
-  border-color: var(--title-color) !important;
-}
-
-.ant-checkbox.ant-wave-target:hover .ant-checkbox-inner {
-  border-color: var(--title-color);
 }
