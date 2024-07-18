@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/src/utils/secrets
+/src/config/secrets
 /.pnp
 .pnp.js
 
