@@ -10,6 +10,8 @@ const cookieParser = require("cookie-parser");
 
 const route = require("./routes");
 
+const db = require("./config/database");
+
 // HTTP request logger middleware for node.js
 app.use(morgan("dev"));
 
@@ -25,6 +27,9 @@ app.use(cors({
   origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
   credentials: true,  
 }));
+
+// Connect to database
+db.connect();
 
 // Route app
 route(app);
