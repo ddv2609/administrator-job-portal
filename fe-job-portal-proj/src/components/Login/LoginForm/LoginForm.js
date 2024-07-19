@@ -2,6 +2,8 @@ import { Button, Form, Input } from "antd";
 import { MdEmail } from "react-icons/md";
 import { BsShieldLockFill } from "react-icons/bs";
 
+import axios from "axios";
+
 import styles from "./LoginForm.module.css";
 import { useNavigate } from "react-router-dom";
 
@@ -9,8 +11,9 @@ function LoginForm() {
   const nav = useNavigate();
 
   const handleSubmitLoginFrm = (values) => {
-    console.log("Submit login form")
-    console.log(values)
+    axios.post("http://localhost:8000/auth/login", values)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err))
   }
 
   return (

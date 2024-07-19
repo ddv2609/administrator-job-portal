@@ -3,10 +3,12 @@ import { MdEmail } from "react-icons/md";
 import { BsShieldFillCheck, BsShieldLockFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 
+import axios from "axios";
+
 import styles from "./SignUpForm.module.css";
 import { useState } from "react";
 
-function SignUpForm({ children }) {
+function SignUpForm({ children, role="candidate" }) {
 
   // console.log(props.children);
 
@@ -26,8 +28,9 @@ function SignUpForm({ children }) {
   });
 
   const handleSubmitSignUpFrm = (values) => {
-    console.log("Submit sign up form");
-    console.log(values);
+    axios.post(`http://localhost:8000/auth/sign-up/${role}`, values)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err))
   };
 
   return (
