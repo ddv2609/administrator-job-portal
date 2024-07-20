@@ -32,7 +32,7 @@ function CandidateSignUp() {
                   <span>Bạn đã có tài khoản? </span>
                   <span 
                     className={styles.loginNow}
-                    onClick={() => nav("/candidate/login")}
+                    onClick={() => nav("/login")}
                   >Đăng nhập ngay</span>
                 </div>
               </div>

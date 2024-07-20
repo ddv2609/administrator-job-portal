@@ -22,6 +22,7 @@ function Address({ type="province", size="default", options=[],
       <Form.Item
         label={<span className={styles.lbSignUpFrm}>{label}</span>}
         name={type}
+        initialValue="Không xác định"
         rules={[
           {
             required: true,
@@ -31,7 +32,7 @@ function Address({ type="province", size="default", options=[],
       >
         <Select 
           options={options} className={styles.select}
-          disabled={options.length === 0}
+          disabled={options.length === 0} showSearch
           suffixIcon={<span className={styles.icon}>{suffixIcon}</span>}
           placeholder={placeholder}
           size={size}

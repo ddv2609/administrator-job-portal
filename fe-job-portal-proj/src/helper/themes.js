@@ -16,6 +16,15 @@ export const themes = {
       itemHoverBg: bgBlur,
       itemActiveBg: bgBlur,
       itemSelectedColor: primaryColor,
+    },
+    Select: {
+      optionSelectedBg: bgBlur,
+      fontSizeLG: "14px",
+      optionActiveBg: bgBlur,
+      optionSelectedColor: primaryColor,
+    },
+    message: {
+      maxCount: 3,
     }
   }
 };

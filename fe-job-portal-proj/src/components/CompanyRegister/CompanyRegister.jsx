@@ -70,7 +70,7 @@ function CompanyRegister() {
         <Col lg={12}>
           <Form.Item
             label={<span className={styles.lbSignUpFrm}>Số điện thoại cá nhân</span>}
-            name="telephone"
+            name="tel"
             rules={[
               {
                 required: true,

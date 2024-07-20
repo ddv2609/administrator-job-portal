@@ -4,7 +4,7 @@ import styles from "./OAuthLogin.module.css";
 import { FaFacebook, FaGoogle, FaLinkedin } from "react-icons/fa";
 import { useState } from "react";
 
-function OAuthLogin({ thirdParties = [] }) {
+function OAuthLogin({ thirdParties = [], role="candidate" }) {
   const [confirmPolicy, setConfirmPolicy] = useState(false);
 
   return (
@@ -24,7 +24,7 @@ function OAuthLogin({ thirdParties = [] }) {
         {
           thirdParties.includes('facebook') ? (
             <Col span={24 / thirdParties.length}>
-              <Button type="primary" size="large" disabled={!confirmPolicy}
+              <Button type="primary" size="large" disabled={!confirmPolicy || role !== "candidate"}
                 icon={<span className={styles.icon}><FaFacebook /></span>}
                 className={styles.loginWithFacebook}
               > Facebook </Button>
@@ -35,7 +35,7 @@ function OAuthLogin({ thirdParties = [] }) {
         {
           thirdParties.includes('linkedin') ? (
             <Col span={24 / thirdParties.length}>
-              <Button type="primary" size="large" disabled={!confirmPolicy}
+              <Button type="primary" size="large" disabled={!confirmPolicy || role !== "candidate"}
                 icon={<span className={styles.icon}><FaLinkedin /></span>}
                 className={styles.loginWithLinkedin}
               > Linkedin </Button>
@@ -46,6 +46,7 @@ function OAuthLogin({ thirdParties = [] }) {
 
       <div className={styles.confirmPolicy}>
         <Checkbox
+          disabled={role === "admin"}
           checked={confirmPolicy}
           onChange={() => {
             setConfirmPolicy(!confirmPolicy);
