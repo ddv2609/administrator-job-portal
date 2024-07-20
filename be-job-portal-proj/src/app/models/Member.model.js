@@ -21,8 +21,6 @@ const MemberSchema = new Schema({
   fullName: { type: String, default: null },
   tel: { 
     type: String, 
-    default: null, 
-    unique: true,
     min: [7, 'Minimum phone number 7 numbers, got {VALUE}'],
     max: [15, 'Maximum phone number 15 numbers, got {VALUE}'], 
   },
