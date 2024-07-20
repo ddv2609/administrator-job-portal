@@ -1,1 +1,1 @@
-# Job Protal Project
+# Job Portal Project
