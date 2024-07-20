@@ -1,9 +1,6 @@
 .login .lbLoginFrm {
   color: var(--text-secondary);
   font-size: 14px;
-}
-
-.login .lbLoginFrm {
   font-weight: 500;
 }
 

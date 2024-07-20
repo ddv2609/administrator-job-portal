@@ -24,7 +24,7 @@ function EmployerSignUp() {
 
                 <div className={styles.account}>
                   <h2>Tài khoản</h2>
-                  <SignUpForm>
+                  <SignUpForm role="employer">
                     <CompanyRegister />
                   </SignUpForm>
                 </div>
@@ -33,7 +33,7 @@ function EmployerSignUp() {
                   <span>Bạn đã có tài khoản? </span>
                   <span
                     className={styles.loginNow}
-                    onClick={() => nav("/employer/login")}
+                    onClick={() => nav("/login")}
                   >Đăng nhập ngay</span>
                 </div>
               </div>

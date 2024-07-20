@@ -14,7 +14,7 @@ const MemberSchema = new Schema({
     type: String, 
     required: true, 
     enum: {
-      values: ["user", "employer", "admin"],
+      values: ["candidate", "employer", "admin"],
       message: "Role <{VALUE}> is not supported",
     } 
   },
