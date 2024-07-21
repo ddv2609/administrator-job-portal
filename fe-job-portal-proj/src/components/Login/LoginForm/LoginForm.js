@@ -23,7 +23,9 @@ function LoginForm({ changeRole }) {
 
   const handleSubmitLoginFrm = (values) => {
     setLoading(true);
-    axios.post("http://localhost:8000/auth/login", values)
+    axios.post("http://localhost:8000/auth/login", values, {
+      withCredentials: true,
+    })
       .then(res => {
         console.log(res.data);
         messageApi.success("Đăng nhập thành công", 1).then(() => nav("/"));
@@ -78,7 +80,7 @@ function LoginForm({ changeRole }) {
             addonBefore={<span className={styles.icon}><BsShieldLockFill /></span>} />
         </Form.Item>
 
-        <Form.Item label={<span className={styles.lbLoginFrm}>Bạn là:</span>} name="role" initialValue={"candidate"}>
+        <Form.Item label={<span className={styles.lbLoginFrm}>Bạn là:</span>} name="role" initialValues={"candidate"}>
           <Select
             style={{ width: "50%" }}
             defaultValue={roles[0]}
