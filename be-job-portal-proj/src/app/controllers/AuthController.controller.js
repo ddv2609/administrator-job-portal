@@ -8,23 +8,43 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
+const jwt = require("jsonwebtoken");
 
 const keys = require("../../config/secrets");
 const mailer = require("../../utils/mail/mailing");
 const { getErrorMessage } = require("../../utils/errors");
 
 class AuthController {
+  
   // [POST] /auth/login
   async loginWithPassword(req, res) {
     const { email, password, role } = req.body;
 
     const member = await Member.findOne({ email: email });
+    console.log(member);
 
     if (member && member.verifiedAt !== null && member.role === role) {
       bcrypt.compare(password, member.password, (err, result) => {
         if (result) {
+          let token = jwt.sign({
+            id: member.id,
+            role: member.role,
+            fullName: member.fullName,
+            email: member.email,
+          }, keys.jwtSecretKey, { expiresIn: "7d" });
+
+          res.cookie("jwt", token, {
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            httpOnly: true
+          });
+
           return res.json({
-            message: "Đăng nhập thành công",
+            id: member.id,
+            role: member.role,
+            fullName: member.fullName,
+            email: member.email,
+            dob: member.dob,
+            avatar: member.avatar, 
           });
         } else {
           return res.status(401).json({

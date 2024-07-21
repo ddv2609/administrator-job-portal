@@ -360,6 +360,7 @@ template {
   --ptit-color: #CC0D00;
   --bg-blur: #00b14f0a;
   --error-color: #ff4d4f;
+  --admin-box-shadow: -8px 12px 18px #00b15022;
 }
 
 * {

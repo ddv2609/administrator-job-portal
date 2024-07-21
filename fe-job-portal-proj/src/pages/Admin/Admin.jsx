@@ -88,9 +88,8 @@ function Admin() {
           </Header>
           <Content
             style={{
-              margin: "12px 8px 8px",
+              // margin: "12px 8px 8px",
               padding: "16px",
-              background: "#FFF",
               borderRadius: "8px",
               height: '75vh',
               overflowY: 'scroll',

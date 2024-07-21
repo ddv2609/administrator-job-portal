@@ -25,6 +25,9 @@ export const themes = {
     },
     message: {
       maxCount: 3,
-    }
+    },
+    Layout: {
+      bodyBg: bgBlur,
+    },
   }
 };
