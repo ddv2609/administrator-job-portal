@@ -5,3 +5,7 @@
   border-radius: 12px;
   box-shadow: var(--admin-box-shadow);
 }
+
+.adminDashboard .lineChartStatistic .heading {
+  margin-top: 0;
+}
