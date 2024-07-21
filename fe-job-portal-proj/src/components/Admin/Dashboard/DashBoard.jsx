@@ -3,22 +3,36 @@ import { FaUserTie } from "react-icons/fa";
 import { FaCheckToSlot } from "react-icons/fa6";
 import { RiUserSearchFill } from "react-icons/ri";
 import { useState } from "react";
-import { ArcElement, Chart, Legend, PieController, Title, Tooltip } from "chart.js";
+import { ArcElement, CategoryScale, Chart, Legend, LinearScale, LineController, LineElement, PieController, PointElement, Title, Tooltip } from "chart.js";
 
 import PieChart from "../PieChart/PieChart";
 import StatisticCard from "../StatisticCard/StatisticCard";
 import styles from "./DashBoard.module.css";
+import LineChart from "../LineChart/LineChart";
 
-Chart.register(ArcElement, PieController, Legend, Title, Tooltip);
+Chart.register(ArcElement, PieController);
+Chart.register(CategoryScale, LinearScale, PointElement, LineController, LineElement);
+Chart.register(Legend, Title, Tooltip);
 
 function Dashboard() {
-  const [chartData, setChartData] = useState({
+  const [chartDataPie, setChartDataPie] = useState({
     labels: ["Ứng viên", "Nhà tuyển dụng", "Công việc"],
     datasets: [
       {
         label: "Số lượng",
         data: [609, 156, 223],
         backgroundColor: ["#00b14f", "#ff9800", "#20bbc9"]
+      }
+    ]
+  });
+
+  const [chartDataLine, setChartDataLine] = useState({
+    labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    datasets: [
+      {
+        label: "Số lượng ứng viên",
+        data: [409, 256, 523, 145, 89, 301, 221, 567, 432, 152, 236, 436],
+        borderColor: "#00b14f",
       }
     ]
   });
@@ -62,11 +76,12 @@ function Dashboard() {
         </Col>
 
         <Col span={12}>
-          <PieChart chartData={chartData} />
+          <PieChart chartData={chartDataPie} />
         </Col>
       </Row>
 
       <div className={styles.lineChartStatistic}>
+        <h3 className={styles.heading}>Thống kê theo tháng</h3>
         <Tabs 
           defaultActiveKey="1"
           items={[[FaUserTie, "Ứng viên"], 
@@ -76,7 +91,7 @@ function Dashboard() {
               return {
                 key: index + 1,
                 label: info[1],
-                children: "Tab " + (index + 1),
+                children: <LineChart chartData={chartDataLine}/>,
                 icon: <Icon />
               };
             })}

@@ -80,7 +80,7 @@ function LoginForm({ changeRole }) {
             addonBefore={<span className={styles.icon}><BsShieldLockFill /></span>} />
         </Form.Item>
 
-        <Form.Item label={<span className={styles.lbLoginFrm}>Bạn là:</span>} name="role" initialValues={"candidate"}>
+        <Form.Item label={<span className={styles.lbLoginFrm}>Bạn là:</span>} name="role" initialValue={"candidate"}>
           <Select
             style={{ width: "50%" }}
             defaultValue={roles[0]}
