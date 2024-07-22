@@ -5,6 +5,7 @@ import Candidates from "./components/Admin/Candidates/Candidates";
 import Companies from "./components/Admin/Companies/Companies";
 import Dashboard from "./components/Admin/Dashboard/DashBoard";
 import Employers from "./components/Admin/Employers/Employers";
+import CandidateProfile from "./pages/CandidateProfile/CandidateProfile";
 import PostedJob from "./components/Admin/PostedJob/PostedJob";
 import Admin from "./pages/Admin/Admin";
 import CandidateSignUp from "./pages/CandidateSignUp/CandidateSignUp";
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
+          <Route path="/candidate/candidate-profile" element={<CandidateProfile />} />
           <Route path="/employer/sign-up" element={<EmployerSignUp />} />
           <Route path="admin/" element={<Admin />}>
             <Route path="dashboard" index element={<Dashboard />} />
