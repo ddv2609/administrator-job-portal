@@ -31,6 +31,7 @@ class AuthController {
             role: member.role,
             fullName: member.fullName,
             email: member.email,
+            avatar: member.avatar,
           }, keys.jwtSecretKey, { expiresIn: "7d" });
 
           res.cookie("jwt", token, {
@@ -76,8 +77,6 @@ class AuthController {
       const session = await mongoose.startSession();
       session.startTransaction();
       try {
-
-        console.log("oke")
         const newMember = (await Member.create([{
           ...info,
           role: "candidate"
@@ -98,6 +97,8 @@ class AuthController {
             const emailContent = emailTemplate.replace('{{verificationLink}}', `${process.env.APP_URL}/auth/verify?email=${info.email}&token=${hashEmail}`);
             mailer.sendMail(info.email, "Verify Email", emailContent);
           })
+
+        console.log("Email Sent!");
 
         return res.sendStatus(200);
       } catch (error) {
@@ -127,6 +128,7 @@ class AuthController {
             mailer.sendMail(email, "Verify Email", emailContent);
           })
 
+        console.log("Email Sent!");
         return res.sendStatus(200);
       } else {
         return res.status(401).json({
@@ -223,6 +225,11 @@ class AuthController {
     });
   }
 
+  // [GET] /auth/logout
+  logout(req, res) {
+    res.clearCookie("jwt");
+    res.sendStatus(200);
+  }
 }
 
 module.exports = new AuthController;
