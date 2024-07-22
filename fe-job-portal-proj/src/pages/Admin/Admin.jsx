@@ -1,19 +1,29 @@
-import { Button, Layout } from "antd";
-import { useState } from "react";
+import { Button, Layout, Spin } from "antd";
+import { useEffect, useState } from "react";
 import { FaChartBar, FaUserShield, FaUserTie } from "react-icons/fa";
 import { HiBuildingOffice2, HiUserGroup } from "react-icons/hi2";
+import { LoadingOutlined } from '@ant-design/icons';
 
 import { FaCheckToSlot } from "react-icons/fa6";
-import { Content, Footer, Header } from "antd/es/layout/layout";
+import { Content, Header } from "antd/es/layout/layout";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { RiUserSearchFill } from "react-icons/ri";
 import AdminSider from "../../components/Admin/AdminSider/AdminSider";
 
+import axios from "axios";
+
 import styles from "./Admin.module.css";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Admin() {
   const [collapsed, setCollapsed] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({});
+
+  const admin = useSelector(state => state.memberReducer);
+
+  const nav = useNavigate();
 
   const itemsMenu = [
     {
@@ -61,9 +71,27 @@ function Admin() {
     },
   ];
 
+  useEffect(() => {
+    console.log(admin)
+    axios.get("http://localhost:8000/api/admin/overview", {
+      withCredentials: true,
+    })
+      .then(res => {
+        // console.log(res.data);
+        setLoading(false);
+        setData(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+        nav("/login");
+      })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className={styles.adminPage}>
-      <Layout>
+      {loading ? <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} fullscreen /> : (
+        <Layout>
         <AdminSider items={itemsMenu} collapsed={collapsed} />
         <Layout
           style={{
@@ -91,14 +119,14 @@ function Admin() {
               // margin: "12px 8px 8px",
               padding: "16px",
               borderRadius: "8px",
-              height: '75vh',
+              height: '100vh',
               overflowY: 'scroll',
               scrollbarWidth: 'none',
             }}
           >
-            <Outlet />
+            <Outlet context={{ data }} />
           </Content>
-          <Footer
+          {/* <Footer
             style={{
               textAlign: 'center',
               fontSize: '16px',
@@ -107,9 +135,10 @@ function Admin() {
             }}
           >
             © 2024. All Rights Reserved. PTIT Job Portal.
-          </Footer>
+          </Footer> */}
         </Layout>
       </Layout>
+      )}
     </div>
   );
 }
