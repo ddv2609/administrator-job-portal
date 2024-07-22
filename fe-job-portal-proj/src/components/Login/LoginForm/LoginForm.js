@@ -8,9 +8,12 @@ import axios from "axios";
 import styles from "./LoginForm.module.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "../../../actions";
 
 function LoginForm({ changeRole }) {
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const nav = useNavigate();
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -27,8 +30,19 @@ function LoginForm({ changeRole }) {
       withCredentials: true,
     })
       .then(res => {
-        console.log(res.data);
-        messageApi.success("Đăng nhập thành công", 1).then(() => nav("/"));
+        dispatch(login(res.data));
+        messageApi.success("Đăng nhập thành công", 1).then(() => {
+          switch (values.role) {
+            case "admin":
+              nav("/admin/dashboard");
+              break;
+            case "employer":
+              nav("/employer");
+              break;
+            default:
+              nav("/");
+          }
+        });
       })
       .catch(err => {
         console.error(err.response.data);
@@ -62,7 +76,7 @@ function LoginForm({ changeRole }) {
             }
           ]}
         >
-          <Input size="large" placeholder="Email" className={styles.field}
+          <Input type="email" size="large" placeholder="Email" className={styles.field}
             addonBefore={<span className={styles.icon}><MdEmail /></span>} />
         </Form.Item>
 
