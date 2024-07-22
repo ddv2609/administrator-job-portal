@@ -1,4 +1,4 @@
-import { Button, Layout, Spin } from "antd";
+import { Layout, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { FaChartBar, FaUserShield, FaUserTie } from "react-icons/fa";
 import { HiBuildingOffice2, HiUserGroup } from "react-icons/hi2";
@@ -6,15 +6,18 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 import { FaCheckToSlot } from "react-icons/fa6";
 import { Content, Header } from "antd/es/layout/layout";
-import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
+
 import { RiUserSearchFill } from "react-icons/ri";
 import AdminSider from "../../components/Admin/AdminSider/AdminSider";
+import HeaderAdmin from "../../components/Admin/HeaderAdmin/HeaderAdmin";
+
+import { setAdminInfo } from "../../actions";
 
 import axios from "axios";
 
 import styles from "./Admin.module.css";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Admin() {
   const [collapsed, setCollapsed] = useState(false);
@@ -22,6 +25,7 @@ function Admin() {
   const [data, setData] = useState({});
 
   const admin = useSelector(state => state.memberReducer);
+  const dispatch = useDispatch();
 
   const nav = useNavigate();
 
@@ -72,7 +76,6 @@ function Admin() {
   ];
 
   useEffect(() => {
-    console.log(admin)
     axios.get("http://localhost:8000/api/admin/overview", {
       withCredentials: true,
     })
@@ -80,6 +83,7 @@ function Admin() {
         // console.log(res.data);
         setLoading(false);
         setData(res.data);
+        dispatch(setAdminInfo(res.data.admin));
       })
       .catch(err => {
         console.log(err);
@@ -104,14 +108,10 @@ function Admin() {
               backgroundColor: "#FFF",
             }}
           >
-            <Button type="text"
-              icon={collapsed ? <AiOutlineMenuUnfold /> : <AiOutlineMenuFold />}
-              onClick={() => setCollapsed(!collapsed)}
-              style={{
-                fontSize: '18px',
-                height: '100%',
-                padding: "0 24px"
-              }}
+            <HeaderAdmin
+              collapsed={collapsed}
+              setCollapsed={setCollapsed}
+              admin={admin}
             />
           </Header>
           <Content
