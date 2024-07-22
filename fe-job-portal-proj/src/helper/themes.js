@@ -37,6 +37,9 @@ export const themes = {
     },
     Spin: {
       colorBgMask: "#FFF",
+    },
+    Dropdown: {
+      controlItemBgHover: bgBlur,
     }
   }
 };

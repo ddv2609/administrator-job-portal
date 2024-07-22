@@ -4,6 +4,8 @@ const memberReducer = (state={}, action) => {
       return action.payload;
     case "LOGOUT":
       return {};
+    case "SET_ADMIN_INFO":
+      return action.payload;
     default:
       return state;
   }
