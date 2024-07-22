@@ -29,5 +29,17 @@ export const themes = {
     Layout: {
       bodyBg: bgBlur,
     },
+    Tabs: {
+      inkBarColor: primaryColor,
+      itemActiveColor: "#00be55",
+      itemHoverColor: primaryColor,
+      itemSelectedColor: primaryColor,
+    },
+    Spin: {
+      colorBgMask: "#FFF",
+    },
+    Dropdown: {
+      controlItemBgHover: bgBlur,
+    }
   }
 };

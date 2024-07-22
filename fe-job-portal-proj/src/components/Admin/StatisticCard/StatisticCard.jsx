@@ -23,7 +23,7 @@ function StatisticCard({ title="Không xác định", role="candidate", icon=<Fa
           <CountUp 
             start={0}
             end={amount}
-            duration={3}
+            duration={2}
           />
         </div>
         <div className={clsx([styles.growth, state === "up" ? styles.growthUp : styles.growthDown])}>
@@ -33,9 +33,8 @@ function StatisticCard({ title="Không xác định", role="candidate", icon=<Fa
               <CountUp 
                 start={0}
                 end={percent}
-                duration={3}
+                duration={2}
                 decimals={2}
-                prefix="-"
                 suffix="%"
               />
             </span>
