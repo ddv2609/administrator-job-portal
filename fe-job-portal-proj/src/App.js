@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import CandidateSignUp from "./pages/CandidateSignUp/CandidateSignUp";
+import CandidateProfile from "./pages/CandidateProfile/CandidateProfile";
 import EmployerSignUp from "./pages/EmployerSignUp/EmployerSignUp";
 import Admin from "./pages/Admin/Admin";
 import Dashboard from "./components/Admin/Dashboard/DashBoard";
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
+          <Route path="/candidate/candidate-profile" element={<CandidateProfile />} />
           <Route path="/employer/sign-up" element={<EmployerSignUp />} />
           <Route path="admin/" element={<Admin />}>
             <Route path="dashboard" index element={<Dashboard />} />
