@@ -20,12 +20,17 @@ const CVUpload = ({ onUploadSuccess }) => {
     };
 
     return (
+        <>
         <div>
-            <input type="file" onChange={handleFileChange} />
-            <button onClick={handleUpload} disabled={!selectedFile}>
-                Upload CV
-            </button>
+            <h2>Tải CV lên</h2>
         </div>
+        <div>
+                <input type="file" onChange={handleFileChange} />
+                <button onClick={handleUpload} disabled={!selectedFile}>
+                    Upload CV
+                </button>
+        </div>
+        </>
     );
 };
 
