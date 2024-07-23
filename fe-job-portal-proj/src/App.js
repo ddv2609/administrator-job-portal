@@ -12,9 +12,10 @@ import Admins from "./components/Admin/Admins/Admins";
 import Companies from "./components/Admin/Companies/Companies";
 import PostedJob from "./components/Admin/PostedJob/PostedJob";
 import VerifyEmail from "./pages/VerifyEmail/VerifyEmail";
+import EmployeerIndex from "./pages/EmployerIndex/EmployeerIndex";
 
 import { ConfigProvider } from "antd";
-import { themes } from "./helper"; 
+import { themes } from "./helper";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/employer/index" element={<EmployeerIndex />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
           <Route path="/employer/sign-up" element={<EmployerSignUp />} />
           <Route path="admin/" element={<Admin />}>

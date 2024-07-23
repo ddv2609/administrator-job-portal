@@ -15,7 +15,7 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineController, LineEle
 Chart.register(Legend, Title, Tooltip);
 
 function Dashboard() {
-  const [chartDataPie, setChartDataPie] = useState({
+  const [chartDataPie] = useState({
     labels: ["Ứng viên", "Nhà tuyển dụng", "Công việc"],
     datasets: [
       {
@@ -26,7 +26,7 @@ function Dashboard() {
     ]
   });
 
-  const [chartDataLine, setChartDataLine] = useState({
+  const [chartDataLine] = useState({
     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     datasets: [
       {
@@ -82,19 +82,19 @@ function Dashboard() {
 
       <div className={styles.lineChartStatistic}>
         <h3 className={styles.heading}>Thống kê theo tháng</h3>
-        <Tabs 
+        <Tabs
           defaultActiveKey="1"
-          items={[[FaUserTie, "Ứng viên"], 
-            [RiUserSearchFill, "Nhà tuyển dụng"], 
-            [FaCheckToSlot, "Công việc được đăng"]].map((info, index) => {
-              const Icon = info[0];
-              return {
-                key: index + 1,
-                label: info[1],
-                children: <LineChart chartData={chartDataLine}/>,
-                icon: <Icon />
-              };
-            })}
+          items={[[FaUserTie, "Ứng viên"],
+          [RiUserSearchFill, "Nhà tuyển dụng"],
+          [FaCheckToSlot, "Công việc được đăng"]].map((info, index) => {
+            const Icon = info[0];
+            return {
+              key: index + 1,
+              label: info[1],
+              children: <LineChart chartData={chartDataLine} />,
+              icon: <Icon />
+            };
+          })}
         />
       </div>
     </div>

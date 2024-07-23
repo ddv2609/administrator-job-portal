@@ -31,7 +31,7 @@
     font-weight: bold;
     color: #000000; 
 }
-.search-cv{
+.search_cv{
     width: 1100px;
     margin-top: 50px;
     margin: 0 auto  ;
@@ -43,7 +43,7 @@
     border: 1px solid #e0e0e0;
     margin-top: 30px;
 }
-.search-job{
+.search_job{
     width: 270px;
     height: 50px;
     background-color: white;
@@ -52,7 +52,7 @@
    border-right: 1px solid rgb(202, 199, 199);
    margin-left: 20px;
 }
-.search-job input{
+.search_job input{
     width: 200px;
     height: 100%;
     border: none;
@@ -62,31 +62,43 @@
     font-size: 20px;
 
 }
-.search-job select{
-    width: 200px;
+.search_job{
+    width: 270px;
     height: 100%;
-    border: none;
     font-size: 5px;
     outline: none;
     padding-left: 20px;
     font-size: 15px;    
     cursor: pointer;
-    -webkit-appearance: none; 
+
     
-
 }
-.search-job option{
+:where(.css-dev-only-do-not-override-ss887o).ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+   border: none;
+}
+
+
+.search_job option{
     font-size: 15px;
 }
 
-.search-job input::placeholder{
+.search_job input::placeholder{
     font-size: 15px;
 }
-.icon-search{
+
+.search_job_input:focus{
+    border: none;
+    box-shadow: none;
+}
+.icon_location{
+    position: absolute;
+
+}
+.icon_search{
     position: absolute;
     transform: translate(-62px, 0px);
 }
-.search-sub{
+.search_sub{
     width: 150px;
     height: 45px;
     background-color: #00b14f;
@@ -95,9 +107,13 @@
     justify-content: center;
     border-radius: 30px;
     color: white;
-    margin-left: 40px;
+    margin-left: 30px;
+    margin-right: 10px;
 }
-.search-sub button{
+.search_sub button:hover{
+    background-color: red;
+}
+.btn_search_sub{
     background-color: #00b14f;
     border: none;
     color: white;
@@ -108,24 +124,17 @@
     cursor: pointer;
     border-radius: 30px;
 }
-.btn-submit-search p{
-    margin-left: 12px;
-  
-}
-.btn-submit-search:hover{
-    background-color: #0fc862;
-    color: white;
-}
+
+
 .thumbs{
     display: none;
 }
-.carousel-root {
+.carousel-root{
     padding-top: 30px;
     width: 1100px;
     height: 500px;
     margin: 0 auto;
     z-index: 0;
-    
 }
 .carousel-status{
     display: none;
