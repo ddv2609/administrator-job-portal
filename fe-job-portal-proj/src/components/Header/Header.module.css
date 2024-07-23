@@ -8,9 +8,10 @@
     width: 100%;
     background-color: white;
     border: 1px solid rgb(198, 198, 198);
-    position: sticky;
-    top: 0;
-    z-index: 1000; 
+    position: fixed;
+  top: 0; /* Đặt vị trí cố định tại đầu trang */
+  right: 0; /* Đặt vị trí cố định ở phía bên phải */
+  z-index: 1000; /* Đảm bảo phần tử này nằm trên các phần tử khác */
     display: flex;
 }
 .headerEmployeer_logo{

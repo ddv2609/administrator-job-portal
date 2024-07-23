@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "../../components/Header/Header";
 import styles from "./EmployeerIndex.module.css";
-import { Input, Form, Select, Button } from "antd";
-
+import { Input, Form, Select, Button, ConfigProvider } from "antd";
+import ListJob from "../../components/ListJob/ListJob";
 import { useState } from "react";
 
 function EmployeerIndex(changeRole) {
@@ -42,104 +42,145 @@ function EmployeerIndex(changeRole) {
   };
 
   return (
-    <div>
-      <Header />
-      <div className={styles.pages_job_search}>
-        <div className={styles.section_header}>
-          <div className={styles.content}>
-            <h1>Tìm việc làm nhanh 24h, việc làm mới nhất trên toàn quốc</h1>
-            <p>
-              Tiếp cận <span class={styles.highlight}>40,000+</span> tin tuyển
-              dụng việc làm mỗi ngày từ hàng nghìn doanh nghiệp uy tín tại Việt
-              Nam
-            </p>
+    <ConfigProvider
+      theme={{
+        components: {
+          Button: {
+            defaultHoverBg: "blue",
+          },
+        },
+      }}
+    >
+      <div>
+        <Header />
+        <div className={styles.pages_job_search}>
+          <div className={styles.section_header}>
+            <div className={styles.content}>
+              <h1>Tìm việc làm nhanh 24h, việc làm mới nhất trên toàn quốc</h1>
+              <p>
+                Tiếp cận <span class={styles.highlight}>40,000+</span> tin tuyển
+                dụng việc làm mỗi ngày từ hàng nghìn doanh nghiệp uy tín tại
+                Việt Nam
+              </p>
 
-            <div className={styles.search_cv}>
-              <div className={styles.search_job} style={{ width: "350px" }}>
-                <Input
-                  placeholder="Vị trí tuyển dụng"
-                  className={styles.search_job_input}
-                ></Input>
-              </div>
-              <div
-                className={styles.search_job}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  paddingTop: "25px",
-                  paddingLeft: "15px",
-                }}
-              >
-                <Form.Item>
-                  <Select
-                    defaultValue="all"
-                    value={selectedRole}
-                    onChange={handleChange}
-                    className={styles.search_location}
-                    style={{ width: "200px" }}
-                  >
-                    {roles.map((role) => (
-                      <Select.Option key={role.value} value={role.value}>
-                        {role.label}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div
-                className={styles.search_job}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  paddingTop: "25px",
-                  paddingLeft: "15px",
-                }}
-              >
-                <Form.Item>
-                  <Select
-                    defaultValue="all"
-                    value={selectedRoleJob}
-                    onChange={handleChangeJob}
-                    className="search_location"
-                    style={{ width: "200px" }}
-                  >
-                    {rolesJob.map((role) => (
-                      <Select.Option key={role.value} value={role.value}>
-                        {role.label}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className={styles.search_sub}>
-                <Button
+              <div className={styles.search_cv}>
+                <div className={styles.search_job} style={{ width: "350px" }}>
+                  <Input
+                    placeholder="Vị trí tuyển dụng"
+                    className={styles.search_job_input}
+                  ></Input>
+                </div>
+                <div
+                  className={styles.search_job}
                   style={{
-                    fontSize: "16px",
-                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingTop: "25px",
+                    paddingLeft: "15px",
                   }}
-                  className={styles.btn_search_sub}
                 >
-                  <span class="icon_search material-symbols-outlined">
-                    search
-                  </span>
-                  Tìm kiếm
-                </Button>
+                  <Form.Item>
+                    <Select
+                      defaultValue="all"
+                      value={selectedRole}
+                      onChange={handleChange}
+                      className={styles.search_location}
+                      style={{ width: "200px" }}
+                    >
+                      {roles.map((role) => (
+                        <Select.Option key={role.value} value={role.value}>
+                          {role.label}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div
+                  className={styles.search_job}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    paddingTop: "25px",
+                    paddingLeft: "15px",
+                  }}
+                >
+                  <Form.Item>
+                    <Select
+                      defaultValue="all"
+                      value={selectedRoleJob}
+                      onChange={handleChangeJob}
+                      className={styles.search_location}
+                      style={{ width: "200px" }}
+                    >
+                      {rolesJob.map((role) => (
+                        <Select.Option key={role.value} value={role.value}>
+                          {role.label}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className={styles.search_sub}>
+                  <Button
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                    }}
+                    className={styles.btn_search_sub}
+                  >
+                    <span class="icon_search material-symbols-outlined">
+                      search
+                    </span>
+                    Tìm kiếm
+                  </Button>
+                </div>
+              </div>
+              <div
+                style={{
+                  marginTop: "30px",
+                }}
+                className={styles.img_job_search}
+              >
+                <img
+                  src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/img/Tek-Expert-bannerT1.jpg"
+                  alt=""
+                />
               </div>
             </div>
+          </div>
+          <div className={styles.list_job}>
+            <div className={styles.title_list_job}>
+              <h2>Việc làm tốt nhất</h2>
+            </div>
             <div
+              className={styles.title_list_job}
               style={{
-                marginTop: "30px",
+                paddingBottom: "30px",
               }}
             >
-              <img
-                src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/img/Tek-Expert-bannerT1.jpg"
-                alt=""
+              <Select
+                showSearch
+                placeholder="Select a person"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={[
+                  { value: "1", label: "Địa điểm" },
+                  { value: "2", label: "Mức Lương" },
+                  { value: "3", label: "Kinh nghiệm " },
+                  { value: "4", label: "Ngành nghề" },
+                ]}
               />
+            </div>
+            <div className={styles.list_job_content}>
+              <ListJob />
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ConfigProvider>
   );
 }
 
