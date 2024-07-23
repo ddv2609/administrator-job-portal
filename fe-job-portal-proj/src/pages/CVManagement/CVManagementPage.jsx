@@ -2,6 +2,7 @@ import { Layout } from 'antd';
 import React, { useState } from 'react';
 import CVList from '../../components/CandidateCV/CVList';
 import CVUpload from '../../components/CandidateCV/CVUpload';
+import UserInfo from '../../components/CandidateCV/UserInfo';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -14,22 +15,20 @@ const headerStyle = {
     backgroundColor: '#4096ff'
 };
 const contentStyle = {
-    minHeight: 120,
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#0958d9',
-    margin: '10px 10px 10px 50px',
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    margin: '20px 10px 20px 100px',
 };
 const siderStyle = {
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#1677ff',
-    margin: '10px 50px 10px 10px',
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    margin: '20px 100px 20px 10px',
 };
 const footerStyle = {
     textAlign: 'center',
     color: '#fff',
-    backgroundColor: '#4096ff',
 };
 const layoutStyle = {
     borderRadius: 8,
@@ -48,22 +47,31 @@ const CVManagementPage = () => {
         setCvs(prevCvs => prevCvs.filter(cv => cv.id !== cvId));
     };
 
+    const user = {
+        name: "Dương Hồng Đức",
+        email: "hongduc20062002@gmail.com",
+        phone: "0339230195",
+        address: "PX, Hà Nội",
+        major: "CNTT"
+    };
     return (
         <Layout style={layoutStyle}>
-            <Header style={headerStyle}>Header</Header>
+            <Header style={headerStyle}></Header>
             <Layout>
                 <Content style={contentStyle}>
                     <div>
-                        <h1>CV Management</h1>
+                        <h1>Hồ sơ & CV</h1>
                         <CVUpload onUploadSuccess={handleUploadSuccess} />
                         <CVList cvs={cvs} onDelete={handleDelete} />
                     </div>
                 </Content>
-                <Sider width="25%" style={siderStyle}>
-                    Sider
+                <Sider width="30%" style={siderStyle}>
+                    <div>
+                        <UserInfo user={user} />
+                    </div>
                 </Sider>
             </Layout>
-            <Footer style={footerStyle}>Footer</Footer>
+            <Footer style={footerStyle}></Footer>
         </Layout>
     );
 };
