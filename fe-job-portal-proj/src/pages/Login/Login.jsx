@@ -1,24 +1,64 @@
+import { useNavigate } from "react-router-dom";
+import { Col, Divider, message, Row } from "antd";
+import axios from "axios";
 import clsx from "clsx";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-import { Col, Divider, Row } from "antd";
-
+import { login } from "../../actions";
 import LoginForm from "../../components/Login/LoginForm/LoginForm";
 import OAuthLogin from "../../components/Login/OAuthLogin/OAuthLogin";
-import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
-import { useState } from "react";
 
 function CandidateLogin() {
   const [role, setRole] = useState("candidate");
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const nav = useNavigate();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const roles = [
+    { label: "Ứng viên", value: "candidate" },
+    { label: "Nhà tuyển dụng", value: "employer" },
+    { label: "Quản trị viên", value: "admin" },
+  ];
 
   const handleNavSignUp = () => {
     role === "candidate" ? nav("/candidate/sign-up") : nav("/employer/sign-up");
   }
 
+  const handleSubmitLoginFrm = (values) => {
+    setLoading(true);
+    axios.post("http://localhost:8000/auth/login", values, {
+      withCredentials: true,
+    })
+      .then(res => {
+        dispatch(login(res.data));
+        messageApi.success("Đăng nhập thành công", 1).then(() => {
+          switch (values.role) {
+            case "admin":
+              nav("/admin/dashboard");
+              break;
+            case "employer":
+              nav("/employer");
+              break;
+            default:
+              nav("/candidate/candidate-profile");
+          }
+        });
+      })
+      .catch(err => {
+        console.error(err.response?.data);
+        messageApi.error(`Đăng nhập thất bại. ${err.response?.data.message || ""}`, 10);
+      })
+      .finally(() => setLoading(false))
+  }
+
   return (
     <>
       <div className={styles.loginSection}>
+        { contextHolder }
         <Row>
           <Col lg={15}>
             <div className={styles.loginForm}>
@@ -33,7 +73,12 @@ function CandidateLogin() {
                   </div>
                 </div>
 
-                <LoginForm changeRole={setRole} />
+                <LoginForm 
+                  loading={loading}
+                  changeRole={setRole} 
+                  roles={roles} 
+                  handleSubmitLoginFrm={handleSubmitLoginFrm}
+                />
 
                 { role !== "admin" ? (
                   <>

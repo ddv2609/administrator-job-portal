@@ -26,9 +26,6 @@ export const themes = {
     message: {
       maxCount: 3,
     },
-    Layout: {
-      bodyBg: bgBlur,
-    },
     Tabs: {
       inkBarColor: primaryColor,
       itemActiveColor: "#00be55",
@@ -43,3 +40,41 @@ export const themes = {
     }
   }
 };
+
+export const adminTableThemes = {
+  components: {
+    Table: {
+      colorPrimary: primaryColor,
+      cellFontSizeMD: "13px",
+      rowHoverBg: bgBlur,
+      headerBorderRadius: 0,
+    },
+    Button: {
+      colorPrimary: primaryColor,
+      colorLink: primaryColor,
+      colorPrimaryActive: "#02b050",
+      colorLinkActive: "#02b050",
+      colorPrimaryHover: "#04df67",
+      colorLinkHover: "#04df67",
+    },
+    Link: {
+      colorPrimary: primaryColor,
+    },
+    Pagination: {
+      colorPrimary: primaryColor,
+    },
+    Select: {
+      colorPrimary: primaryColor,
+      colorPrimaryHover: primaryColor,
+    },
+    Dropdown: {
+      colorPrimary: primaryColor,
+      controlItemBgActive: "#00b15018",
+      controlItemBgActiveHover: "#00b1503c",
+    },
+    Input: {
+      activeBorderColor: primaryColor,
+      hoverBorderColor: "#04df67",
+    }
+  }
+}

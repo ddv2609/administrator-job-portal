@@ -1,5 +1,5 @@
-import { Layout, Spin } from "antd";
-import { useEffect, useState } from "react";
+import { ConfigProvider, FloatButton, Layout, Spin } from "antd";
+import { useEffect, useRef, useState } from "react";
 import { FaChartBar, FaUserShield, FaUserTie } from "react-icons/fa";
 import { HiBuildingOffice2, HiUserGroup } from "react-icons/hi2";
 import { LoadingOutlined } from '@ant-design/icons';
@@ -19,6 +19,8 @@ import styles from "./Admin.module.css";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+const primaryColor = "#00b14f";
+
 function Admin() {
   const [collapsed, setCollapsed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -26,6 +28,8 @@ function Admin() {
 
   const admin = useSelector(state => state.memberReducer);
   const dispatch = useDispatch();
+
+  const contentRef = useRef(null);
 
   const nav = useNavigate();
 
@@ -84,49 +88,68 @@ function Admin() {
         setLoading(false);
         setData(res.data);
         dispatch(setAdminInfo(res.data.admin));
+        if (!admin)
+          localStorage.setItem("selected-key", 1);
       })
       .catch(err => {
         console.log(err);
         nav("/login");
       })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      localStorage.removeItem("selected-key");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className={styles.adminPage}>
-      {loading ? <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} fullscreen /> : (
+      {loading ? <Spin indicator={<LoadingOutlined style={{ fontSize: 48, color: "#00b14f" }} spin />} fullscreen /> : (
         <Layout>
-        <AdminSider items={itemsMenu} collapsed={collapsed} />
-        <Layout
-          style={{
-            maxHeight: '100vh',
-          }}
-        >
-          <Header
-            style={{
-              padding: 0,
-              backgroundColor: "#FFF",
+          <AdminSider items={itemsMenu} collapsed={collapsed} admin={admin} />
+          <ConfigProvider
+            theme={{
+              components: {
+                // Layout: {
+                //   bodyBg: "#00b14f0a",
+                // },
+                FloatButton: {
+                  colorText: primaryColor,
+                }
+              }
             }}
           >
-            <HeaderAdmin
-              collapsed={collapsed}
-              setCollapsed={setCollapsed}
-              admin={admin}
-            />
-          </Header>
-          <Content
-            style={{
-              // margin: "12px 8px 8px",
-              padding: "16px",
-              borderRadius: "8px",
-              height: '100vh',
-              overflowY: 'scroll',
-              scrollbarWidth: 'none',
-            }}
-          >
-            <Outlet context={{ data }} />
-          </Content>
-          {/* <Footer
+            <Layout
+              style={{
+                maxHeight: '100vh',
+              }}
+            >
+              <Header
+                style={{
+                  padding: 0,
+                  backgroundColor: "#FFF",
+                }}
+              >
+                <HeaderAdmin
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  admin={admin}
+                />
+              </Header>
+              <Content
+                ref={contentRef}
+                style={{
+                  // margin: "12px 8px 8px",
+                  padding: "16px",
+                  borderRadius: "8px",
+                  height: '100vh',
+                  overflowY: 'scroll',
+                  scrollbarWidth: 'none',
+                }}
+              >
+                <FloatButton.BackTop target={() => contentRef.current} />
+                <Outlet context={{ data, admin }} />
+              </Content>
+              {/* <Footer
             style={{
               textAlign: 'center',
               fontSize: '16px',
@@ -136,8 +159,9 @@ function Admin() {
           >
             © 2024. All Rights Reserved. PTIT Job Portal.
           </Footer> */}
+            </Layout>
+          </ConfigProvider>
         </Layout>
-      </Layout>
       )}
     </div>
   );
