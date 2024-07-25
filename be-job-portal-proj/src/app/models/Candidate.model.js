@@ -8,7 +8,6 @@ const CandidateSchema = new Schema({
   linkedinId: { type: String },
   defaultResume: { type: String },
   education: { type: String },
-  address: { type: String },
   member: { 
     type: Schema.Types.ObjectId, 
     ref: "Member",
