@@ -4,7 +4,7 @@ import { Avatar, List, Space } from "antd";
 
 const data = Array.from({ length: 23 }).map((_, i) => ({
   href: "https://ant.design",
-  title: `ant design part ${i}`,
+  title: `Tuyển dụng vị trí ReactJS `,
   avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
   company: "Công ty HTT ABBAMK",
   content:
@@ -49,10 +49,11 @@ const App = () => (
         ]}
         extra={
           <img
-            width={272}
+            width={240}
+            height={150}
             style={{ marginLeft: "200px" }}
             alt="logo"
-            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+            src="https://upload.wikimedia.org/wikipedia/commons/1/13/Logo_PTIT_University.png"
           />
         }
       >
@@ -64,7 +65,7 @@ const App = () => (
         {item.content}
         <p>Lương:{item.Wage} </p>
         <p>Địa chỉ:{item.address}</p>
-        company={item.company}
+        company:{item.company}
       </List.Item>
     )}
   />

@@ -3,6 +3,7 @@ import Header from "../../components/Header/Header";
 import styles from "./EmployeerIndex.module.css";
 import { Input, Form, Select, Button, ConfigProvider } from "antd";
 import ListJob from "../../components/ListJob/ListJob";
+import Footer from "../../components/FooterMain/Footer";
 import { useState } from "react";
 
 function EmployeerIndex(changeRole) {
@@ -47,6 +48,9 @@ function EmployeerIndex(changeRole) {
         components: {
           Button: {
             defaultHoverBg: "blue",
+          },
+          Select: {
+            defaultActiveBg: "blue",
           },
         },
       }}
@@ -174,9 +178,24 @@ function EmployeerIndex(changeRole) {
                 ]}
               />
             </div>
-            <div className={styles.list_job_content}>
+            <div
+              className={styles.list_job_content}
+              style={{
+                paddingBottom: "30px",
+              }}
+            >
               <ListJob />
             </div>
+          </div>
+          <div
+            className={styles.footer_main}
+            style={{
+              width: "1150px",
+              height: "330px",
+              margin: "0 auto",
+            }}
+          >
+            <Footer />
           </div>
         </div>
       </div>
