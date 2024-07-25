@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mongooseDelete = require("mongoose-delete");
+// const mongooseDelete = require("mongoose-delete");
 
 const Schema = mongoose.Schema;
 
@@ -46,20 +46,27 @@ const MemberSchema = new Schema({
     get: (value) => value.toLowerCase(),
     set: (value) => value.toLowerCase(),
   },
+  address: { type: String, default: null },
   avatar: { type: String, default: null },
   verifiedAt: { 
     type: Date, 
     default: null,  
+  },
+  hidden: { type: Boolean, default: false },
+  hiddenAt: { type: Date },
+  hiddenBy: { 
+    type: Schema.Types.ObjectId, 
+    ref: "Member", 
   }
 }, {
   timestamps: true,
 });
 
-MemberSchema.plugin(mongooseDelete, {
-  deletedAt : true,
-  deletedBy: true,
-  overrideMethods: true,
-});
+// MemberSchema.plugin(mongooseDelete, {
+//   deletedAt : true,
+//   deletedBy: true,
+//   overrideMethods: true,
+// });
 
 MemberSchema.pre("remove", async function(next) {
   await mongoose.model("User").deleteOne({ member: this._id });

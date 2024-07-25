@@ -21,9 +21,8 @@ class AuthController {
     const { email, password, role } = req.body;
 
     const member = await Member.findOne({ email: email });
-    console.log(member);
 
-    if (member && member.verifiedAt !== null && member.role === role) {
+    if (member && !member.hidden && member.verifiedAt !== null && member.role === role) {
       bcrypt.compare(password, member.password, (err, result) => {
         if (result) {
           let token = jwt.sign({
@@ -49,14 +48,15 @@ class AuthController {
           });
         } else {
           return res.status(401).json({
-            message: "Email hoặc password không chính xác",
+            message: "Email hoặc password không chính xác!",
           });
         }
       });
 
     } else {
+      console.log(member);
       return res.status(401).json({
-        message: "Email hoặc password không chính xác",
+        message: member?.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : "Email hoặc password không chính xác!",
       });
     }
 
