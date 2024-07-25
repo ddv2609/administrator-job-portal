@@ -1,63 +1,16 @@
-import { Button, Form, Input, message, Select } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { MdEmail } from "react-icons/md";
 import { BsShieldLockFill } from "react-icons/bs";
 import { FaUserAlt } from "react-icons/fa";
 
-import axios from "axios";
-
 import styles from "./LoginForm.module.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../../../actions";
 
-function LoginForm({ changeRole }) {
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+function LoginForm({ handleSubmitLoginFrm, changeRole, roles, loading }) {
   const nav = useNavigate();
-
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const roles = [
-    { label: "Ứng viên", value: "candidate" },
-    { label: "Nhà tuyển dụng", value: "employer" },
-    { label: "Quản trị viên", value: "admin" },
-  ];
-
-  const handleSubmitLoginFrm = (values) => {
-    setLoading(true);
-    axios.post("http://localhost:8000/auth/login", values, {
-      withCredentials: true,
-    })
-      .then(res => {
-        dispatch(login(res.data));
-        messageApi.success("Đăng nhập thành công", 1).then(() => {
-          switch (values.role) {
-            case "admin":
-              nav("/admin/dashboard");
-              break;
-            case "employer":
-              nav("/employer");
-              break;
-            default:
-              nav("/");
-          }
-        });
-      })
-      .catch(err => {
-        console.error(err.response.data);
-        messageApi.error(`Đăng nhập thất bại. ${err.response.data.message}!`, 10);
-      })
-      .finally(() => setLoading(false))
-  }
-
-  const handleSelectRole = (item) => {
-    changeRole(item);
-  }
 
   return (
     <div className={styles.login}>
-      {contextHolder}
       <Form
         layout="vertical"
         onFinish={handleSubmitLoginFrm}
@@ -101,7 +54,7 @@ function LoginForm({ changeRole }) {
             size="large"
             suffixIcon={<span className={styles.icon}><FaUserAlt /></span>}
             options={roles}
-            onChange={handleSelectRole}
+            onChange={changeRole}
           />
         </Form.Item>
 

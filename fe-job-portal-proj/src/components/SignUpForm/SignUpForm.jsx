@@ -60,7 +60,7 @@ function SignUpForm({ children, role="candidate" }) {
       })
       .catch(err => {
         console.error(err);
-        messageApi.error(err.response.data.message);
+        messageApi.error(err.response?.data.message);
       })
       .finally(() => setResend(false))
   };

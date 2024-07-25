@@ -4,7 +4,7 @@ import Sider from "antd/es/layout/Sider";
 import styles from "./AdminSider.module.css";
 import { useNavigate } from "react-router-dom";
 
-function AdminSider({ items = [], collapsed = false }) {
+function AdminSider({ items = [], collapsed = false, admin }) {
   const nav = useNavigate();
 
   const handleSelectItems = ({ item, key, keyPath, selectedKeys, domEvent }) => {
@@ -25,7 +25,7 @@ function AdminSider({ items = [], collapsed = false }) {
           <div className={styles.logo}>
             <img className={styles.image} src="/logo.png" alt="PTIT Job Portal Logo"/>
             {
-              collapsed ? <></> : <h1 className={styles.heading}>PTIT JOB</h1>
+              collapsed ? <></> : <h3 className={styles.heading}>Job Portal</h3>
             }
           </div>
         </div>
