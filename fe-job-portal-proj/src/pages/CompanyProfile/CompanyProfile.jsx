@@ -9,10 +9,10 @@ import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { RiUserSearchFill } from "react-icons/ri";
 import AdminSider from "../../components/Admin/AdminSider/AdminSider";
 
-import styles from "./CandidateProfile.module.css";
+import styles from "./CompanyProfile.module.css";
 import { Outlet } from "react-router-dom";
 
-function CandidateProfile(){
+function CompanyProfile(){
     const [collapsed, setCollapsed] = useState(false);
 
   const itemsMenu = [
@@ -102,4 +102,4 @@ function CandidateProfile(){
     </div>      
     )
 }
-export default CandidateProfile;
+export default CompanyProfile;

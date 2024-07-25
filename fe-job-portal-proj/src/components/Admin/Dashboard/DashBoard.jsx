@@ -21,7 +21,6 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineController, LineEle
 Chart.register(Legend, Title, Tooltip);
 
 function Dashboard() {
-<<<<<<< HEAD
   const [chartDataPie] = useState({
     labels: ["Ứng viên", "Nhà tuyển dụng", "Công việc"],
     datasets: [
@@ -43,7 +42,7 @@ function Dashboard() {
       }
     ]
   });
-=======
+
   const { data } = useOutletContext();
   const nav = useNavigate();
 
@@ -89,7 +88,6 @@ function Dashboard() {
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
->>>>>>> b5b089ee4a77bd3506a2e681ab0e108846d6bcd7
 
   return (
     <div className={styles.adminDashboard}>
