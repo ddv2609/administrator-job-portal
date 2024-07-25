@@ -21,28 +21,6 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineController, LineEle
 Chart.register(Legend, Title, Tooltip);
 
 function Dashboard() {
-  const [chartDataPie] = useState({
-    labels: ["Ứng viên", "Nhà tuyển dụng", "Công việc"],
-    datasets: [
-      {
-        label: "Số lượng",
-        data: [609, 156, 223],
-        backgroundColor: ["#00b14f", "#ff9800", "#20bbc9"]
-      }
-    ]
-  });
-
-  const [chartDataLine] = useState({
-    labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    datasets: [
-      {
-        label: "Số lượng ứng viên",
-        data: [409, 256, 523, 145, 89, 301, 221, 567, 432, 152, 236, 436],
-        borderColor: "#00b14f",
-      }
-    ]
-  });
-
   const { data } = useOutletContext();
   const nav = useNavigate();
 
@@ -155,14 +133,24 @@ function Dashboard() {
         <h3 className={styles.heading}>Thống kê theo tháng</h3>
         <Tabs
           defaultActiveKey="1"
-          items={[[FaUserTie, "Ứng viên"],
-          [RiUserSearchFill, "Nhà tuyển dụng"],
-          [FaCheckToSlot, "Công việc được đăng"]].map((info, index) => {
-            const Icon = info[0];
+          items={[{ icon: FaUserTie, role: "Ứng viên", data: datas[0], color: "#01be56" },
+          { icon: RiUserSearchFill, role: "Nhà tuyển dụng", data: datas[1], color: "#ff9800" },
+          { icon: FaCheckToSlot, role: "Công việc được đăng", data: datas[2], color: "#20bbc9" }].map((info, index) => {
+            const Icon = info.icon;
+            // const labels = ["January", "February", "March", "April", "May", "June",
+            //   "July", "August", "September", "October", "November", "December"];
             return {
               key: index + 1,
-              label: info[1],
-              children: <LineChart chartData={chartDataLine} />,
+              label: info.role,
+              children: <LineChart
+                title={`Thống kê ${info.role.toLowerCase()} mới theo tháng`}
+                chartData={{
+                  labels, datasets: [{
+                    ...info.data,
+                    borderColor: info.color
+                  }]
+                }}
+              />,
               icon: <Icon />
             };
           })}
