@@ -10,6 +10,7 @@ const CompanySchema = new Schema({
   },
   logo: { type: String },
   companySize: { type: Number },
+  field: { type: String },
   introduction: { type: String },
   website: { type: String },
   taxCode: { type: String },
