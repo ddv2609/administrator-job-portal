@@ -1,19 +1,12 @@
-import { Button, Form, Input, message, Select } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { MdEmail } from "react-icons/md";
 import { BsShieldLockFill } from "react-icons/bs";
 import { FaUserAlt } from "react-icons/fa";
 
-import axios from "axios";
-
 import styles from "./LoginForm.module.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../../../actions";
 
-function LoginForm({ changeRole }) {
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+function LoginForm({ handleSubmitLoginFrm, changeRole, roles, loading }) {
   const nav = useNavigate();
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -54,10 +47,8 @@ function LoginForm({ changeRole }) {
   const handleSelectRole = (item) => {
     changeRole(item);
   }
-
   return (
     <div className={styles.login}>
-      {contextHolder}
       <Form
         layout="vertical"
         onFinish={handleSubmitLoginFrm}
@@ -101,7 +92,7 @@ function LoginForm({ changeRole }) {
             size="large"
             suffixIcon={<span className={styles.icon}><FaUserAlt /></span>}
             options={roles}
-            onChange={handleSelectRole}
+            onChange={changeRole}
           />
         </Form.Item>
 

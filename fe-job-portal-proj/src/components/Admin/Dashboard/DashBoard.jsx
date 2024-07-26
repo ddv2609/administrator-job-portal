@@ -21,35 +21,13 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineController, LineEle
 Chart.register(Legend, Title, Tooltip);
 
 function Dashboard() {
-  const [chartDataPie] = useState({
-    labels: ["Ứng viên", "Nhà tuyển dụng", "Công việc"],
-    datasets: [
-      {
-        label: "Số lượng",
-        data: [609, 156, 223],
-        backgroundColor: ["#00b14f", "#ff9800", "#20bbc9"]
-      }
-    ]
-  });
-
-  const [chartDataLine] = useState({
-    labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    datasets: [
-      {
-        label: "Số lượng ứng viên",
-        data: [409, 256, 523, 145, 89, 301, 221, 567, 432, 152, 236, 436],
-        borderColor: "#00b14f",
-      }
-    ]
-  });
-
-  const { data } = useOutletContext();
+  const { data, getOverviewInfo } = useOutletContext();
   const nav = useNavigate();
 
   const [datas, setDatas] = useState([
     {
       label: "Số lượng công việc",
-      data: [409, 256, 523, 145, 89, 301, 221, 567, 432, 152, 236, 436],
+      data: [10, 50, 32, 15, 23, 8, 7],
     }
   ]);
 
@@ -65,8 +43,10 @@ function Dashboard() {
       axios.get("http://localhost:8000/api/admin/statistic/employer", {
         withCredentials: true,
       }),
+      getOverviewInfo(),
     ])
       .then(([candidates, employers]) => {
+        console.log(candidates, employers);
         setDatas([{
           label: "Số lượng ứng viên",
           data: candidates.data.statistic
@@ -104,7 +84,7 @@ function Dashboard() {
                   data.candidates.lastAmount === data.candidates.currAmount ? 0
                     : data.candidates.lastAmount !== 0
                       ? (data.candidates.currAmount !== 0
-                        ? ((data.candidates.currAmount - data.candidates.lastAmount) / (data.candidates.currAmount + data.candidates.lastAmount)).toFixed(2) : 0) : 100
+                        ? (100 * (data.candidates.currAmount - data.candidates.lastAmount) / data.candidates.lastAmount).toFixed(2) : 0) : 100
                 }
                 state={data.candidates.currAmount >= data.candidates.lastAmount ? "up" : "down"}
               />
@@ -119,7 +99,7 @@ function Dashboard() {
                   data.employers.lastAmount === data.employers.currAmount ? 0
                     : data.employers.lastAmount !== 0
                       ? (data.employers.currAmount !== 0
-                        ? ((data.employers.currAmount - data.employers.lastAmount) / (data.employers.currAmount + data.employers.lastAmount)).toFixed(2) : 0) : 100
+                        ? (100 * (data.employers.currAmount - data.employers.lastAmount) / data.employers.lastAmount).toFixed(2) : 0) : 100
                 }
                 state={data.employers.currAmount >= data.employers.lastAmount ? "up" : "down"}
                 role="employer"
@@ -130,8 +110,8 @@ function Dashboard() {
               <StatisticCard
                 title="Công việc được đăng"
                 icon={<FaCheckToSlot />}
-                amount={223}
-                percent={10.02}
+                amount={7}
+                percent={-6.67}
                 state="down"
                 role="postedJob"
               />
@@ -144,7 +124,7 @@ function Dashboard() {
             labels: ["Ứng viên", "Nhà tuyển dụng", "Công việc"],
             datasets: [{
               label: "Số lượng",
-              data: [data.candidates.currAmount, data.employers.currAmount, 223],
+              data: [data.candidates.currAmount, data.employers.currAmount, 7],
               backgroundColor: ["#00b14f", "#ff9800", "#20bbc9"],
             }]
           }} />
@@ -155,14 +135,24 @@ function Dashboard() {
         <h3 className={styles.heading}>Thống kê theo tháng</h3>
         <Tabs
           defaultActiveKey="1"
-          items={[[FaUserTie, "Ứng viên"],
-          [RiUserSearchFill, "Nhà tuyển dụng"],
-          [FaCheckToSlot, "Công việc được đăng"]].map((info, index) => {
-            const Icon = info[0];
+          items={[{ icon: FaUserTie, role: "Ứng viên", data: datas[0], color: "#01be56" },
+          { icon: RiUserSearchFill, role: "Nhà tuyển dụng", data: datas[1], color: "#ff9800" },
+          { icon: FaCheckToSlot, role: "Công việc được đăng", data: datas[2], color: "#20bbc9" }].map((info, index) => {
+            const Icon = info.icon;
+            // const labels = ["January", "February", "March", "April", "May", "June",
+            //   "July", "August", "September", "October", "November", "December"];
             return {
               key: index + 1,
-              label: info[1],
-              children: <LineChart chartData={chartDataLine} />,
+              label: info.role,
+              children: <LineChart
+                title={`Thống kê ${info.role.toLowerCase()} mới theo tháng`}
+                chartData={{
+                  labels, datasets: [{
+                    ...info.data,
+                    borderColor: info.color
+                  }]
+                }}
+              />,
               icon: <Icon />
             };
           })}

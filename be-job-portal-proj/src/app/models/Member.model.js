@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mongooseDelete = require("mongoose-delete");
+// const mongooseDelete = require("mongoose-delete");
 
 const Schema = mongoose.Schema;
 
@@ -46,27 +46,41 @@ const MemberSchema = new Schema({
     get: (value) => value.toLowerCase(),
     set: (value) => value.toLowerCase(),
   },
+  address: { type: String, default: null },
   avatar: { type: String, default: null },
   verifiedAt: { 
     type: Date, 
     default: null,  
+  },
+  hidden: { type: Boolean, default: false },
+  hiddenAt: { type: Date },
+  hiddenBy: { 
+    type: Schema.Types.ObjectId, 
+    ref: "Member", 
   }
 }, {
   timestamps: true,
 });
 
-MemberSchema.plugin(mongooseDelete, {
-  deletedAt : true,
-  deletedBy: true,
-  overrideMethods: true,
-});
+// MemberSchema.plugin(mongooseDelete, {
+//   deletedAt : true,
+//   deletedBy: true,
+//   overrideMethods: true,
+// });
 
-MemberSchema.pre("remove", async function(next) {
-  await mongoose.model("User").deleteOne({ member: this._id });
-  await mongoose.model("Employer").deleteOne({ member: this._id });
-  await mongoose.model("Admin").deleteOne({ member: this._id });
+// MemberSchema.pre("remove", async function(next) {
+//   try {
+//     await mongoose.model("User").deleteOne({ member: this._id });
+//     const employer = await mongoose.model("Employer").findOneAndDelete({ member: this._id });
+//     if (employer) {
+//       await mongoose.model("Company").deleteOne({ _id: employer.company });
+//     }
+//     await mongoose.model("Admin").deleteOne({ member: this._id });
 
-  next();
-});
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 module.exports = mongoose.model("Member", MemberSchema, "tblMember");
