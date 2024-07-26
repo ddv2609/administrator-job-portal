@@ -21,7 +21,7 @@ Chart.register(CategoryScale, LinearScale, PointElement, LineController, LineEle
 Chart.register(Legend, Title, Tooltip);
 
 function Dashboard() {
-  const { data } = useOutletContext();
+  const { data, getOverviewInfo } = useOutletContext();
   const nav = useNavigate();
 
   const [datas, setDatas] = useState([
@@ -43,8 +43,10 @@ function Dashboard() {
       axios.get("http://localhost:8000/api/admin/statistic/employer", {
         withCredentials: true,
       }),
+      getOverviewInfo(),
     ])
       .then(([candidates, employers]) => {
+        console.log(candidates, employers);
         setDatas([{
           label: "Số lượng ứng viên",
           data: candidates.data.statistic
@@ -82,7 +84,7 @@ function Dashboard() {
                   data.candidates.lastAmount === data.candidates.currAmount ? 0
                     : data.candidates.lastAmount !== 0
                       ? (data.candidates.currAmount !== 0
-                        ? (100 * (data.candidates.currAmount - data.candidates.lastAmount) / (data.candidates.currAmount + data.candidates.lastAmount)).toFixed(2) : 0) : 100
+                        ? (100 * (data.candidates.currAmount - data.candidates.lastAmount) / data.candidates.lastAmount).toFixed(2) : 0) : 100
                 }
                 state={data.candidates.currAmount >= data.candidates.lastAmount ? "up" : "down"}
               />
@@ -97,7 +99,7 @@ function Dashboard() {
                   data.employers.lastAmount === data.employers.currAmount ? 0
                     : data.employers.lastAmount !== 0
                       ? (data.employers.currAmount !== 0
-                        ? (100 * (data.employers.currAmount - data.employers.lastAmount) / (data.employers.currAmount + data.employers.lastAmount)).toFixed(2) : 0) : 100
+                        ? (100 * (data.employers.currAmount - data.employers.lastAmount) / data.employers.lastAmount).toFixed(2) : 0) : 100
                 }
                 state={data.employers.currAmount >= data.employers.lastAmount ? "up" : "down"}
                 role="employer"

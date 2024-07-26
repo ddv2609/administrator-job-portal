@@ -2,7 +2,9 @@ const Candidate = require("../models/Candidate.model");
 const Employer = require("../models/Employer.model");
 const Admin = require("../models/Admin.model");
 const Member = require("../models/Member.model");
+const Company = require("../models/Company.model");
 
+const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
 
@@ -20,7 +22,7 @@ class AdminController {
     const firstDayOfCurrMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const lastDayOfCurrMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-    Member.find({
+    await Member.find({
       createdAt: {
         $gte: firstDayOfLastMonth,
         $lte: lastDayOfCurrMonth,
@@ -69,15 +71,12 @@ class AdminController {
     const today = new Date();
     const currentMonth = today.getMonth();
 
-    Member.find({
+    await Member.find({
       createdAt: {
         $gte: new Date(today.getFullYear(), 0, 1),
         $lte: new Date(today.getFullYear(), currentMonth + 1, 0),
       },
-      $or: [
-        { role: "candidate", },
-        { role: "employer", },
-      ]
+      role: pos,
     }).then(members => {
       const data = Array(currentMonth + 1).fill(0);
       members.forEach((member) => data[new Date(member.createdAt).getMonth()]++);
@@ -89,7 +88,7 @@ class AdminController {
     })
   }
 
-  // [GET] /api/admin/list/<role>?hide=<boolean>
+  // [GET] /api/admin/list/<role>?hidden=<boolean>&page=<number>&size=<number>
   async getListMembers(req, res) {
     const { role } = req.params;
     const { hidden, page, size } = req.query;
@@ -152,7 +151,7 @@ class AdminController {
       console.log(error);
       return res.status(500).json({
         message: `Có lỗi xảy ra: Error code <${error.code}>`,
-      })
+      });
     }
   }
 
@@ -248,6 +247,115 @@ class AdminController {
       return res.status(500).json({
         message: `Có lỗi xảy ra: ${error.code ? "Error code <" + error.code + ">" : error.message}`,
       })
+    }
+  }
+
+  // [GET] /api/admin/all/companies?hidden=<boolean>&page=<number>&size=<number>
+  async getListCompanies(req, res) {
+    const { hidden, page, size } = req.query;
+
+    try {
+      const total = await Member.countDocuments({ 
+        role: "employer",
+        hidden: hidden === "true",
+      });
+
+      const employers = await Employer.find({})
+        .populate({
+          path: "member",
+          match: { 
+            hidden: hidden === "true",
+          },
+          options: { skip: (page - 1) * size, limit: size },
+          select: "tel email verifiedAt",
+        })
+        .populate({
+          path: "company",
+        })
+      
+      const companies = employers.filter(employer => employer.member !== null);
+
+      return res.json({
+        companies,
+        info: {
+          page,
+          size,
+          total,
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [DELETE] /api/admin/:role/delete
+  async deleteMembers(req, res) {
+    const { role } = req.params;
+    const { members } = req.body;
+    const emails = members?.map((mem) => mem.email);
+    const memIds = members?.map((mem) => mem.mbid);
+    console.log(emails, memIds);
+    try {
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
+      switch (role) {
+        case "employers":
+          let employers = await Employer.find({}).select("_id company").populate({
+            path: "member",
+            match: { _id: { $in: memIds } },
+            select: "",
+          });
+          console.log(employers);
+          employers = employers.filter(employer => employer.member)
+          const employerIds = employers.map(employer => employer._id);
+          const companies = employers.map(employer => employer.company);
+
+          await Promise.all([
+            await Company.deleteMany({ _id: { $in: companies } }),
+            await Employer.deleteMany({ _id: { $in: employerIds } }),
+          ]);
+          break;
+        case "candidates":
+          const candidates = await Candidate.find({}).select("_id").populate({
+            path: "member",
+            match: { _id: { $in: memIds } },
+            select: "",
+          });
+          console.log(candidates);
+
+          const candidateIds = candidates.filter(candidate => candidate.member);
+          await Candidate.deleteMany({ _id: { $in: candidateIds } });
+          break;
+        default:
+          break;
+      }
+
+      await Member.deleteMany({ _id: { $in: memIds } });
+
+      const emailTemplatePath = path.join(__dirname, '../../resources/views/form-notify.html');
+      const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
+      const emailContent = emailTemplate.replace('{{message}}', `
+        Tài khoản của bạn đã bị quản trị viên xóa khỏi hệ thống.
+        Bạn phải đăng ký lại nếu muốn tiếp tục đăng nhập vào website của chúng tôi.  
+      `);
+      emails.forEach((email) => mailer.sendMail(email, "Tài khoản đã bị xóa", emailContent));
+
+      console.log("Send all mails!");
+
+      await session.commitTransaction();
+      session.endSession();
+      return res.sendStatus(200);
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
     }
   }
 }

@@ -5,7 +5,7 @@ import axios from "axios";
 import { AiOutlineUser } from "react-icons/ai";
 import { FaUserShield } from "react-icons/fa";
 
-import ManagementMember from "../ManagementMember/ManagementMember";
+import ManagementTable from "../ManagementTable/ManagementTable";
 
 function Admins() {
   const [loading, setLoading] = useState(false);
@@ -134,7 +134,7 @@ function Admins() {
   return (
     <>
       { contextHolder }
-      <ManagementMember 
+      <ManagementTable 
         getData={getAdmins}
         setData={setData}
         tableParams={tableParams}

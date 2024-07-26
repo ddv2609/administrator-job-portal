@@ -79,12 +79,11 @@ function Admin() {
     },
   ];
 
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/admin/overview", {
+  const getOverviewInfo = async () => {
+    await axios.get("http://localhost:8000/api/admin/overview", {
       withCredentials: true,
     })
       .then(res => {
-        // console.log(res.data);
         setLoading(false);
         setData(res.data);
         dispatch(setAdminInfo(res.data.admin));
@@ -95,6 +94,11 @@ function Admin() {
         console.log(err);
         nav("/login");
       })
+  }
+
+  useEffect(() => {
+    getOverviewInfo();
+
     return () => {
       localStorage.removeItem("selected-key");
     }
@@ -147,7 +151,7 @@ function Admin() {
                 }}
               >
                 <FloatButton.BackTop target={() => contentRef.current} />
-                <Outlet context={{ data, admin }} />
+                <Outlet context={{ data, admin, getOverviewInfo }} />
               </Content>
               {/* <Footer
             style={{

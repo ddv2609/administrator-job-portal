@@ -12,6 +12,8 @@ const CompanySchema = new Schema({
   companySize: { type: Number },
   introduction: { type: String },
   website: { type: String },
+  taxCode: { type: String },
+  license: { type: String },
   address: {
     province: {
       type: String,
