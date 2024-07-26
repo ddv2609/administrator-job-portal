@@ -11,7 +11,7 @@ import { RiUserSearchFill } from "react-icons/ri";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./Employers.module.css";
-import ManagementMember from "../ManagementMember/ManagementMember";
+import ManagementTable from "../ManagementTable/ManagementTable";
 import { useOutletContext } from "react-router-dom";
 
 function Employers() {
@@ -28,6 +28,9 @@ function Employers() {
 
   const [openConfirmVerify, setOpenConfirmVerify] = useState(null);
   const [confirmVerifyLoading, setConfirmVerifyLoading] = useState(false);
+
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(null);
+  const [confirmDeleteLoading, setConfirmDeleteLoading] = useState(false);
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -49,7 +52,7 @@ function Employers() {
       .then(_ => {
         const employerIds = employers.map(employer => employer._id);
         setData(prev => prev.filter(employer => !employerIds.includes(employer._id)));
-        messageApi.success("Ẩn ứng viên thành công!");
+        messageApi.success("Ẩn nhà tuyển dụng thành công!");
       })
       .catch(err => {
         console.log(err);
@@ -71,7 +74,7 @@ function Employers() {
       .then(_ => {
         const employerIds = employers.map(employer => employer._id);
         setData(prev => prev.filter(employer => !employerIds.includes(employer._id)));
-        messageApi.success("Khôi phục ứng viên thành công!");
+        messageApi.success("Khôi phục nhà tuyển dụng thành công!");
       })
       .catch(err => {
         console.log(err);
@@ -130,6 +133,28 @@ function Employers() {
       })
   }
 
+  const handleConfirmDelete = async (employers) => {
+    setConfirmDeleteLoading(true);
+    await axios.post(`http://localhost:8000/api/admin/employers/delete`, {
+      members: employers.map(employer => ({ mbid: employer._id, email: employer.email, })),
+    }, {
+      withCredentials: true,
+    })
+      .then(_ => {
+        const employerIds = employers.map(employer => employer._id);
+        setData(prev => prev.filter(employer => !employerIds.includes(employer._id)));
+        messageApi.success("Xóa nhà tuyển dụng thành công!");
+      })
+      .catch(err => {
+        console.log(err);
+        messageApi.error(err.response?.data?.message);
+      })
+      .finally(() => {
+        setConfirmDeleteLoading(false);
+        setOpenConfirmDelete(null);
+      })
+  }
+
   const columns = [
     {
       title: "Avatar",
@@ -143,6 +168,7 @@ function Employers() {
         />
       </div>,
       width: "6%",
+      align: "center",
     },
     {
       title: "Họ tên",
@@ -247,7 +273,7 @@ function Employers() {
             </span>
           </Tooltip>
           <Tooltip title="Ẩn" placement="topRight">
-            <Popconfirm title="Ẩn nhà tuyển dụng" description="Bạn chắc chắn muốn ẩn nhà tuyển dụng này?"
+            <Popconfirm title="Ẩn nhà tuyển dụng" description="Bạn chắc chắn muốn ẩn nhà tuyển dụng này?" placement="topRight"
               icon={<QuestionCircleOutlined style={{ color: "#ff4d4f" }} />} open={openConfirmHidden === record._id}
               onConfirm={() => handleConfirmHidden([record])}
               onCancel={() => { if (!confirmHiddenLoading) setOpenConfirmHidden(null) }}
@@ -259,7 +285,7 @@ function Employers() {
           </Tooltip>
           <Tooltip title={record.status ? "Không khả dụng" : "Xác minh thủ công"} placement="topRight">
             <Popconfirm title="Xác minh nhà tuyển dụng" description="Bạn chắc chắn muốn xác minh cho nhà tuyển dụng này?"
-              icon={<QuestionCircleOutlined style={{ color: "#20bbc9" }} />} 
+              icon={<QuestionCircleOutlined style={{ color: "#20bbc9" }} />} placement="topRight"
               open={!record.status && openConfirmVerify === record._id}
               onConfirm={() => handleConfirmVerify([record])}
               onCancel={() => { if (!confirmVerifyLoading) setOpenConfirmVerify(null) }}
@@ -286,13 +312,14 @@ function Employers() {
   return (
     <>
       {contextHolder}
-      <ManagementMember 
+      <ManagementTable 
         getData={getEmployers}
         setData={setData}
         tableParams={tableParams}
         handleConfirmHidden={handleConfirmHidden}
         handleConfirmEnable={handleConfirmEnable}
         handleConfirmVerify={handleConfirmVerify}
+        handleConfirmDelete={handleConfirmDelete}
         setTableParams={setTableParams}
         uses={["refresh", "add", "export", "verify", "hidden", "enable", "delete"]}
         tabs={[{
@@ -313,7 +340,7 @@ function Employers() {
                 <Tooltip title="Bỏ ẩn" placement="topRight">
                   <Popconfirm title="Khôi phục ứng viên" description="Bạn chắc chắn muốn khôi phục ứng viên này?"
                     icon={<QuestionCircleOutlined style={{ color: "#20bbc9" }} />} open={openConfirmEnable === record._id}
-                    onConfirm={() => handleConfirmEnable([record])}
+                    onConfirm={() => handleConfirmEnable([record])} placement="topRight"
                     onCancel={() => { if (!confirmEnableLoading) setOpenConfirmEnable(null) }}
                   >
                     <span className={styles.restore} onClick={() => setOpenConfirmEnable(record._id)}>
@@ -322,9 +349,15 @@ function Employers() {
                   </Popconfirm>
                 </Tooltip>
                 <Tooltip title="Xóa vĩnh viễn" placement="topRight">
-                  <span className={styles.delete} >
-                    <RiDeleteBin6Line />
-                  </span>
+                  <Popconfirm title="Hành động không thể khôi phục" description="Bạn chắc chắn muốn xóa vĩnh viễn nhà tuyển dụng này?"
+                    icon={<QuestionCircleOutlined style={{ color: "#ff4d4f" }} />} open={openConfirmDelete === record._id}
+                    onConfirm={() => handleConfirmDelete([record])} placement="topRight"
+                    onCancel={() => { if (!confirmDeleteLoading) setOpenConfirmDelete(null) }}
+                  >
+                    <span className={styles.delete} onClick={() => setOpenConfirmDelete(record._id)} >
+                      <RiDeleteBin6Line />
+                    </span>
+                  </Popconfirm>
                 </Tooltip>
               </Space>
             ),

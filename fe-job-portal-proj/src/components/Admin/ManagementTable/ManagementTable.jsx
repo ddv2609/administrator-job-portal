@@ -1,13 +1,14 @@
 import { ConfigProvider, Modal, Tabs } from "antd";
 import { useState } from "react";
 
-import styles from "./ManagementMember.module.css";
+import styles from "./ManagementTable.module.css";
 import AdminTable from "../AdminTable/AdminTable";
 import { adminTableThemes } from "../../../helper";
 
-function ManagementMember({ getData, tabs, isRowSelection=true, 
-  tableParams, setTableParams, setData, uses=["all"], 
-  handleConfirmHidden, handleConfirmEnable, handleConfirmVerify }) {
+function ManagementMember({ getData=null, tabs=[], isRowSelection=true, 
+  tableParams={}, setTableParams=null, setData=null, uses=["all"], 
+  handleConfirmHidden=null, handleConfirmEnable=null, handleConfirmVerify=null,
+  handleConfirmDelete=null }) {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -102,6 +103,25 @@ function ManagementMember({ getData, tabs, isRowSelection=true,
     }
   }
 
+  const handleConfirmDeleteSelected = () => {
+    if (selectedRows.length) {
+      modal.warning({
+        title: "Hành động không thể khôi phục",
+        content: "Bạn chắc chắn muốn xóa tất cả các hàng được chọn!",
+        open: openModalConfirm,
+        okText: "Xác nhận",
+        closable: true,
+        onOk: async () => {
+          setConfirmLoading(true);
+          await handleConfirmDelete(selectedRows);
+          setConfirmLoading(false);
+          setOpenModalConfirm(false);
+        },
+        onCancel: () => { if (!confirmLoading) setOpenModalConfirm(false) },
+      })
+    } 
+  }
+
   return (
     <div className={styles.candidates}>
       <ConfigProvider theme={adminTableThemes} >
@@ -131,6 +151,7 @@ function ManagementMember({ getData, tabs, isRowSelection=true,
                   handleConfirmHiddenSelected={handleConfirmHiddenSelected}
                   handleConfirmEnableSelected={handleConfirmEnableSelected}
                   handleConfirmVerifySelected={handleConfirmVerifySelected}
+                  handleConfirmDeleteSelected={handleConfirmDeleteSelected}
                 />
             )
           })).map((table, index) => ({

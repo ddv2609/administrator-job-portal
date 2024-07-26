@@ -23,6 +23,7 @@
 
 .verifyEmail .content h2 {
   margin-top: 0;
+  margin-bottom: 8px;
 }
 
 .verifyEmail .content .btnAction {
@@ -31,6 +32,7 @@
   color: var(--title-color);
   border: 1px var(--title-color) solid;
   cursor: pointer;
+  margin-top: 24px;
 }
 
 .verifyEmail .content .btnAction:focus-within, 

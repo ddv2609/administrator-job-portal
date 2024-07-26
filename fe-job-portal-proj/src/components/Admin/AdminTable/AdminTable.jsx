@@ -12,9 +12,10 @@ import styles from "./AdminTable.module.css";
 
 const primaryColor = "#00b14f";
 
-function AdminTable({ title, columns, hidden = true, isRowSelection, selectedRowKeys, onSelectChange,
-  data, tableParams, loading, handleTableChange, columnSearches = [], handleRefresh
-  , uses = [], handleConfirmHiddenSelected, handleConfirmEnableSelected, handleConfirmVerifySelected }) {
+function AdminTable({ title="", columns=[], hidden=true, isRowSelection=true, selectedRowKeys=[], 
+  onSelectChange=null, data=[], tableParams={}, loading=false, handleTableChange=null, 
+  columnSearches = [], handleRefresh=null, uses = [], handleConfirmHiddenSelected=null, 
+  handleConfirmEnableSelected=null, handleConfirmVerifySelected=null, handleConfirmDeleteSelected=null }) {
   const actions = [
     { code: 1, key: "refresh", icon: <MdRefresh />, tooltip: "Làm mới", onClick: handleRefresh },
     { code: 2, key: "add", icon: <FaPlus />, tooltip: "Thêm mới" },
@@ -22,7 +23,7 @@ function AdminTable({ title, columns, hidden = true, isRowSelection, selectedRow
       key: hidden ? "delete" : "verify", 
       icon: hidden ? <RiDeleteBin6Line/> : <MdOutlineMarkEmailRead />, 
       tooltip: hidden ? "Xóa vĩnh viễn" : "Xác minh thủ công", 
-      onClick: () => hidden ? null : handleConfirmVerifySelected() },
+      onClick: () => hidden ? handleConfirmDeleteSelected() : handleConfirmVerifySelected() },
     { code: 4, 
       key: hidden ? "enable" : "hidden", 
       icon: hidden ? <MdOutlineSettingsBackupRestore/> : <MdHideSource />, 

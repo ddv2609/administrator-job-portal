@@ -48,6 +48,8 @@ export const adminTableThemes = {
       cellFontSizeMD: "13px",
       rowHoverBg: bgBlur,
       headerBorderRadius: 0,
+      rowSelectedBg: "#00b1501f",
+      rowSelectedHoverBg: "#00b15048"
     },
     Button: {
       colorPrimary: primaryColor,

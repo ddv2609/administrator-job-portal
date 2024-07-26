@@ -68,12 +68,19 @@ const MemberSchema = new Schema({
 //   overrideMethods: true,
 // });
 
-MemberSchema.pre("remove", async function(next) {
-  await mongoose.model("User").deleteOne({ member: this._id });
-  await mongoose.model("Employer").deleteOne({ member: this._id });
-  await mongoose.model("Admin").deleteOne({ member: this._id });
+// MemberSchema.pre("remove", async function(next) {
+//   try {
+//     await mongoose.model("User").deleteOne({ member: this._id });
+//     const employer = await mongoose.model("Employer").findOneAndDelete({ member: this._id });
+//     if (employer) {
+//       await mongoose.model("Company").deleteOne({ _id: employer.company });
+//     }
+//     await mongoose.model("Admin").deleteOne({ member: this._id });
 
-  next();
-});
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 module.exports = mongoose.model("Member", MemberSchema, "tblMember");
