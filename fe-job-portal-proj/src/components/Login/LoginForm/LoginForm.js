@@ -9,44 +9,6 @@ import { useNavigate } from "react-router-dom";
 function LoginForm({ handleSubmitLoginFrm, changeRole, roles, loading }) {
   const nav = useNavigate();
 
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const roles = [
-    { label: "Ứng viên", value: "candidate" },
-    { label: "Nhà tuyển dụng", value: "employer" },
-    { label: "Quản trị viên", value: "admin" },
-  ];
-
-  const handleSubmitLoginFrm = (values) => {
-    setLoading(true);
-    axios.post("http://localhost:8000/auth/login", values, {
-      withCredentials: true,
-    })
-      .then(res => {
-        dispatch(login(res.data));
-        messageApi.success("Đăng nhập thành công", 1).then(() => {
-          switch (values.role) {
-            case "admin":
-              nav("/admin/dashboard");
-              break;
-            case "employer":
-              nav("/employer/companyjob");
-              break;
-            default:
-              nav("/");
-          }
-        });
-      })
-      .catch(err => {
-        console.error(err.response.data);
-        messageApi.error(`Đăng nhập thất bại. ${err.response.data.message}!`, 10);
-      })
-      .finally(() => setLoading(false))
-  }
-
-  const handleSelectRole = (item) => {
-    changeRole(item);
-  }
   return (
     <div className={styles.login}>
       <Form
