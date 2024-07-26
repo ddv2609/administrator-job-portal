@@ -37,7 +37,7 @@ function LoginForm({ changeRole }) {
               nav("/admin/dashboard");
               break;
             case "employer":
-              nav("/employer");
+              nav("/employer/companyjob");
               break;
             default:
               nav("/");
