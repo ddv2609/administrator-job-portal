@@ -23,29 +23,40 @@ class AuthController {
     const member = await Member.findOne({ email: email });
 
     if (member && !member.hidden && member.verifiedAt !== null && member.role === role) {
-      bcrypt.compare(password, member.password, (err, result) => {
+      bcrypt.compare(password, member.password, async (err, result) => {
         if (result) {
-          let token = jwt.sign({
+          const payload = {
             id: member.id,
             role: member.role,
             fullName: member.fullName,
             email: member.email,
             avatar: member.avatar,
-          }, keys.jwtSecretKey, { expiresIn: "7d" });
+          };
+
+          switch (payload.role) {
+            case "employer":
+              const employer = await Employer.findOne({ member: member.id });
+              payload.uid = employer.id;
+              payload.companyId = employer.company;
+              break;
+            case "admin":
+              const admin = await Admin.findOne({ member: member.id });
+              payload.uid = admin.id;
+              break;
+            default:
+              const candidate = await Candidate.findOne({ member: member.id });
+              payload.uid = candidate.id;
+              break;
+          }
+
+          let token = jwt.sign(payload, keys.jwtSecretKey, { expiresIn: "7d" });
 
           res.cookie("jwt", token, {
             maxAge: 1000 * 60 * 60 * 24 * 7,
             httpOnly: true
           });
 
-          return res.json({
-            id: member.id,
-            role: member.role,
-            fullName: member.fullName,
-            email: member.email,
-            dob: member.dob,
-            avatar: member.avatar, 
-          });
+          return res.json(payload);
         } else {
           return res.status(401).json({
             message: "Email hoặc password không chính xác!",
@@ -56,7 +67,9 @@ class AuthController {
     } else {
       console.log(member);
       return res.status(401).json({
-        message: member?.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : "Email hoặc password không chính xác!",
+        message: member?.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : (
+          member?.verifiedAt ? "Email hoặc password không chính xác!" : "Tài khoản của bạn chưa được xác minh"
+        ),
       });
     }
 
