@@ -5,12 +5,9 @@ const mongoose = require("mongoose");
 
 class CandidateController {
 
-  // [GET] /api/candidate/info/:uid
+  // [GET] /api/candidate/info/
   async getInfo(req, res) {
-    const { uid } = req.params;
-
-    if (uid !== req.user.id)
-      return res.sendStatus(401);
+    const uid = req.user.id;
 
     try {
       const candidate = await Candidate.findOne({ member: uid }).select("-__v").populate({
@@ -29,11 +26,9 @@ class CandidateController {
     }
   }
 
-  // [POST] /api/candidate/info/:uid
+  // [POST] /api/candidate/info/
   async updateInfo(req, res) {
-    const { uid } = req.params;
-    if (uid !== req.user.id)
-      return res.sendStatus(401);
+    const uid = req.user.id;
 
     const info = req.body;
 
@@ -73,12 +68,9 @@ class CandidateController {
     }
   }
 
-  // [POST] /api/candidate/avatar/:uid
+  // [POST] /api/candidate/avatar/
   async updateAvatar(req, res) {
-    const { uid } = req.params;
-
-    if (uid !== req.user.id)
-      return res.sendStatus(401);
+    const uid = req.user.id;
 
     const { avatar } = req.body;
 
@@ -100,12 +92,9 @@ class CandidateController {
     }
   }
 
-  // [POST] /api/candidate/resumes/:uid
+  // [POST] /api/candidate/resumes/
   async updateResumes(req, res) {
-    const { uid } = req.params;
-
-    if (uid !== req.user.id)
-      return res.sendStatus(401);
+    const uid = req.user.id;
 
     const { resumes } = req.body;
 
@@ -131,12 +120,10 @@ class CandidateController {
     }
   }
 
-  // [DELETE] /api/candidate/:uid/resume/:resumeId
+  // [DELETE] /api/candidate/resume/:resumeId
   async deleteResume(req, res) {
-    const { resumeId, uid } = req.params;
-
-    if (uid !== req.user.id)
-      return res.sendStatus(401);
+    const uid = req.user.id;
+    const { resumeId } = req.params;
 
     try {
       await Candidate.updateOne({ member: uid }, {
