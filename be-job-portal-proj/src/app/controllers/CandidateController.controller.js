@@ -7,10 +7,10 @@ class CandidateController {
 
   // [GET] /api/candidate/info/
   async getInfo(req, res) {
-    const uid = req.user.id;
+    const mid = req.user.id;
 
     try {
-      const candidate = await Candidate.findOne({ member: uid }).select("-__v").populate({
+      const candidate = await Candidate.findOne({ member: mid }).select("-__v").populate({
         path: "member",
         select: "-updatedAt -password -role -hidden -__v"
       })
@@ -28,7 +28,7 @@ class CandidateController {
 
   // [POST] /api/candidate/info/
   async updateInfo(req, res) {
-    const uid = req.user.id;
+    const mid = req.user.id;
 
     const info = req.body;
 
@@ -36,7 +36,7 @@ class CandidateController {
       const session = await mongoose.startSession();
       session.startTransaction();
 
-      const candidate = await Candidate.findOneAndUpdate({ member: uid }, {
+      const candidate = await Candidate.findOneAndUpdate({ member: mid }, {
         education: info.education,
       }, { new: true }).select("-__v")
 
@@ -44,7 +44,7 @@ class CandidateController {
       delete info.avatar;
       delete info.education;
 
-      const member = await Member.findOneAndUpdate({ _id: uid }, {
+      const member = await Member.findOneAndUpdate({ _id: mid }, {
         ...info,
       }, { new: true }).select("-updatedAt -password -role -hidden -__v");
 
@@ -70,12 +70,12 @@ class CandidateController {
 
   // [POST] /api/candidate/avatar/
   async updateAvatar(req, res) {
-    const uid = req.user.id;
+    const mid = req.user.id;
 
     const { avatar } = req.body;
 
     try {
-      await Member.updateOne({ _id: uid }, {
+      await Member.updateOne({ _id: mid }, {
         avatar: avatar,
       });
 
@@ -94,12 +94,12 @@ class CandidateController {
 
   // [POST] /api/candidate/resumes/
   async updateResumes(req, res) {
-    const uid = req.user.id;
+    const mid = req.user.id;
 
     const { resumes } = req.body;
 
     try {
-      const newResumes = await Candidate.findOneAndUpdate({ member: uid }, {
+      const newResumes = await Candidate.findOneAndUpdate({ member: mid }, {
         $push: {
           resumes: {
             $each: resumes,
@@ -122,11 +122,11 @@ class CandidateController {
 
   // [DELETE] /api/candidate/resume/:resumeId
   async deleteResume(req, res) {
-    const uid = req.user.id;
+    const mid = req.user.id;
     const { resumeId } = req.params;
 
     try {
-      await Candidate.updateOne({ member: uid }, {
+      await Candidate.updateOne({ member: mid }, {
         $pull: {
           resumes: {
             _id: resumeId,

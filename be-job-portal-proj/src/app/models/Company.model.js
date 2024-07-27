@@ -28,6 +28,10 @@ const CompanySchema = new Schema({
       type: String,
       require: true,
     },
+    detail: {
+      type: String,
+      default: "",
+    }
   }
 });
 
