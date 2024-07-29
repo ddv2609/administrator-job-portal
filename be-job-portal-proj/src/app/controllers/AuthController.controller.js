@@ -30,7 +30,6 @@ class AuthController {
             role: member.role,
             fullName: member.fullName,
             email: member.email,
-            avatar: member.avatar,
           };
 
           switch (payload.role) {
@@ -56,7 +55,10 @@ class AuthController {
             httpOnly: true
           });
 
-          return res.json(payload);
+          return res.json({
+            ...payload,
+            avatar: member.avatar,
+          });
         } else {
           return res.status(401).json({
             message: "Email hoặc password không chính xác!",
@@ -67,9 +69,9 @@ class AuthController {
     } else {
       console.log(member);
       return res.status(401).json({
-        message: member?.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : (
-          member?.verifiedAt ? "Email hoặc password không chính xác!" : "Tài khoản của bạn chưa được xác minh"
-        ),
+        message: member ? (member.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : (
+          member.verifiedAt ? "Email hoặc password không chính xác!" : "Tài khoản của bạn chưa được xác minh"
+        )) : "Email hoặc password không chính xác!",
       });
     }
 

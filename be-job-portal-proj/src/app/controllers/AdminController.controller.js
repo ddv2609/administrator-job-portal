@@ -7,10 +7,59 @@ const Company = require("../models/Company.model");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
+const { bucket, getDownloadURL } = require("../../config/firebase");
 
 const mailer = require("../../utils/mail/mailing");
 
 class AdminController {
+  // [GET] /api/admin/info
+  async getAdminInfo(req, res) {
+    const uid = req.user.uid;
+
+    try {
+      const admin = await Admin.findById(uid).populate({
+        path: "member",
+        select: "-updatedAt -password -hiddenAt -hiddenBy"
+      }).select("-__v");
+
+      return res.json({
+        info: {
+          uid: admin._id,
+          ...admin.member.toObject(),
+        },
+      })
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [POST] /api/admin/info
+  async updateAdminInfo(req, res) {
+    const mid = req.user.id;
+    const info = req.body;
+    
+    try {
+      const member = await Member.findOneAndUpdate({ _id: mid }, {
+        ...info,
+      }, { new: true }).select("-updatedAt -password -role -hidden -__v");
+
+      return res.json({
+        info: {
+          uid: req.user.uid,
+          ...member.toObject(),
+        },
+      })
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
   // [GET] /api/admin/overview
   async overviewInfo(req, res) {
 
@@ -46,7 +95,6 @@ class AdminController {
       });
 
       return res.json({
-        admin: req.user,
         candidates: {
           currAmount: currCandidate,
           lastAmount: lastCandidate,
@@ -352,6 +400,71 @@ class AdminController {
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [POST] /api/admin/avatar
+  async updateAvatar(req, res) {
+    try {
+      if (!req.file)
+        return res.status(400).json({
+          message: "Chưa có file nào được tải lên!",
+        });
+      
+      const fileName = "avatar" + path.extname(req.file.originalname);
+
+      const [files] = await bucket.getFiles({ prefix: `admin/${req.user.id}/avatar` });
+      await Promise.all(files.map(file => file.delete()));
+
+      const blob = bucket.file(`admin/${req.user.id}/avatar/${fileName}`);
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        }
+      });
+
+      blobStream.on("error", (err) => {
+        return res.status(500).json({
+          message: err,
+        })
+      });
+
+      blobStream.on("finish", async () => {
+        const url = await getDownloadURL(blob);
+        await Member.updateOne({ _id: req.user.id }, {
+          avatar: url,
+        });
+
+        return res.json({
+          url,
+        });
+      });
+
+      blobStream.end(req.file.buffer);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [DELETE] api/admin/avatar
+  async deleteAvatar(req, res) {
+    try {
+      const [files] = await bucket.getFiles({ prefix: `admin/${req.user.id}/avatar` });
+      await Promise.all(files.map(file => file.delete()));
+
+      await Member.updateOne({ _id: req.user.id }, {
+        avatar: null,
+      });
+
+      res.sendStatus(200);
+    } catch (error) {
       console.log(error);
       return res.status(500).json({
         message: `Có lỗi xảy ra: Error code <${error.code}>`,
