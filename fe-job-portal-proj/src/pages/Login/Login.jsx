@@ -44,7 +44,7 @@ function CandidateLogin() {
               nav("/employer/companyjob");
               break;
             default:
-              nav("/candidate/candidate-profile");
+              nav("/");
           }
         });
       })

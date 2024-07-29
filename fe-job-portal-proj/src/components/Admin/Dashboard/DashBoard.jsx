@@ -46,7 +46,7 @@ function Dashboard() {
       getOverviewInfo(),
     ])
       .then(([candidates, employers]) => {
-        console.log(candidates, employers);
+        // console.log(candidates, employers);
         setDatas([{
           label: "Số lượng ứng viên",
           data: candidates.data.statistic

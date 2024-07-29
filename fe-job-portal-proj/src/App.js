@@ -27,10 +27,12 @@ import CompanyProflie from "./components/Employer/Company-Profile/Company-Profil
 import CompanyChat from "./components/Employer/Chat/Chat";
 import CompanyCandidateProflie from "./components/Employer/Candidate-Profile/Candidate-Profile";
 import CompanyCandidateList from "./components/Employer/Candidate-List/Candidate-List";
+import History from "./components/Admin/History/History";
 
 
 import { ConfigProvider } from "antd";
 import { themes } from "./helper";
+import Account from "./components/Admin/Account/Account";
 
 function App() {
   return (
@@ -64,6 +66,8 @@ function App() {
             <Route path="management/admins" element={<Admins />} />
             <Route path="management/companies" element={<Companies />} />
             <Route path="management/posted-job" element={<PostedJob />} />
+            <Route path="account" element={<Account />} />
+            <Route path="history" element={<History />} />
           </Route>
           <Route path="/verify/:status" element={<VerifyEmail />} />
           <Route path="/cv-management" element={<CVManagementPage />} />

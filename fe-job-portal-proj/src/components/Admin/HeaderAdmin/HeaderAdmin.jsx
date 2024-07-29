@@ -75,23 +75,26 @@ function HeaderAdmin({ collapsed, setCollapsed, admin }) {
         <Dropdown
           menu={{
             items: [
+              // {
+              //   key: "1",
+              //   label: <Space align="center" className={styles.actionItem}>
+              //     <span className={styles.actionIcon}><AiOutlineUser /></span> <span>Account</span>
+              //   </Space>, 
+              // },
               {
-                label: <Space align="center" className={styles.actionItem}>
-                  <span className={styles.actionIcon}><AiOutlineUser /></span> <span>Account</span>
-                </Space>, key: "1"
-              },
-              {
+                key: "1",
                 label: <Space align="center" className={styles.actionItem}>
                   <span className={styles.actionIcon}><AiOutlineMail /></span> <span>Inbox</span>
-                </Space>, key: "2"
+                </Space>, 
               },
               {
+                key: "2",
                 label: <Space align="center" className={styles.actionItem}>
                   <span className={styles.actionIcon}><AiOutlineSetting /></span> <span>Setting</span>
-                </Space>, key: "3"
+                </Space>,
               },
               {
-                key: "4",
+                key: "3",
                 label: <Space align="center" className={styles.actionItem}>
                   <span className={styles.actionIcon}><AiOutlineLogout /></span> <span>Logout</span>
                 </Space>,

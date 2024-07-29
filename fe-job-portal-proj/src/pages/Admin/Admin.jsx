@@ -1,13 +1,15 @@
 import { ConfigProvider, FloatButton, Layout, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { FaChartBar, FaUserShield, FaUserTie } from "react-icons/fa";
+import { FaChartBar, FaUserCircle, FaUserShield, FaUserTie } from "react-icons/fa";
 import { HiBuildingOffice2, HiUserGroup } from "react-icons/hi2";
 import { LoadingOutlined } from '@ant-design/icons';
 
 import { FaCheckToSlot } from "react-icons/fa6";
 import { Content, Header } from "antd/es/layout/layout";
 
-import { RiUserSearchFill } from "react-icons/ri";
+import { RiFunctionLine, RiUserSearchFill } from "react-icons/ri";
+import { FaHistory } from "react-icons/fa";
+import { TbSettingsCode } from "react-icons/tb";
 import AdminSider from "../../components/Admin/AdminSider/AdminSider";
 import HeaderAdmin from "../../components/Admin/HeaderAdmin/HeaderAdmin";
 
@@ -35,58 +37,94 @@ function Admin() {
 
   const itemsMenu = [
     {
-      key: '1',
-      icon: <FaChartBar />,
-      label: 'Dashboard',
-      nav: '/admin/dashboard',
-    },
-    {
-      key: '2',
-      icon: <HiUserGroup />,
-      label: 'List of members',
+      key: "features",
+      label: (<strong style={{ display:"flex", alignItems:"center", justifyContent: collapsed ? "center" : "start" } }>
+          {collapsed ? null : <RiFunctionLine />} <span style={collapsed ? null : { marginLeft: "4px" }}>FEATURES</span>
+        </strong>),
+      type: "group",
       children: [
         {
-          key: '2.1',
-          icon: <FaUserTie />,
-          label: 'Candidates',
-          nav: '/admin/management/candidates',
+          key: '1',
+          icon: <FaChartBar />,
+          label: 'Dashboard',
+          nav: '/admin/dashboard',
         },
         {
-          key: '2.2',
-          icon: <RiUserSearchFill />,
-          label: 'Employers',
-          nav: '/admin/management/employers',
+          key: '2',
+          icon: <HiUserGroup />,
+          label: 'List of members',
+          children: [
+            {
+              key: '2.1',
+              icon: <FaUserTie />,
+              label: 'Candidates',
+              nav: '/admin/management/candidates',
+            },
+            {
+              key: '2.2',
+              icon: <RiUserSearchFill />,
+              label: 'Employers',
+              nav: '/admin/management/employers',
+            },
+            {
+              key: '2.3',
+              icon: <FaUserShield />,
+              label: 'Admins',
+              nav: '/admin/management/admins',
+            }
+          ]
         },
         {
-          key: '2.3',
-          icon: <FaUserShield />,
-          label: 'Admins',
-          nav: '/admin/management/admins',
-        }
+          key: '3',
+          icon: <HiBuildingOffice2 />,
+          label: 'List of companies',
+          nav: '/admin/management/companies',
+        },
+        {
+          key: '4',
+          icon: <FaCheckToSlot />,
+          label: 'List of posted jobs',
+          nav: '/admin/management/posted-job',
+        },
       ]
     },
+    {  type: "divider" }, 
     {
-      key: '3',
-      icon: <HiBuildingOffice2 />,
-      label: 'List of companies',
-      nav: '/admin/management/companies',
-    },
-    {
-      key: '4',
-      icon: <FaCheckToSlot />,
-      label: 'List of posted jobs',
-      nav: '/admin/management/posted-job',
-    },
+      key: "admin",
+      label: (<strong style={{ display:"flex", alignItems:"center", justifyContent: collapsed ? "center" : "start" }}>
+          {collapsed ? null : <TbSettingsCode />} <span style={collapsed ? null : { marginLeft: "4px" }}>ADMIN</span>
+        </strong>),
+      type: "group",
+      children: [
+        {
+          key: "5",
+          icon: <FaUserCircle />,
+          label: "Account",
+          nav: "/admin/account"
+        },
+        {
+          key: "6",
+          icon: <FaHistory />,
+          label: "History",
+          nav: "/admin/history"
+        }
+      ],
+    }
   ];
 
   const getOverviewInfo = async () => {
-    await axios.get("http://localhost:8000/api/admin/overview", {
-      withCredentials: true,
-    })
-      .then(res => {
+    await Promise.all([
+      await axios.get("http://localhost:8000/api/admin/overview", {
+        withCredentials: true,
+      }),
+      await axios.get("http://localhost:8000/api/admin/info", {
+        withCredentials: true,
+      })
+    ])
+      .then(([resOverview, resInfo]) => {
         setLoading(false);
-        setData(res.data);
-        dispatch(setAdminInfo(res.data.admin));
+        setData(resOverview.data);
+        dispatch(setAdminInfo(resInfo.data.info));
         if (!admin)
           localStorage.setItem("selected-key", 1);
       })
