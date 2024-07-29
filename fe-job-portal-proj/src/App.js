@@ -10,7 +10,7 @@ import PostedJob from "./components/Admin/PostedJob/PostedJob";
 import Admin from "./pages/Admin/Admin";
 import Employer from "./pages/Employer/Employer";
 import CandidateSignUp from "./pages/CandidateSignUp/CandidateSignUp";
-import CVManagementPage from './pages/CVManagement/CVManagementPage';
+import CVManagementPage from "./pages/CVManagement/CVManagementPage";
 import EmployerSignUp from "./pages/EmployerSignUp/EmployerSignUp";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
@@ -27,7 +27,7 @@ import CompanyProflie from "./components/Employer/Company-Profile/Company-Profil
 import CompanyChat from "./components/Employer/Chat/Chat";
 import CompanyCandidateProflie from "./components/Employer/Candidate-Profile/Candidate-Profile";
 import CompanyCandidateList from "./components/Employer/Candidate-List/Candidate-List";
-
+import CandidateIndex from "./pages/CandidateIndex/CandidateIndex";
 
 import { ConfigProvider } from "antd";
 import { themes } from "./helper";
@@ -42,18 +42,38 @@ function App() {
           <Route path="/employer/index" element={<EmployeerIndex />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
           <Route path="/company/company-profile" element={<CompanyProfile />} />
-
+          <Route path="/candidate" element={<CandidateIndex />} />
           <Route path="/employer" element={<Employer />}>
             <Route path="company-profile" index element={<CompanyProflie />} />
-            <Route path="company-editprofile" index element={<CompanyEditProflie />} />
-            <Route path="companyjob-detail" index element={<CompanyJobDetail />} />
+            <Route
+              path="company-editprofile"
+              index
+              element={<CompanyEditProflie />}
+            />
+            <Route
+              path="companyjob-detail"
+              index
+              element={<CompanyJobDetail />}
+            />
             <Route path="companyjob-edit" index element={<CompanyJobEdit />} />
             <Route path="companyjob-post" index element={<CompanyJobPost />} />
             <Route path="companyjob" index element={<CompanyJob />} />
-            <Route path="employer-profile" index element={<EmployerProfile />} />
+            <Route
+              path="employer-profile"
+              index
+              element={<EmployerProfile />}
+            />
             <Route path="chat" index element={<CompanyChat />} />
-            <Route path="candidate-profile" index element={<CompanyCandidateProflie />} />
-            <Route path="candidate-list" index element={<CompanyCandidateList />} />
+            <Route
+              path="candidate-profile"
+              index
+              element={<CompanyCandidateProflie />}
+            />
+            <Route
+              path="candidate-list"
+              index
+              element={<CompanyCandidateList />}
+            />
           </Route>
 
           <Route path="/employer/sign-up" element={<EmployerSignUp />} />
