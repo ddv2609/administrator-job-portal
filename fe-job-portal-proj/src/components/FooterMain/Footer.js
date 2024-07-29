@@ -24,13 +24,7 @@ function Footer(props) {
             Job
           </h1>
         </div>
-        <p
-          style={{
-            fontWeight: "500",
-          }}
-        >
-          Tiếp lợi thế - Nối thành công
-        </p>
+
         <div className={styles.certificates}>
           <img
             src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/v4/image/footer/google_for_startup.png"
@@ -99,9 +93,6 @@ function Footer(props) {
           <li>
             <Link>Hỏi đáp</Link>
           </li>
-          <li>
-            <Link>Chính sách bảo mật</Link>
-          </li>
         </ul>
       </div>
       <div className={styles.footer_section_links}>
@@ -138,8 +129,6 @@ function Footer(props) {
           </li>
         </ul>
       </div>
-
-      <div className={styles.footer_section_social}></div>
     </div>
   );
 }

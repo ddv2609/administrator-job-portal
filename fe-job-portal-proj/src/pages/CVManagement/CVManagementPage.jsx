@@ -3,17 +3,11 @@ import React, { useState } from 'react';
 import CVList from '../../components/CandidateCV/CVList';
 import CVUpload from '../../components/CandidateCV/CVUpload';
 import UserInfo from '../../components/CandidateCV/UserInfo';
+import Footer from "../../components/FooterMain/Footer";
+import Header from "../../components/Header/Header";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
-const headerStyle = {   
-    textAlign: 'center',
-    color: '#fff',
-    height: 64,
-    paddingInline: 48,
-    lineHeight: '64px',
-    backgroundColor: '#4096ff'
-};
 const contentStyle = {
     padding: 10,
     borderRadius: 8,
@@ -25,14 +19,13 @@ const siderStyle = {
     borderRadius: 8,
     backgroundColor: '#fff',
     margin: '20px 100px 20px 10px',
+    display: 'inline-block',
 };
-const footerStyle = {
-    textAlign: 'center',
-    color: '#fff',
-};
+
 const layoutStyle = {
     borderRadius: 8,
     overflow: 'hidden',
+    minHeight: '100vh',
 };
 
 
@@ -56,8 +49,8 @@ const CVManagementPage = () => {
     };
     return (
         <Layout style={layoutStyle}>
-            <Header style={headerStyle}></Header>
-            <Layout>
+            <Header />
+            <Layout style={{ paddingTop: 64 }}>
                 <Content style={contentStyle}>
                     <div>
                         <h1>Hồ sơ & CV</h1>
@@ -71,7 +64,7 @@ const CVManagementPage = () => {
                     </div>
                 </Sider>
             </Layout>
-            <Footer style={footerStyle}></Footer>
+            <Footer />
         </Layout>
     );
 };
