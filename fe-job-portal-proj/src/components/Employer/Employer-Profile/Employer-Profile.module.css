@@ -58,7 +58,9 @@
   
   .address,
   .phonenumber,
-  .employees {
+  .email,
+  .dob,
+  .gender {
     margin: 10px 0;
     font-weight: bold;
   white-space: nowrap;
