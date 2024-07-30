@@ -14,8 +14,9 @@ function JobDetail() {
       <div className={styles.header}>
       <div className={styles.jobActions}>
           <button className={styles.editButton} onClick={() => navigate('/employer/companyjob-edit')} >Sửa</button>
-          <button className={styles.deleteButton}>Xóa</button>
+          <button className={styles.deleteButton}>Đóng</button> 
         </div>
+        {/* Chỗ này cho trạng thái đóng hoặc mở */}
         <button className={styles.backButton} onClick={handleBackClick}>← Quay lại</button>
         
       </div>
@@ -112,6 +113,13 @@ function JobDetail() {
             </div>
             <div className={styles.infoItem}>
               <span className={styles.infoLabel}>Giới tính:</span>
+              <span>Không yêu cầu</span>
+            </div>
+            <div className={styles.infoItem1}>
+              <div className={styles.infoLabel1}>Ngành nghề:</div>
+              <span>Không yêu cầu</span>
+              <span>Không yêu cầu</span>
+              <span>Không yêu cầu</span>
               <span>Không yêu cầu</span>
             </div>
           </div>

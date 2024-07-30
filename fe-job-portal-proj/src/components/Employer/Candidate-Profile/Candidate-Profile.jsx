@@ -28,7 +28,19 @@ function CandidateProfile() {
                 />
                 <h1 className={styles.Name}>Ptit</h1>
             </div>
-            <div className={styles.details}>              
+            <div className={styles.details}>
+                <div>
+                    <span className={styles.Gender}>Giới tính: </span>
+                    <span>Nam</span>
+                </div>      
+                <div>
+                    <span className={styles.Dob}>Ngày Sinh: </span>
+                    <span>11/04/2000</span>
+                </div>
+                <div>
+                    <span className={styles.Address}>Địa Chỉ: </span>
+                    <span>hà Nội</span>
+                </div>        
                 <div>
                     <span className={styles.PhoneNumber}>Số điện thoại: </span>
                     <span>123</span>

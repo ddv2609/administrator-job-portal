@@ -22,6 +22,7 @@ import CompanyJobDetail from "./components/Employer/Job-Detail/Job-Detail";
 import CompanyJobEdit from "./components/Employer/Job-Edit/Job-Edit";
 import CompanyJobPost from "./components/Employer/Job-Post/Job-Post";
 import EmployerProfile from "./components/Employer/Employer-Profile/Employer-Profile";
+import EmployerEditProfile from "./components/Employer/Employer-EditProfile/Employer-EditProfile";
 import CompanyEditProflie from "./components/Employer/Company-EditProfile/Company-EditProfile";
 import CompanyProflie from "./components/Employer/Company-Profile/Company-Profile";
 import CompanyChat from "./components/Employer/Chat/Chat";
@@ -62,6 +63,11 @@ function App() {
               path="employer-profile"
               index
               element={<EmployerProfile />}
+            />
+            <Route
+              path="employer-editprofile"
+              index
+              element={<EmployerEditProfile />}
             />
             <Route path="chat" index element={<CompanyChat />} />
             <Route
