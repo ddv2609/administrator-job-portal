@@ -1,5 +1,6 @@
-import React from 'react';
 import { Layout } from "antd";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 import styles from "./Header.module.css";
 
 
@@ -39,7 +40,7 @@ function Header_CandidateIndex(props) {
                             </li>
 
                             <li className={styles.menu_dropdonw_hackjob}>
-                                <a href="#guide">Hồ sơ và CV</a>
+                                <a href="/candidate/cv-management">Hồ sơ và CV</a>
                                 <div
                                     className={styles.dropdonw_items_hackjob}
                                     style={{
@@ -134,6 +135,7 @@ function Header_CandidateIndex(props) {
                     </div>
                 </div>
             </Layout >
+            <Outlet />
         </div >
     );
 }
