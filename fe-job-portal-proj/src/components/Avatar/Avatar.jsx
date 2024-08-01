@@ -114,7 +114,7 @@ function Avatar({ API }) {
           <div className={styles.avatarUpload} onClick={() => setPreviewOpen(true)}>
             { upload ? <Spin indicator={ <LoadingOutlined style={{ fontSize: 24, }} spin /> }/> : (
               <>
-                <img src={admin.avatar} className={styles.avatar} alt="Avatar" />
+                <img src={admin.avatar || "/avatar.png"} className={styles.avatar} alt="Avatar" />
                 <EyeOutlined className={styles.iconEye} />
               </>
             ) }
@@ -144,7 +144,7 @@ function Avatar({ API }) {
           visible: previewOpen,
           onVisibleChange: (visible) => setPreviewOpen(visible),
         }}
-        src={admin.avatar}
+        src={admin.avatar || "/avatar.png"}
       />
     </div>
   );

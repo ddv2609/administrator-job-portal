@@ -191,7 +191,6 @@ class CandidateController {
 
       await bucket.file(`candidate/${req.user.id}/resumes/${resumeFile.name}`).delete();
 
-      console.log("success");
       return res.sendStatus(200);
     } catch (error) {
       console.log(error);

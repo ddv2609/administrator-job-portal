@@ -6,7 +6,7 @@ const storage = multer.memoryStorage();
 const uploadImage = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // < 5MB
+    fileSize: 10 * 1024 * 1024 // < 10MB
   },
   fileFilter: (req, file, cb) => {
     const filetypes = /jpeg|jpg|png|gif|tiff|psd|pdf|ico|svg|ai|indd|raw/;
@@ -25,7 +25,7 @@ const uploadImage = multer({
 const uploadResume = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // < 5MB
+    fileSize: 10 * 1024 * 1024 // < 10MB
   },
   fileFilter: (req, file, cb) => {
     const filetypes = /pdf|docx|doc/;

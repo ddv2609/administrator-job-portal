@@ -6,6 +6,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 import { FaCheckToSlot } from "react-icons/fa6";
 import { Content, Header } from "antd/es/layout/layout";
+import { IoChatboxEllipsesSharp } from "react-icons/io5";
 
 import { RiFunctionLine, RiUserSearchFill } from "react-icons/ri";
 import { FaHistory } from "react-icons/fa";
@@ -23,7 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const primaryColor = "#00b14f";
 
-function Admin() {
+function Admin({ socket }) {
   const [collapsed, setCollapsed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
@@ -104,39 +105,50 @@ function Admin() {
         },
         {
           key: "6",
+          icon: <IoChatboxEllipsesSharp />,
+          label: "Chat",
+          nav: "/admin/chat"
+        },
+        {
+          key: "7",
           icon: <FaHistory />,
           label: "History",
           nav: "/admin/history"
-        }
+        },
       ],
     }
   ];
 
   const getOverviewInfo = async () => {
-    await Promise.all([
-      await axios.get("http://localhost:8000/api/admin/overview", {
-        withCredentials: true,
-      }),
-      await axios.get("http://localhost:8000/api/admin/info", {
-        withCredentials: true,
-      })
-    ])
-      .then(([resOverview, resInfo]) => {
-        setLoading(false);
-        setData(resOverview.data);
-        dispatch(setAdminInfo(resInfo.data.info));
-        if (!admin)
-          localStorage.setItem("selected-key", 1);
-      })
-      .catch(err => {
-        console.log(err);
+    try {
+      const [resOverview, resInfo] = await Promise.all([
+        axios.get("http://localhost:8000/api/admin/overview", {
+          withCredentials: true,
+        }),
+        axios.get("http://localhost:8000/api/admin/info", {
+          withCredentials: true,
+        })
+      ]);
+
+      setLoading(false);
+      setData(resOverview.data);
+      dispatch(setAdminInfo(resInfo.data.info));
+      // if (!admin)
+      //   localStorage.setItem("selected-key", 1);
+      return resInfo.data.info;
+    } catch (error) {
+      console.log(error);
+      const code = error.response.status;
+      console.log(code);
+      if (400 <= code && code < 500)
         nav("/login");
-      })
+    }
   }
 
   useEffect(() => {
-    getOverviewInfo();
-
+    getOverviewInfo()
+      .then(admin => socket.emit("online", admin._id));
+    
     return () => {
       localStorage.removeItem("selected-key");
     }
@@ -175,6 +187,7 @@ function Admin() {
                   collapsed={collapsed}
                   setCollapsed={setCollapsed}
                   admin={admin}
+                  socket={socket}
                 />
               </Header>
               <Content

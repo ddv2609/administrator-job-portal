@@ -12,7 +12,7 @@ import { logout } from "../../../actions";
 import styles from "./HeaderAdmin.module.css";
 import { useEffect, useState } from "react";
 
-function HeaderAdmin({ collapsed, setCollapsed, admin }) {
+function HeaderAdmin({ collapsed, setCollapsed, admin, socket }) {
   const [fullScreen, setFullScreen] = useState(false);
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -22,6 +22,7 @@ function HeaderAdmin({ collapsed, setCollapsed, admin }) {
       withCredentials: true,
     })
       .then(_ => {
+        socket.emit("leave");
         dispatch(logout());
         nav("/login");
       })

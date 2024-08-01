@@ -1,5 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
+import socketClient from "socket.io-client";
+
 import Admins from "./components/Admin/Admins/Admins";
 import Candidates from "./components/Admin/Candidates/Candidates";
 import Companies from "./components/Admin/Companies/Companies";
@@ -33,6 +35,20 @@ import History from "./components/Admin/History/History";
 import { ConfigProvider } from "antd";
 import { themes } from "./helper";
 import Account from "./components/Admin/Account/Account";
+import Chat from "./components/Admin/Chat/Chat";
+
+const socket = socketClient("http://127.0.0.1:8000", {
+  reconnectionAttempts: 5,
+  reconnectionDelay: 10000,
+  reconnection: true,
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 3 * 60 * 1000, // 2 minutes
+    skipMiddlewares: true,
+  },
+  query: {
+    uid: new Date().getTime(),
+  }
+});
 
 function App() {
   return (
@@ -59,7 +75,7 @@ function App() {
           </Route>
 
           <Route path="/employer/sign-up" element={<EmployerSignUp />} />
-          <Route path="admin/" element={<Admin />}>
+          <Route path="admin/" element={<Admin socket={socket} />}>
             <Route path="dashboard" index element={<Dashboard />} />
             <Route path="management/candidates" element={<Candidates />} />
             <Route path="management/employers" element={<Employers />} />
@@ -67,6 +83,7 @@ function App() {
             <Route path="management/companies" element={<Companies />} />
             <Route path="management/posted-job" element={<PostedJob />} />
             <Route path="account" element={<Account />} />
+            <Route path="chat" element={<Chat socket={socket} />} />
             <Route path="history" element={<History />} />
           </Route>
           <Route path="/verify/:status" element={<VerifyEmail />} />
