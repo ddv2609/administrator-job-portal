@@ -18,15 +18,15 @@ const CompanySchema = new Schema({
   address: {
     province: {
       type: String,
-      require: true,
+      required: true,
     },
     district: {
       type: String,
-      require: true,
+      required: true,
     },
     ward: {
       type: String,
-      require: true,
+      required: true,
     },
     detail: {
       type: String,

@@ -8,7 +8,7 @@ import { adminTableThemes } from "../../../helper";
 function ManagementMember({ getData=null, tabs=[], isRowSelection=true, 
   tableParams={}, setTableParams=null, setData=null, uses=["all"], 
   handleConfirmHidden=null, handleConfirmEnable=null, handleConfirmVerify=null,
-  handleConfirmDelete=null }) {
+  handleConfirmDelete=null, columnSearches=[] }) {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -145,7 +145,7 @@ function ManagementMember({ getData=null, tabs=[], isRowSelection=true,
                   tableParams={tableParams}
                   onSelectChange={onSelectChange}
                   handleTableChange={handleTableChange}
-                  columnSearches={["fullName", "email", "tel", "address"]}
+                  columnSearches={["fullName", "email", "tel", "address", ...columnSearches]}
                   handleRefresh={() => getData(tableParams.pagination.current, tableParams.pagination.pageSize
                     , index ? true : false)}
                   handleConfirmHiddenSelected={handleConfirmHiddenSelected}

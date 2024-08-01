@@ -3,6 +3,7 @@ const Employer = require("../models/Employer.model");
 const Admin = require("../models/Admin.model");
 const Member = require("../models/Member.model");
 const Company = require("../models/Company.model");
+const Job = require("../models/Job.model");
 
 const mongoose = require("mongoose");
 const fs = require("fs");
@@ -40,7 +41,7 @@ class AdminController {
   async updateAdminInfo(req, res) {
     const mid = req.user.id;
     const info = req.body;
-    
+
     try {
       const member = await Member.findOneAndUpdate({ _id: mid }, {
         ...info,
@@ -65,46 +66,105 @@ class AdminController {
 
     // await new Promise((resolve) => setTimeout(resolve, 5000));
 
-    const today = new Date();
+    try {
+      const today = new Date();
 
-    const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    const firstDayOfCurrMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastDayOfCurrMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const firstDayOfCurrMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const lastDayOfCurrMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      await Promise.all([
+        await Job.find({
+          createdAt: {
+            $gte: firstDayOfLastMonth,
+            $lte: lastDayOfCurrMonth,
+          },
+        }),
+        await Member.find({
+          createdAt: {
+            $gte: firstDayOfLastMonth,
+            $lte: lastDayOfCurrMonth,
+          },
+          $or: [
+            { role: "candidate", },
+            { role: "employer", },
+          ]
+        })
+      ]).then(([jobs, members]) => {
+        let [currCandidate, currEmployer, lastCandidate, lastEmployer, currJob, lastJob] = [0, 0, 0, 0, 0, 0];
+        members.forEach((member) => {
+          if (member.role === "candidate") {
+            if (firstDayOfCurrMonth <= member.createdAt && member.createdAt <= lastDayOfCurrMonth)
+              currCandidate++;
+            else lastCandidate++;
+          } else {
+            if (firstDayOfCurrMonth <= member.createdAt && member.createdAt <= lastDayOfCurrMonth)
+              currEmployer++;
+            else lastEmployer++;
+          }
+        });
 
-    await Member.find({
-      createdAt: {
-        $gte: firstDayOfLastMonth,
-        $lte: lastDayOfCurrMonth,
-      },
-      $or: [
-        { role: "candidate", },
-        { role: "employer", },
-      ]
-    }).then(members => {
-      let [currCandidate, currEmployer, lastCandidate, lastEmployer] = [0, 0, 0, 0];
-      members.forEach((member) => {
-        if (member.role === "candidate") {
-          if (firstDayOfCurrMonth <= member.createdAt && member.createdAt <= lastDayOfCurrMonth)
-            currCandidate++;
-          else lastCandidate++;
-        } else {
-          if (firstDayOfCurrMonth <= member.createdAt && member.createdAt <= lastDayOfCurrMonth)
-            currEmployer++;
-          else lastEmployer++;
-        }
+        jobs.forEach((job) => {
+          if (firstDayOfCurrMonth <= job.createdAt && job.createdAt <= lastDayOfCurrMonth)
+            currJob++;
+          else lastJob++;
+        })
+
+        return res.json({
+          candidates: {
+            currAmount: currCandidate,
+            lastAmount: lastCandidate,
+          },
+          employers: {
+            currAmount: currEmployer,
+            lastAmount: lastEmployer,
+          },
+          jobs: {
+            currAmount: currJob,
+            lastAmount: lastJob,
+          }
+        });
+      })
+
+      // await Member.find({
+      //   createdAt: {
+      //     $gte: firstDayOfLastMonth,
+      //     $lte: lastDayOfCurrMonth,
+      //   },
+      //   $or: [
+      //     { role: "candidate", },
+      //     { role: "employer", },
+      //   ]
+      // }).then(members => {
+      //   let [currCandidate, currEmployer, lastCandidate, lastEmployer] = [0, 0, 0, 0];
+      //   members.forEach((member) => {
+      //     if (member.role === "candidate") {
+      //       if (firstDayOfCurrMonth <= member.createdAt && member.createdAt <= lastDayOfCurrMonth)
+      //         currCandidate++;
+      //       else lastCandidate++;
+      //     } else {
+      //       if (firstDayOfCurrMonth <= member.createdAt && member.createdAt <= lastDayOfCurrMonth)
+      //         currEmployer++;
+      //       else lastEmployer++;
+      //     }
+      //   });
+
+      //   return res.json({
+      //     candidates: {
+      //       currAmount: currCandidate,
+      //       lastAmount: lastCandidate,
+      //     },
+      //     employers: {
+      //       currAmount: currEmployer,
+      //       lastAmount: lastEmployer,
+      //     }
+      //   });
+      // })
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
       });
-
-      return res.json({
-        candidates: {
-          currAmount: currCandidate,
-          lastAmount: lastCandidate,
-        },
-        employers: {
-          currAmount: currEmployer,
-          lastAmount: lastEmployer,
-        }
-      });
-    })
+    }
   }
 
   // [GET] /api/admin/statistic/<role>
@@ -136,13 +196,41 @@ class AdminController {
     })
   }
 
+  // [GET] /api/admin/statistic/jobs
+  async statisticPostedJobs(req, res) {
+
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const pos = req.params.role;
+
+    const months = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    const today = new Date();
+    const currentMonth = today.getMonth();
+
+    await Job.find({
+      createdAt: {
+        $gte: new Date(today.getFullYear(), 0, 1),
+        $lte: new Date(today.getFullYear(), currentMonth + 1, 0),
+      },
+    }).then(jobs => {
+      const data = Array(currentMonth + 1).fill(0);
+      jobs.forEach((job) => data[new Date(job.createdAt).getMonth()]++);
+
+      return res.json({
+        labels: months.slice(0, today.getMonth() + 1),
+        statistic: data,
+      });
+    })
+  }
+
   // [GET] /api/admin/list/<role>?hidden=<boolean>&page=<number>&size=<number>
   async getListMembers(req, res) {
     const { role } = req.params;
     const { hidden, page, size } = req.query;
 
     try {
-      const total = await Member.countDocuments({ 
+      const total = await Member.countDocuments({
         role: role,
         hidden: hidden === "true",
       });
@@ -153,7 +241,7 @@ class AdminController {
         case "employer":
           const employers = await Employer.find({}).populate({
             path: "member",
-            match: { 
+            match: {
               hidden: hidden === "true",
             },
             options: { skip: (page - 1) * size, limit: size },
@@ -164,7 +252,7 @@ class AdminController {
         case "admin":
           const admins = await Admin.find({}).populate({
             path: "member",
-            match: { 
+            match: {
               hidden: hidden === "true",
             },
             options: { skip: (page - 1) * size, limit: size },
@@ -175,7 +263,7 @@ class AdminController {
         case "candidate":
           const candidates = await Candidate.find({}).populate({
             path: "member",
-            match: { 
+            match: {
               hidden: hidden === "true",
             },
             options: { skip: (page - 1) * size, limit: size },
@@ -273,7 +361,7 @@ class AdminController {
     const { members } = req.body;
     const emails = members?.map((mem) => mem.email);
     const memIds = members?.map((mem) => mem.mbid);
-    
+
     try {
       await Member.updateMany({ _id: { $in: memIds } }, {
         verifiedAt: new Date(),
@@ -298,12 +386,12 @@ class AdminController {
     }
   }
 
-  // [GET] /api/admin/all/companies?hidden=<boolean>&page=<number>&size=<number>
+  // [GET] /api/admin/list/companies?hidden=<boolean>&page=<number>&size=<number>
   async getListCompanies(req, res) {
     const { hidden, page, size } = req.query;
 
     try {
-      const total = await Member.countDocuments({ 
+      const total = await Member.countDocuments({
         role: "employer",
         hidden: hidden === "true",
       });
@@ -311,7 +399,7 @@ class AdminController {
       const employers = await Employer.find({})
         .populate({
           path: "member",
-          match: { 
+          match: {
             hidden: hidden === "true",
           },
           options: { skip: (page - 1) * size, limit: size },
@@ -320,7 +408,7 @@ class AdminController {
         .populate({
           path: "company",
         })
-      
+
       const companies = employers.filter(employer => employer.member !== null);
 
       return res.json({
@@ -339,13 +427,107 @@ class AdminController {
     }
   }
 
+  // [GET] /api/admin/list/posted-job?hidden=<boolean>&page=<number>&size=<number>
+  async getListPostedJob(req, res) {
+    const { hidden, page, size } = req.query;
+
+    try {
+      const total = await Job.countDocuments({
+        hidden: hidden === "true",
+      });
+
+      const jobs = await Job.find({
+        hidden: hidden === "true",
+      })
+        .skip((page - 1) * size)
+        .limit(size)
+        .populate({
+          path: "categories",
+        })
+        .populate({
+          path: "company",
+        })
+
+      return res.json({
+        jobs,
+        info: {
+          page,
+          size,
+          total,
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [POST] /api/admin/posted-job/hidden
+  async hiddenPostedJobs(req, res) {
+    const { jobs, adminId } = req.body;
+
+    try {
+      await Job.updateMany({ _id: { $in: jobs } }, {
+        hidden: true,
+        hiddenAt: new Date(),
+        hiddenBy: adminId,
+      })
+
+      return res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: ${error.code ? "Error code <" + error.code + ">" : error.message}`,
+      })
+    }
+  }
+
+  // [POST] /api/admin/posted-job/enable
+  async enablePostedJobs(req, res) {
+    const { jobs } = req.body;
+
+    try {
+      await Job.updateMany({ _id: { $in: jobs } }, {
+        hidden: false,
+        hiddenAt: null,
+        hiddenBy: null,
+      })
+
+      return res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: ${error.code ? "Error code <" + error.code + ">" : error.message}`,
+      })
+    }
+  }
+
+  // [DELETE] /api/admin/posted-job/delete
+  async deletePostedJob(req, res) {
+    const { jobs } = req.body;
+    try {
+      await Job.deleteMany({
+        _id: { $in: jobs }
+      });
+
+      return res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
   // [DELETE] /api/admin/:role/delete
   async deleteMembers(req, res) {
     const { role } = req.params;
     const { members } = req.body;
     const emails = members?.map((mem) => mem.email);
     const memIds = members?.map((mem) => mem.mbid);
-    console.log(emails, memIds);
+
     try {
       const session = await mongoose.startSession();
       session.startTransaction();
@@ -357,7 +539,7 @@ class AdminController {
             match: { _id: { $in: memIds } },
             select: "",
           });
-          console.log(employers);
+          // console.log(employers);
           employers = employers.filter(employer => employer.member)
           const employerIds = employers.map(employer => employer._id);
           const companies = employers.map(employer => employer.company);
@@ -365,6 +547,7 @@ class AdminController {
           await Promise.all([
             await Company.deleteMany({ _id: { $in: companies } }),
             await Employer.deleteMany({ _id: { $in: employerIds } }),
+            await Job.deleteMany({ company: { $elemMatch: { _id: { $in: companies } } } })
           ]);
           break;
         case "candidates":
@@ -414,7 +597,7 @@ class AdminController {
         return res.status(400).json({
           message: "Chưa có file nào được tải lên!",
         });
-      
+
       const fileName = "avatar" + path.extname(req.file.originalname);
 
       const [files] = await bucket.getFiles({ prefix: `admin/${req.user.id}/avatar` });

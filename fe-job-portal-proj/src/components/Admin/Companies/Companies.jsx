@@ -110,7 +110,7 @@ function Companies() {
       withCredentials: true,
     })
       .then(res => {
-        console.log(res.data.companies, pos);
+        // console.log(res.data.companies, pos);
         setData(res.data.companies?.map((data) => ({
           uid: data._id,
           companyId: data.company._id,

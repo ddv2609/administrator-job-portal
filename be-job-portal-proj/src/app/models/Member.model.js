@@ -57,7 +57,9 @@ const MemberSchema = new Schema({
   hiddenBy: { 
     type: Schema.Types.ObjectId, 
     ref: "Member", 
-  }
+  },
+  online: { type: Boolean },
+  onlineAt: { type: Date },
 }, {
   timestamps: true,
 });

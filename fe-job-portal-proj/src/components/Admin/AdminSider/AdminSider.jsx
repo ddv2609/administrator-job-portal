@@ -17,7 +17,9 @@ function AdminSider({ items = [], collapsed = false, admin }) {
       <Sider trigger={null} collapsible collapsed={collapsed}
         theme="light"
         style={{
-          height: '100%',
+          height: "100vh",
+          overflow: "auto",
+          scrollbarWidth: "none",
         }}
       // onClick={() => setCollapsed(false)}
       >
