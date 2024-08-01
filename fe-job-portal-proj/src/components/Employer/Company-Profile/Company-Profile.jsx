@@ -37,7 +37,11 @@ function CompanyProflie() {
         getCompany();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const navigate = useNavigate();
     return (
+        <div>
+
         <div className={styles.container}>
             <div className={styles.header}>
                 <img
@@ -71,9 +75,13 @@ function CompanyProflie() {
                     <span>{companySize}</span>
                 </div>
             </div>
+            <div className={styles.jobActions}>
+            <button className={styles.editButton} onClick={() => navigate('/employer/company-editprofile')} >Sửa</button>
+          </div>   
+            
+        </div>
         </div>
     );
 };
 
 export default CompanyProflie;
-

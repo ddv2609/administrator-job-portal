@@ -92,7 +92,7 @@ function Employers() {
       withCredentials: true,
     })
       .then(res => {
-        console.log(res.data.members, pos);
+        // console.log(res.data.members, pos);
         setData(res.data.members?.map((data) => ({
           uid: data._id,
           ...data.member,

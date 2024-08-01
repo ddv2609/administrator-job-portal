@@ -20,7 +20,9 @@ class AuthController {
   async loginWithPassword(req, res) {
     const { email, password, role } = req.body;
 
-    const member = await Member.findOne({ email: email });
+    const member = await Member.findOneAndUpdate({ email: email }, {
+      onlineAt: Date.now(),
+    }, { new: true });
 
     if (member && !member.hidden && member.verifiedAt !== null && member.role === role) {
       bcrypt.compare(password, member.password, async (err, result) => {
@@ -30,7 +32,6 @@ class AuthController {
             role: member.role,
             fullName: member.fullName,
             email: member.email,
-            avatar: member.avatar,
           };
 
           switch (payload.role) {
@@ -56,7 +57,10 @@ class AuthController {
             httpOnly: true
           });
 
-          return res.json(payload);
+          return res.json({
+            ...payload,
+            avatar: member.avatar,
+          });
         } else {
           return res.status(401).json({
             message: "Email hoặc password không chính xác!",
@@ -65,11 +69,11 @@ class AuthController {
       });
 
     } else {
-      console.log(member);
+      // console.log(member);
       return res.status(401).json({
-        message: member?.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : (
-          member?.verifiedAt ? "Email hoặc password không chính xác!" : "Tài khoản của bạn chưa được xác minh"
-        ),
+        message: member ? (member.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : (
+          member.verifiedAt ? "Email hoặc password không chính xác!" : "Tài khoản của bạn chưa được xác minh"
+        )) : "Email hoặc password không chính xác!",
       });
     }
 
@@ -239,7 +243,11 @@ class AuthController {
   }
 
   // [GET] /auth/logout
-  logout(req, res) {
+  async logout(req, res) {
+    await Member.updateOne({ email: req.user.email }, { 
+      online: false,
+      onlineAt: Date.now(),
+    });
     res.clearCookie("jwt");
     res.sendStatus(200);
   }

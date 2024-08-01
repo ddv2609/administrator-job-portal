@@ -7,7 +7,8 @@ module.exports.verifyJwt = (req, res, next) => {
   if (token) {
     let isAllow = true, info;
     jwt.verify(token, keys.jwtSecretKey, (err, decoded) => {
-      if (err && err.name === "TokenExpiredError") {
+      // err.name === "TokenExpiredError"
+      if (err) {
         isAllow = false;
       }
 

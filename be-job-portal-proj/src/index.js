@@ -1,6 +1,8 @@
 const express = require("express");
+const { createServer } = require("node:http");
 
 const app = express();
+const server = createServer(app);
 
 require('dotenv').config();
 
@@ -9,6 +11,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const route = require("./routes");
+const { runMessageService } = require("./app/controllers/MessageService");
 
 const db = require("./config/database");
 
@@ -24,7 +27,8 @@ app.use(cookieParser());
 
 // Middleware for CORS policy
 app.use(cors({
-  origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
+  origin: ["http://127.0.0.1:3000", "http://localhost:3000", 
+    "http://127.0.0.1:5000", "http://localhost:5000"],
   credentials: true,  
 }));
 
@@ -34,6 +38,9 @@ db.connect();
 // Route app
 route(app);
 
+// Connect message service
+runMessageService(server);
+
 const PORT = process.env.PORT || 8000;
 
-app.listen(PORT);
+server.listen(PORT);

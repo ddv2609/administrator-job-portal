@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './Job-Post.module.css';
 import { useNavigate } from 'react-router-dom';
+import { Col, Form, Input, Radio, Row } from "antd";
+import Address from "../../Address/Address";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Select } from "antd";
+
+
+
 
 function AddJob() {
   const navigate = useNavigate();
@@ -24,12 +32,71 @@ function AddJob() {
   const [numberOfVacancies, setNumberOfVacancies] = useState('');
   const [employmentType, setEmploymentType] = useState('');
   const [gender, setGender] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+
+  const handleCategoryChange = (value) => {
+    setSelectedCategories(value);
+  };
+  
+
 
   const handleSave = () => {
-    // Handle save logic
-    // For example, sending the data to the server
+
     navigate('/job-list');
   };
+
+  useEffect(() => {
+    axios.get("https://vapi.vnappmob.com/api/province/")
+      .then(res => {
+        const cities = res.data.results.map((city, index) => ({
+          id: index,
+          key: city.province_id,
+          label: city.province_name,
+          value: city.province_name,
+        }));
+
+        setCities(cities);
+      })
+  }, []);
+
+  const handleSelectCitites = (_, option) => {
+    setDistricts([]);
+    setWards([]);
+    axios.get(`https://vapi.vnappmob.com/api/province/district/${option.key}`)
+      .then(res => {
+        const districts = res.data.results.map((district, index) => ({
+          id: index,
+          key: district.district_id,
+          label: district.district_name,
+          value: district.district_name,
+        }))
+
+        setDistricts(districts);
+      })
+      .catch(err => console.error(err))
+  }
+
+  const handleSelectDistricts = (_, option) => {
+    setWards([]);
+    axios.get(`https://vapi.vnappmob.com/api/province/ward/${option.key}`)
+      .then(res => {
+        const wards = res.data.results.map((ward, index) => ({
+          id: index,
+          key: ward.ward_id,
+          label: ward.ward_name,
+          value: ward.ward_name,
+        }))
+
+        setWards(wards);
+      })
+  }
+
+
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
 
   return (
     <div className={styles.container}>
@@ -112,6 +179,38 @@ function AddJob() {
         />
       </div>
 
+      <Row gutter={[32, 0]}>
+        <Col lg={12}>
+          <Address
+            label="Địa điểm làm việc"
+            type="province" size="large" 
+            options={cities}
+            message="Vui lòng chọn tỉnh/thành phố làm việc"
+            placeholder="Chọn tỉnh/thành phố"
+            onSelect={handleSelectCitites}
+          />
+        </Col>
+        <Col lg={12}>
+          <Address
+            label="Quận/huyện"
+            type="district" size="large"
+            options={districts} 
+            message="Vui lòng chọn quận/huyện làm việc"
+            placeholder="Chọn quận/huyện"
+            onSelect={handleSelectDistricts}
+          />
+        </Col>
+        <Col lg={12}>
+          <Address
+            label="Xã/phường"
+            type="ward" size="large"
+            options={wards}
+            message="Vui lòng chọn xã/phường làm việc"
+            placeholder="Chọn xã/phường"
+          />
+        </Col>
+      </Row>
+
       <div className={styles.formGroup}>
         <label className={styles.label}>Kinh nghiệm</label>
         <select
@@ -129,6 +228,26 @@ function AddJob() {
           <option value="5 năm">5 năm</option>
           <option value="Trên 5 năm">Trên 5 năm</option>
         </select>
+      </div>
+
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Ngành Nghề</label>
+        <Select
+          mode="multiple"
+          className={styles.input}
+          placeholder="Chọn danh mục"
+          value={selectedCategories}
+          onChange={setSelectedCategories}
+          options={[
+            { value: '1', label: 'Danh mục 1' },
+            { value: '2', label: 'Danh mục 2' },
+            { value: '3', label: 'Danh mục 3' },
+            { value: '4', label: 'Danh mục 4' },
+            { value: '5', label: 'Danh mục 5' },
+            { value: '6', label: 'Danh mục 6' },
+            { value: '7', label: 'Danh mục 7' },
+          ]}
+        />
       </div>
 
       <div className={styles.formGroup}>

@@ -94,6 +94,31 @@ class CompanyController {
       });
     }
   }
+
+  // [POST] /api/company/hidden-job/:jobId
+  async hiddenJob(req, res) {
+    const companyId = req.user.companyId;
+    const { jobId } = req.params;
+
+    try {
+      await Job.updateOne({
+        _id: jobId,
+        company: companyId,
+      }, {
+        hidden: true,
+        hiddenAt: Date.now(),
+      });
+
+      return res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: error.toString(),
+      });
+    }
+  }
+
+  // [GET] /api/company/application/:jobId
 }
 
 module.exports = new CompanyController;

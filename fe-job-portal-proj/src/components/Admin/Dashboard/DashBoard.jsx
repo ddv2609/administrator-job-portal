@@ -24,12 +24,7 @@ function Dashboard() {
   const { data, getOverviewInfo } = useOutletContext();
   const nav = useNavigate();
 
-  const [datas, setDatas] = useState([
-    {
-      label: "Số lượng công việc",
-      data: [10, 50, 32, 15, 23, 8, 7],
-    }
-  ]);
+  const [datas, setDatas] = useState([]);
 
   const [labels, setLabels] = useState([]);
 
@@ -43,24 +38,30 @@ function Dashboard() {
       axios.get("http://localhost:8000/api/admin/statistic/employer", {
         withCredentials: true,
       }),
+      axios.get("http://localhost:8000/api/admin/statistic/jobs", {
+        withCredentials: true,
+      }),
       getOverviewInfo(),
     ])
-      .then(([candidates, employers]) => {
-        console.log(candidates, employers);
+      .then(([candidates, employers, jobs]) => {
+        // console.log(candidates, employers);
         setDatas([{
           label: "Số lượng ứng viên",
           data: candidates.data.statistic
         }, {
           label: "Số lượng nhà tuyển dụng",
           data: employers.data.statistic
-        }, ...datas]);
+        }, {
+          label: "Số lượng nhà công việc",
+          data: jobs.data.statistic
+        },]);
 
         setLabels(candidates.data.labels);
       })
       .catch(err => {
         console.error(err);
 
-        const code = err.response.status;
+        const code = err?.response?.status;
         if (400 <= code && code < 500)
           nav("/login");
         else
@@ -110,9 +111,14 @@ function Dashboard() {
               <StatisticCard
                 title="Công việc được đăng"
                 icon={<FaCheckToSlot />}
-                amount={7}
-                percent={-6.67}
-                state="down"
+                amount={data.jobs.currAmount}
+                percent={
+                  data.jobs.lastAmount === data.jobs.currAmount ? 0
+                    : data.jobs.lastAmount !== 0
+                      ? (data.jobs.currAmount !== 0
+                        ? (100 * (data.jobs.currAmount - data.jobs.lastAmount) / data.jobs.lastAmount).toFixed(2) : 0) : 100
+                }
+                state={data.jobs.currAmount >= data.jobs.lastAmount ? "up" : "down"}
                 role="postedJob"
               />
             </Col>
@@ -124,7 +130,7 @@ function Dashboard() {
             labels: ["Ứng viên", "Nhà tuyển dụng", "Công việc"],
             datasets: [{
               label: "Số lượng",
-              data: [data.candidates.currAmount, data.employers.currAmount, 7],
+              data: [data.candidates.currAmount, data.employers.currAmount, data.jobs.currAmount],
               backgroundColor: ["#00b14f", "#ff9800", "#20bbc9"],
             }]
           }} />

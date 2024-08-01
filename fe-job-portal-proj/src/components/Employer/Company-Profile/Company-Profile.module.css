@@ -35,6 +35,16 @@
     margin-left: 60px;
     margin-bottom: 40px;
   }
+
+  .editButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    margin-left: 350px;
+  }
   
   .introduction {
     margin-bottom: 15px;
@@ -47,11 +57,12 @@
   }
   
   .address,
-  .website,
+  .phonenumber,
   .employees {
     margin: 10px 0;
     font-weight: bold;
   white-space: nowrap;
+  margin-top: 10px;
   }
   
   
