@@ -1,9 +1,9 @@
-import React from 'react';
-import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
-import { Input, Form, Select, Button } from "antd";
-import ListJob from "../../components/ListJob/ListJob";
+import { Button, Form, Input, Select } from "antd";
+import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Footer from "../../components/FooterMain/Footer";
-import { useState } from "react";
+import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
+import ListJob from "../../components/ListJob/ListJob";
 import styles from "./CadidateIndex.module.css";
 function CandidateIndex(props) {
     const [selectedRole, setSelectedRole] = useState("all");
@@ -183,6 +183,7 @@ function CandidateIndex(props) {
                     <Footer />
                 </div>
             </div>
+            <Outlet />
         </div>
     );
 }
