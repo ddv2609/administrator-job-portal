@@ -13,6 +13,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import styles from "./Candidates.module.css";
 import ManagementTable from "../ManagementTable/ManagementTable";
 import { useOutletContext } from "react-router-dom";
+import ModalUpdate from "../ModalUpdate/ModalUpdate";
 
 function Candidates() {
   const { admin } = useOutletContext();
@@ -32,6 +33,8 @@ function Candidates() {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(null);
   const [confirmDeleteLoading, setConfirmDeleteLoading] = useState(false);
 
+  const [modalData, setModalData] = useState(null);
+
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -40,6 +43,15 @@ function Candidates() {
   });
 
   const [messageApi, contextHolder] = message.useMessage();
+
+  const handleUpdateCandidate = (data) => {
+    setData(prev => prev.map(candidate => {
+      // console.log(candidate);
+      if (candidate._id === data._id)
+        return data;
+      return candidate;
+    }))
+  }
 
   const handleConfirmHidden = async (candidates) => {
     setConfirmHiddenLoading(true);
@@ -269,7 +281,7 @@ function Candidates() {
       render: (record) => (
         <Space size="small" align="start">
           <Tooltip title="Chỉnh sửa" placement="topRight">
-            <span className={styles.update} >
+            <span className={styles.update} onClick={() => setModalData(record)} >
               <FaRegPenToSquare />
             </span>
           </Tooltip>
@@ -369,6 +381,27 @@ function Candidates() {
           data: data,
         }]}
       />
+      { modalData && <ModalUpdate 
+        data={{
+          ...modalData,
+          resumes: [
+            { 
+              name: "CV-ứng-tuyển-intern-ReactJs.pdf", 
+              resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191" 
+            },
+            { name: "CV-ứng-tuyển-intern-Node-ExpressJS.docx",
+              resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191" 
+            },
+            { name: "CV-ứng-tuyển-intern-ASPdotNet.doc",
+              resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191" 
+            }
+          ]
+        }} 
+        setModalData={setModalData} 
+        handleUpdateMember={handleUpdateCandidate}
+      >
+
+      </ModalUpdate> }
     </>
   );
 }
