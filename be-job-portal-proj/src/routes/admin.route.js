@@ -5,6 +5,8 @@ const { uploadImage } = require("../config/multer");
 
 const adminController = require("../app/controllers/AdminController.controller");
 
+router.delete("/member/avatar/:mid", adminController.deleteMemberAvatar);
+router.post("/member/avatar/:mid", uploadImage.single("file"), adminController.updateMemberAvatar);
 router.post("/posted-job/delete", adminController.deletePostedJob);
 router.post("/posted-job/enable", adminController.enablePostedJobs);
 router.post("/posted-job/hidden", adminController.hiddenPostedJobs);

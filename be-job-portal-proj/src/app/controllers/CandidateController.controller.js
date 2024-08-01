@@ -117,6 +117,25 @@ class CandidateController {
     }
   }
 
+  // [DELETE] api/candidate/avatar
+  async deleteAvatar(req, res) {
+    try {
+      const [files] = await bucket.getFiles({ prefix: `canidate/${req.user.id}/avatar` });
+      await Promise.all(files.map(file => file.delete()));
+
+      await Member.updateOne({ _id: req.user.id }, {
+        avatar: null,
+      });
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
   // [POST] /api/candidate/resumes/
   async updateResumes(req, res) {
     try {

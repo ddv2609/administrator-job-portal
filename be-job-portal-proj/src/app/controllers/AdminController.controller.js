@@ -654,6 +654,75 @@ class AdminController {
       });
     }
   }
+
+  // [POST] /api/admin/member/avatar/:mid
+  async updateMemberAvatar(req, res) {
+    const { mid } = req.params;
+
+    try {
+      if (!req.file)
+        return res.status(400).json({
+          message: "Chưa có file nào được tải lên!",
+        });
+
+      const fileName = "avatar" + path.extname(req.file.originalname);
+
+      const [files] = await bucket.getFiles({ prefix: `candidate/${mid}/avatar` });
+      await Promise.all(files.map(file => file.delete()));
+
+      const blob = bucket.file(`candidate/${mid}/avatar/${fileName}`);
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        }
+      });
+
+      blobStream.on("error", (err) => {
+        return res.status(500).json({
+          message: err,
+        })
+      });
+
+      blobStream.on("finish", async () => {
+        const url = await getDownloadURL(blob);
+        await Member.updateOne({ _id: mid }, {
+          avatar: url,
+        });
+
+        return res.json({
+          url,
+        });
+      });
+
+      blobStream.end(req.file.buffer);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [DELETE] api/admin/member/avatar/:mid
+  async deleteMemberAvatar(req, res) {
+    const { mid } = req.params;
+
+    try {
+      const [files] = await bucket.getFiles({ prefix: `candidate/${mid}/avatar` });
+      await Promise.all(files.map(file => file.delete()));
+
+      await Member.updateOne({ _id: mid }, {
+        avatar: null,
+      });
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
 }
 
 module.exports = new AdminController;

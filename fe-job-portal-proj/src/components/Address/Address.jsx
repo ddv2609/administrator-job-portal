@@ -3,7 +3,7 @@ import { ConfigProvider, Form, Select } from "antd";
 import styles from "./Address.module.css";
 
 function Address({ type="province", size="default", options=[], 
-  message="", placeholder="", label="", suffixIcon, onSelect }) {
+  message="", placeholder="", label="", required=true, suffixIcon, onSelect }) {
   
 
   return (
@@ -23,12 +23,12 @@ function Address({ type="province", size="default", options=[],
         label={<span className={styles.lbSignUpFrm}>{label}</span>}
         name={type}
         initialValue="Không xác định"
-        rules={[
+        rules={required ? [
           {
             required: true,
             message: {message}
           }
-        ]}
+        ] : null}
       >
         <Select 
           options={options} className={styles.select}

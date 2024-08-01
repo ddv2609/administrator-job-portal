@@ -10,13 +10,14 @@ import styles from "./Avatar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminInfo } from "../../actions";
 
-function Avatar({ API }) {
-  const admin = useSelector(state => state.memberReducer);
+function Avatar({ API, user=null, handleUpdateMember }) {
+  const member = useSelector(state => state.memberReducer);
   const dispatch = useDispatch();
 
   const [upload, setUpLoad] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [avatar, setAvatar] = useState(user?.avatar);
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -65,8 +66,15 @@ function Avatar({ API }) {
       withCredentials: true,
     })
       .then(res => {
+        setAvatar(res.data.url);
         messageApi.success("Cập nhật ảnh đại diện thành công");
-        dispatch(setAdminInfo({ ...admin, avatar: res.data.url }));
+        if (!user)
+          dispatch(setAdminInfo({ ...member, avatar: res.data.url }));
+        else
+          handleUpdateMember({
+            ...user,
+            avatar: res.data.url,
+          });
         return res.data;
       })
       .catch(err => {
@@ -82,8 +90,15 @@ function Avatar({ API }) {
       withCredentials: true,
     })
       .then(_ => {
+        setAvatar("/avatar.png");
         messageApi.success("Xóa ảnh đại diện thành công");
-        dispatch(setAdminInfo({ ...admin, avatar: "/avatar.png" }));
+        if (!user)
+          dispatch(setAdminInfo({ ...member, avatar: "/avatar.png" }));
+        else
+        handleUpdateMember({
+          ...user,
+          avatar: null,
+        });
       })
       .catch(err => {
         console.log(err);
@@ -114,13 +129,17 @@ function Avatar({ API }) {
           <div className={styles.avatarUpload} onClick={() => setPreviewOpen(true)}>
             { upload ? <Spin indicator={ <LoadingOutlined style={{ fontSize: 24, }} spin /> }/> : (
               <>
-                <img src={admin.avatar || "/avatar.png"} className={styles.avatar} alt="Avatar" />
+                { avatar || user ? (
+                  <img src={avatar || "/avatar.png"} className={styles.avatar} alt="Avatar" />
+                ) : (
+                  <img src={member.avatar || "/avatar.png"} className={styles.avatar} alt="Avatar" />
+                ) }
                 <EyeOutlined className={styles.iconEye} />
               </>
             ) }
           </div>
           <Dropdown
-            menu={{ items: admin.avatar === "/avatar.png" ? [editOptions[0]] : editOptions }}
+            menu={{ items: member.avatar === "/avatar.png" || !avatar ? [editOptions[0]] : editOptions }}
             open={openDropdown}
             trigger="click"
             onOpenChange={(open) => setOpenDropdown(open)}
@@ -144,7 +163,7 @@ function Avatar({ API }) {
           visible: previewOpen,
           onVisibleChange: (visible) => setPreviewOpen(visible),
         }}
-        src={admin.avatar || "/avatar.png"}
+        src={avatar || user ? (avatar || "/avatar.png") : (member.avatar || "/avatar.png")}
       />
     </div>
   );
