@@ -251,3 +251,125 @@
     font-size: 22px;
     color: #00b14f;
 }
+.header_task_profile{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0px;
+    margin-right: 40px;
+    margin-top: 10px;
+}
+.header_task_icon{
+  margin-right: 40px;
+    cursor: pointer;
+    display: flex;
+}
+.header_task_icon a{
+   color: #00b14f;
+}
+.header_task_icon_noti{
+    height: 40px;
+    width: 40px;
+    background-color: wheat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+    border-radius: 50%;
+    background-color: rgba(0, 177, 79, .102);
+}
+.header_task_icon_forum{
+    height: 40px;
+    width: 40px;
+    background-color: wheat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(0, 177, 79, .102);
+}
+.header_profile{
+    position: relative;
+}
+.functuon_profile{
+    display: none;
+    position: absolute;
+    height: 210px;
+    width: 300px;
+    background-color: white;
+    border-radius: 10px;
+    transform: translate(-251px, 0px);
+  padding: 10px;
+   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.header_profile:hover .functuon_profile{
+    display: block;
+    
+}
+.profile_inf{
+    display: flex;
+    align-items: center;
+    height: 60px;
+    width: 280px;
+    padding: 10px;
+    border-bottom: 1px solid rgb(198, 198, 198);
+}
+.edit_inf{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 280px;
+    padding: 10px;
+   background-color:  rgb(243, 243, 243);
+   border-radius: 5px;
+   margin-top: 15px;
+   cursor: pointer;
+}
+.logout{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 280px;
+    padding: 10px;
+    background-color: rgb(243, 243, 243);
+    border-radius: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.edit_inf a{
+    text-decoration: none;
+    color:black;
+    font-size: 15px;
+    margin-left: 10px;
+}
+.logout a{
+    text-decoration: none;
+    color:black;
+    font-size: 15px;
+    margin-left: 10px;
+}   
+.edit_inf:hover{
+    color: #00b14f;
+    background-color: rgb(231, 231, 231);
+}
+.edit_inf:hover a {
+    color: #00b14f;
+    background-color: rgb(231, 231, 231);
+}
+.logout:hover{
+    color: #00b14f;
+    background-color: rgb(231, 231, 231);
+} 
+.logout:hover a {
+    color: #00b14f;
+    background-color: rgb(231, 231, 231);
+}  
+.edit_inf span{
+    font-size: 22px;
+    color: #00b14f;
+}
+.logout span{
+    font-size: 22px;
+    color: #00b14f;
+}

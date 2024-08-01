@@ -21,80 +21,9 @@ function Header(props) {
         <div className={styles.headerEmployeer_index}>
           <div className={styles.headerEmployeer_logo}>
             <img src="/logo.png" alt="logo" />
-            <h1>Job</h1>
+            <h1>Portal</h1>
           </div>
-          <div className={styles.nav}>
-            <ul className={styles.navLists}>
-              <li className={styles.menu_dropdonw_company}>
-                <a href="#company">Công ty</a>
-                <div className={styles.dropdown_items_company}>
-                  <ul style={{ textDecoration: "none", listStyleType: "none" }}>
-                    <li>
-                      <a href="#danh sách công ty">
-                        <span class="material-symbols-outlined">business</span>
-                        Danh sách công ty
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#danh sách công ty">
-                        <span class="material-symbols-outlined">
-                          social_leaderboard
-                        </span>
-                        Top công ty
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-
-              <li className={styles.menu_dropdonw_hackjob}>
-                <a href="#guide">Cẩm nang nghề nghiệp</a>
-                <div
-                  className={styles.dropdonw_items_hackjob}
-                  style={{
-                    marginLeft: "20px",
-                  }}
-                >
-                  <ul style={{ textDecoration: "none", listStyleType: "none" }}>
-                    <li>
-                      <a href="#danh sách công ty">
-                        <span class="material-symbols-outlined">explore</span>
-                        Định hướng nghề nghiệp
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#danh sách công ty">
-                        <span class="material-symbols-outlined">pageview</span>
-                        Bí kíp tìm công việc
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#danh sách công ty">
-                        <span class="material-symbols-outlined">
-                          rate_review
-                        </span>
-                        Chế độ lương thưởng
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#danh sách công ty">
-                        <span class="material-symbols-outlined">wysiwyg</span>
-                        Kiến thức chuyên ngành
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#danh sách công ty">
-                        <span class="material-symbols-outlined">
-                          trending_up
-                        </span>
-                        Thị trường và xu hướng nghề nghiệp
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <div className={styles.nav}></div>
           <div className={styles.button_container}>
             <Button
               onClick={handleLoginClick}

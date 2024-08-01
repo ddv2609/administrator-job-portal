@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { Col, Divider, message, Row } from "antd";
 import axios from "axios";
 import clsx from "clsx";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { login } from "../../actions";
 import LoginForm from "../../components/Login/LoginForm/LoginForm";
@@ -44,7 +44,7 @@ function CandidateLogin() {
               nav("/employer/companyjob");
               break;
             default:
-              nav("/");
+              nav("/candidate");
           }
         });
       })

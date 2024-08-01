@@ -185,7 +185,7 @@ function Home() {
             className={styles.footer_main}
             style={{
               width: "1150px",
-              height: "330px",
+              height: "170px",
               margin: "0 auto",
             }}
           >

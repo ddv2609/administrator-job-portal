@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import styles from './Company-EditProfile.module.css';
+import styles from './Employer-EditProfile.module.css';
 import { useNavigate } from 'react-router-dom';
 import { Col, Row } from "antd";
 import Address from "../../Address/Address";
 import axios from "axios";
 
-const EditCompanyProfile = () => {
+const EmployerEditProfile = () => {
   const navigate = useNavigate();
-
-
 
   const [cities, setCities] = useState('Hà Nội');
   const [districts, setDistricts] = useState('Hà Đông');
@@ -83,32 +81,34 @@ const EditCompanyProfile = () => {
   }
 
   // State for form fields
-  const [logo, setLogo] = useState(null); // Store the selected file
+  const [logo, setLogo] = useState(null);
   const [companyName, setCompanyName] = useState('Ptit');
-  const [introduction, setIntroduction] = useState('Chúng tôi là một công ty hàng đầu trong lĩnh vực XYZ, cam kết mang đến sản phẩm và dịch vụ chất lượng cao.');
   const [phoneNumber, setPhoneNumber] = useState('2323232323');
-  const [employees, setEmployees] = useState('100');
+  const [gender, setGender] = useState('Nam');
+  const [dob, setDob] = useState('2000-04-11');
+  const [email, setEmail] = useState('1@gmail.com');
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setLogo(reader.result); // Store the file data (base64 string) in state
+        setLogo(reader.result);
       };
-      reader.readAsDataURL(file); // Read the file as a base64 encoded string
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSave = () => {
-    navigate('/company-profile');
+    // Add your save logic here
+    navigate('/employer/profile');
   };
 
   return (
     <div className={styles.container}>
-      <h1>Chỉnh sửa hồ sơ công ty</h1>
+      <h1>Chỉnh sửa hồ sơ nhà tuyển dụng</h1>
       <div className={styles.formGroup}>
-        <label className={styles.label}>Logo</label>
+        <label className={styles.label}>Ảnh</label>
         <input
           className={styles.input}
           type="file"
@@ -119,7 +119,7 @@ const EditCompanyProfile = () => {
       </div>
 
       <div className={styles.formGroup}>
-        <label className={styles.label}>Tên công ty</label>
+        <label className={styles.label}>Tên </label>
         <input
           className={styles.input}
           type="text"
@@ -128,12 +128,26 @@ const EditCompanyProfile = () => {
         />
       </div>
 
+
       <div className={styles.formGroup}>
-        <label className={styles.label}>Giới thiệu về công ty</label>
-        <textarea
-          className={styles.textarea}
-          value={introduction}
-          onChange={(e) => setIntroduction(e.target.value)}
+        <label className={styles.label}>Giới tính</label>
+        <select
+          className={styles.select}
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+        >
+          <option value="Nam">Nam</option>
+          <option value="Nữ">Nữ</option>
+        </select>
+      </div>
+
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Ngày sinh</label>
+        <input
+          className={styles.input}
+          type="date"
+          value={dob}
+          onChange={(e) => setDob(e.target.value)}
         />
       </div>
 
@@ -179,6 +193,15 @@ const EditCompanyProfile = () => {
         </Col>
       </Row>
 
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Email</label>
+        <input
+          className={styles.input}
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
 
       <div className={styles.formGroup}>
         <label className={styles.label}>Số điện thoại</label>
@@ -190,22 +213,12 @@ const EditCompanyProfile = () => {
         />
       </div>
 
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Số lượng nhân lực</label>
-        <input
-          className={styles.input}
-          type="number"
-          value={employees}
-          onChange={(e) => setEmployees(e.target.value)}
-        />
-      </div>
-
       <div className={styles.formActions}>
         <button className={styles.saveButton} onClick={handleSave}>Lưu</button>
-        <button className={styles.cancelButton} onClick={() => navigate('/employer/company-profile')}>Hủy</button>
+        <button className={styles.cancelButton} onClick={() => navigate('/employer/employer-profile')}>Hủy</button>
       </div>
     </div>
   );
 };
 
-export default EditCompanyProfile;
+export default EmployerEditProfile;
