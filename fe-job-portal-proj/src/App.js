@@ -42,7 +42,9 @@ function App() {
           <Route path="/employer/index" element={<EmployeerIndex />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
           <Route path="/company/company-profile" element={<CompanyProfile />} />
-          <Route path="/candidate" element={<CandidateIndex />} />
+          <Route path="/candidate" element={<CandidateIndex />}>
+            <Route path="cv-management" element={<CVManagementPage />} />
+          </Route>
 
           <Route path="/employer" element={<Employer />}>
             <Route path="company-profile" index element={<CompanyProflie />} />

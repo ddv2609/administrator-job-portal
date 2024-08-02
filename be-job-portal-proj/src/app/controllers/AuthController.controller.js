@@ -18,7 +18,14 @@ class AuthController {
   // [POST] /auth/login
   async loginWithPassword(req, res) {
     const { email, password, role } = req.body;
-    const member = await Member.findOne({ email: email });
+    const member = await Member.findOneAndUpdate(
+      { email: email },
+      {
+        onlineAt: Date.now(),
+      },
+      { new: true }
+    );
+
     if (
       member &&
       !member.hidden &&

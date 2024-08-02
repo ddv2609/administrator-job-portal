@@ -4,7 +4,7 @@ import CVList from '../../components/CandidateCV/CVList';
 import CVUpload from '../../components/CandidateCV/CVUpload';
 import UserInfo from '../../components/CandidateCV/UserInfo';
 import Footer from "../../components/FooterMain/Footer";
-import HeaderCandidateIndex from '../../components/Header/Header_CandidateIndex';
+import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
 
 
 const { Sider, Content } = Layout;
@@ -50,7 +50,7 @@ const CVManagementPage = () => {
     };
     return (
         <Layout style={layoutStyle}>
-            <HeaderCandidateIndex />
+            <HeaderCadidateIdex />
             <Layout style={{ paddingTop: 64 }}>
                 <Content style={contentStyle}>
                     <div>
