@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 const { getDownloadURL } = require("firebase-admin/storage");
 
-const serviceAccount = require("../secrets/firebase/service-account.json");
+const serviceAccount = require("../secrets/service_account.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
