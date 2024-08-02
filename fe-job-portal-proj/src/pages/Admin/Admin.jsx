@@ -147,7 +147,7 @@ function Admin({ socket }) {
 
   useEffect(() => {
     getOverviewInfo()
-      .then(admin => socket.emit("online", admin._id));
+      .then(admin => socket.emit("online", admin?._id));
     
     return () => {
       localStorage.removeItem("selected-key");

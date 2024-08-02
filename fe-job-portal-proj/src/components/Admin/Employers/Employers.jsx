@@ -1,4 +1,4 @@
-import { Avatar, message, Popconfirm, Space, Tag, Tooltip } from "antd";
+import { Avatar, Col, Form, Input, message, Popconfirm, Space, Tag, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import clsx from "clsx";
@@ -13,6 +13,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import styles from "./Employers.module.css";
 import ManagementTable from "../ManagementTable/ManagementTable";
 import { useOutletContext } from "react-router-dom";
+import ModalUpdate from "../ModalUpdate/ModalUpdate";
 
 function Employers() {
   const { admin } = useOutletContext();
@@ -32,6 +33,8 @@ function Employers() {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(null);
   const [confirmDeleteLoading, setConfirmDeleteLoading] = useState(false);
 
+  const [modalData, setModalData] = useState(null);
+
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -40,6 +43,15 @@ function Employers() {
   });
 
   const [messageApi, contextHolder] = message.useMessage();
+
+  const handleUpdateEmployer = (data) => {
+    setData(prev => prev.map(employer => {
+      // console.log(employer);
+      if (employer._id === data._id)
+        return data;
+      return employer;
+    }))
+  }
 
   const handleConfirmHidden = async (employers) => {
     setConfirmHiddenLoading(true);
@@ -86,7 +98,7 @@ function Employers() {
       })
   }
 
-  const getEmployers = (page, pageSize, hidden = false, pos="Unknow") => {
+  const getEmployers = (page, pageSize, hidden = false, pos = "Unknow") => {
     setLoading(true);
     axios.get(`http://localhost:8000/api/admin/list/employer?hidden=${hidden}&page=${page}&size=${pageSize}`, {
       withCredentials: true,
@@ -95,6 +107,7 @@ function Employers() {
         // console.log(res.data.members, pos);
         setData(res.data.members?.map((data) => ({
           uid: data._id,
+          company: data.company.name,
           ...data.member,
           status: data.member?.verifiedAt ? true : false,
         })));
@@ -268,7 +281,7 @@ function Employers() {
       render: (record) => (
         <Space size="small" align="start">
           <Tooltip title="Chỉnh sửa" placement="topRight">
-            <span className={styles.update} >
+            <span className={styles.update} onClick={() => setModalData(record)} >
               <FaRegPenToSquare />
             </span>
           </Tooltip>
@@ -290,7 +303,7 @@ function Employers() {
               onConfirm={() => handleConfirmVerify([record])}
               onCancel={() => { if (!confirmVerifyLoading) setOpenConfirmVerify(null) }}
             >
-              <span className={clsx([styles.verify, record.status ? styles.disabled : null])} 
+              <span className={clsx([styles.verify, record.status ? styles.disabled : null])}
                 onClick={() => setOpenConfirmVerify(record._id)}
               >
                 <MdOutlineMarkEmailRead />
@@ -306,13 +319,13 @@ function Employers() {
 
   useEffect(() => {
     getEmployers(1, 10, false, "Employers.jsx");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       {contextHolder}
-      <ManagementTable 
+      <ManagementTable
         getData={getEmployers}
         setData={setData}
         tableParams={tableParams}
@@ -368,6 +381,23 @@ function Employers() {
           data: data,
         }]}
       />
+
+      {modalData && <ModalUpdate
+        data={{
+          ...modalData,
+        }}
+        setModalData={setModalData}
+        handleUpdateMember={handleUpdateEmployer}
+        apiUpdate={`http://localhost:8000/api/admin/member/info/${modalData._id}`}
+      >
+        <Col span={24}>
+          <Form.Item
+            label={<span className={styles.lbUpdateFrm}>Tên công ty</span>}
+          >
+            <Input  placeholder="Tên công ty" value={modalData.company} disabled />
+          </Form.Item>
+        </Col>
+      </ModalUpdate>}
     </>
   );
 }

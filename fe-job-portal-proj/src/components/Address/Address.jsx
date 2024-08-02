@@ -2,7 +2,7 @@ import { ConfigProvider, Form, Select } from "antd";
 
 import styles from "./Address.module.css";
 
-function Address({ type="province", size="default", options=[], 
+function Address({ type="province", size="default", options=[], initialValue, 
   message="", placeholder="", label="", required=true, suffixIcon, onSelect }) {
   
 
@@ -22,7 +22,7 @@ function Address({ type="province", size="default", options=[],
       <Form.Item
         label={<span className={styles.lbSignUpFrm}>{label}</span>}
         name={type}
-        initialValue="Không xác định"
+        initialValue={initialValue || "Không xác định"}
         rules={required ? [
           {
             required: true,

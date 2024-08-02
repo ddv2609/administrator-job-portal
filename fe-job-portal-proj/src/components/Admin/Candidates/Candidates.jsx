@@ -1,4 +1,4 @@
-import { Avatar, message, Popconfirm, Space, Tag, Tooltip } from "antd";
+import { Avatar, Col, Form, message, Popconfirm, Space, Tag, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import clsx from "clsx";
@@ -14,6 +14,7 @@ import styles from "./Candidates.module.css";
 import ManagementTable from "../ManagementTable/ManagementTable";
 import { useOutletContext } from "react-router-dom";
 import ModalUpdate from "../ModalUpdate/ModalUpdate";
+import TextArea from "antd/es/input/TextArea";
 
 function Candidates() {
   const { admin } = useOutletContext();
@@ -298,12 +299,12 @@ function Candidates() {
           </Tooltip>
           <Tooltip title={record.status ? "Không khả dụng" : "Xác minh thủ công"} placement="topRight">
             <Popconfirm title="Xác minh ứng viên" description="Bạn chắc chắn muốn xác minh cho ứng viên này?" placement="topRight"
-              icon={<QuestionCircleOutlined style={{ color: "#20bbc9" }} />} 
+              icon={<QuestionCircleOutlined style={{ color: "#20bbc9" }} />}
               open={!record.status && openConfirmVerify === record._id}
               onConfirm={() => handleConfirmVerify([record])}
               onCancel={() => { if (!confirmVerifyLoading) setOpenConfirmVerify(null) }}
             >
-              <span className={clsx([styles.verify, record.status ? styles.disabled : null])} 
+              <span className={clsx([styles.verify, record.status ? styles.disabled : null])}
                 onClick={() => setOpenConfirmVerify(record._id)}
               >
                 <MdOutlineMarkEmailRead />
@@ -381,27 +382,38 @@ function Candidates() {
           data: data,
         }]}
       />
-      { modalData && <ModalUpdate 
+      {modalData && <ModalUpdate
         data={{
           ...modalData,
-          resumes: [
-            { 
-              name: "CV-ứng-tuyển-intern-ReactJs.pdf", 
-              resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191" 
-            },
-            { name: "CV-ứng-tuyển-intern-Node-ExpressJS.docx",
-              resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191" 
-            },
-            { name: "CV-ứng-tuyển-intern-ASPdotNet.doc",
-              resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191" 
-            }
-          ]
-        }} 
-        setModalData={setModalData} 
+          // resumes: [
+          //   {
+          //     name: "CV-ứng-tuyển-intern-ReactJs.pdf",
+          //     resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191"
+          //   },
+          //   {
+          //     name: "CV-ứng-tuyển-intern-Node-ExpressJS.docx",
+          //     resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191"
+          //   },
+          //   {
+          //     name: "CV-ứng-tuyển-intern-ASPdotNet.doc",
+          //     resume: "https://www.topcv.vn/xem-cv/AwFWVFYACQVXAVFTAw0ODgIDVlcMBFQCWABXUg0191"
+          //   }
+          // ]
+        }}
+        setModalData={setModalData}
         handleUpdateMember={handleUpdateCandidate}
+        apiUpdate={`http://localhost:8000/api/admin/member/info/${modalData._id}`}
       >
-
-      </ModalUpdate> }
+        <Col span={24}>
+          <Form.Item
+            label={<span className={styles.lbUpdateFrm}>Học vấn</span>}
+            name="education"
+            initialValue={modalData?.education}
+          >
+            <TextArea rows={4} placeholder="Học vấn" />
+          </Form.Item>
+        </Col>
+      </ModalUpdate>}
     </>
   );
 }
