@@ -1,17 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LikeOutlined, StarOutlined } from "@ant-design/icons";
 import { Avatar, List, Space } from "antd";
-
-const data = Array.from({ length: 23 }).map((_, i) => ({
-  href: "https://ant.design",
-  title: `Tuyển dụng vị trí ReactJS `,
-  avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
-  company: "Công ty HTT ABBAMK",
-  content:
-    "We supply a series of design principles,  product prototypes beautifully and efficiently.",
-  Wage: "10.000.000 - 20.000.000",
-  address: "Hà Nội",
-}));
+import axios from "axios";
+import styles from "./ListJob.module.css";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -20,55 +11,88 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 
-const App = () => (
-  <List
-    itemLayout="vertical"
-    size="large"
-    pagination={{
-      onChange: (page) => {
-        console.log(page);
-      },
-      pageSize: 3,
-    }}
-    dataSource={data}
-    renderItem={(item) => (
-      <List.Item
-        key={item.title}
-        actions={[
-          <IconText
-            style={{ cursor: "pointer" }}
-            icon={StarOutlined}
-            text="156"
-            key="list-vertical-star-o"
-          />,
-          <IconText
-            icon={LikeOutlined}
-            text="156"
-            key="list-vertical-like-o"
-          />,
-        ]}
-        extra={
-          <img
-            width={240}
-            height={150}
-            style={{ marginLeft: "200px" }}
-            alt="logo"
-            src="https://upload.wikimedia.org/wikipedia/commons/1/13/Logo_PTIT_University.png"
+const App = () => {
+  const [page, setPage] = useState(1);
+  const [jobs, setJobs] = useState([]);
+  const [pageSize, setPageSize] = useState(3);
+  const totalItems = 20;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8000/api/job/suggestion?page=${page}&size=${pageSize}`,
+          { withCredentials: true }
+        );
+        const data = await res.data;
+        setJobs(data.jobs);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [page, pageSize]);
+
+  return (
+    <List
+      itemLayout="vertical"
+      size="large"
+      pagination={{
+        current: page, // Trang hiện tại
+        pageSize: pageSize, // Kích thước trang
+        total: totalItems, // Tổng số mục
+        onChange: (page, pageSize) => {
+          setPage(page);
+          setPageSize(pageSize);
+        },
+      }}
+      dataSource={jobs}
+      renderItem={(item) => (
+        <List.Item
+          key={item.title}
+          actions={[
+            <IconText
+              style={{ cursor: "pointer" }}
+              icon={StarOutlined}
+              text="156"
+              key="list-vertical-star-o"
+            />,
+            <IconText
+              icon={LikeOutlined}
+              text="156"
+              key="list-vertical-like-o"
+            />,
+          ]}
+          extra={
+            <img
+              width={240}
+              height={150}
+              style={{ marginLeft: "200px" }}
+              alt="logo"
+              src={item.Img_logo}
+            />
+          }
+        >
+          <List.Item.Meta
+            avatar={
+              <Avatar src="https://www.w3schools.com/howto/img_avatar.png" />
+            }
+            title={
+              <a className={styles.title_job} href={item.href}>
+                {item["Job Title"]}
+              </a>
+            }
+            company={item["Name Company"]}
           />
-        }
-      >
-        <List.Item.Meta
-          avatar={<Avatar src={item.avatar} />}
-          title={<a href={item.href}>{item.title}</a>}
-          company={item.company}
-        />
-        {item.content}
-        <p>Lương:{item.Wage} </p>
-        <p>Địa chỉ:{item.address}</p>
-        company:{item.company}
-      </List.Item>
-    )}
-  />
-);
+          {item.content}
+          <p>Lương: {item.Wage} </p>
+          <p>Địa chỉ: {item["Company Address"]}</p>
+          Công ty: {item["Name Company"]}
+        </List.Item>
+      )}
+    />
+  );
+};
 
 export default App;

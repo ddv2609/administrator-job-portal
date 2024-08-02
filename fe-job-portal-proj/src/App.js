@@ -43,6 +43,7 @@ function App() {
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
           <Route path="/company/company-profile" element={<CompanyProfile />} />
           <Route path="/candidate" element={<CandidateIndex />} />
+
           <Route path="/employer" element={<Employer />}>
             <Route path="company-profile" index element={<CompanyProflie />} />
             <Route

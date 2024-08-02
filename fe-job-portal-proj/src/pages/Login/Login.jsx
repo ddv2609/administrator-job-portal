@@ -44,12 +44,13 @@ function CandidateLogin() {
               nav("/employer/companyjob");
               break;
             default:
-              nav("/candidate/candidate-profile");
+              nav("/candidate");
           }
         });
       })
       .catch(err => {
         console.error(err.response?.data);
+        console.log(err)
         messageApi.error(`Đăng nhập thất bại. ${err.response?.data.message || ""}`, 10);
       })
       .finally(() => setLoading(false))
@@ -58,7 +59,7 @@ function CandidateLogin() {
   return (
     <>
       <div className={styles.loginSection}>
-        { contextHolder }
+        {contextHolder}
         <Row>
           <Col lg={15}>
             <div className={styles.loginForm}>
@@ -66,21 +67,21 @@ function CandidateLogin() {
                 <div className={styles.header}>
                   <h2 className={styles.title}>Chào mừng bạn đã quay trở lại</h2>
                   <div className={styles.desc}>
-                    { role === "candidate" 
+                    {role === "candidate"
                       ? "Cùng xây dựng một hồ sơ nổi bật và nhận được các cơ hội sự nghiệp lý tưởng"
                       : "Cùng tạo dựng lợi thế cho doanh nghiệp bằng trải nghiệm công nghệ tuyển dụng ứng dụng sâu AI & Hiring Funnel"
                     }
                   </div>
                 </div>
 
-                <LoginForm 
+                <LoginForm
                   loading={loading}
-                  changeRole={setRole} 
-                  roles={roles} 
+                  changeRole={setRole}
+                  roles={roles}
                   handleSubmitLoginFrm={handleSubmitLoginFrm}
                 />
 
-                { role !== "admin" ? (
+                {role !== "admin" ? (
                   <>
                     <Divider className={styles.useOthers}>Hoặc đăng nhập bằng</Divider>
                     <OAuthLogin thirdParties={["google", "facebook", "linkedin"]} role={role} />
@@ -92,7 +93,7 @@ function CandidateLogin() {
                       >Đăng ký ngay</span>
                     </div>
                   </>
-                  ) : (<></>) 
+                ) : (<></>)
                 }
               </div>
 
