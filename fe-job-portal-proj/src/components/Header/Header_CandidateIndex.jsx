@@ -2,6 +2,7 @@ import { Layout } from "antd";
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styles from "./Header.module.css";
+import { Link } from 'react-router-dom';
 
 
 function Header_CandidateIndex(props) {
@@ -10,8 +11,13 @@ function Header_CandidateIndex(props) {
             <Layout>
                 <div className={styles.headerEmployeer_index}>
                     <div className={styles.headerEmployeer_logo}>
-                        <img src="/logo.png" alt="logo" />
-                        <h1>Portal</h1>
+                        <Link to="/candidate" style={{
+                            display: "flex",
+                        }}>
+                            <img src="/logo.png" alt="logo" />
+                            <h1>Portal</h1>
+                        </Link>
+
                     </div>
                     <div className={styles.nav}>
                         <ul className={styles.navLists}>
@@ -45,25 +51,18 @@ function Header_CandidateIndex(props) {
                                     className={styles.dropdonw_items_hackjob}
                                     style={{
                                         marginLeft: "20px",
-                                        height: "150px",
+                                        height: "100px",
                                     }}
                                 >
                                     <ul style={{ textDecoration: "none", listStyleType: "none" }}>
+
                                         <li>
-                                            <a href="#danh sách công ty">
-                                                <span class="material-symbols-outlined">
-                                                    assignment_ind
-                                                </span>
-                                                Quản lý CV
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#danh sách công ty">
-                                                <span class="material-symbols-outlined">
+                                            <Link to="/cv-management">
+                                                <span className="material-symbols-outlined">
                                                     publish
                                                 </span>
                                                 Tải CV lên
-                                            </a>
+                                            </Link>
                                         </li>
 
                                     </ul>

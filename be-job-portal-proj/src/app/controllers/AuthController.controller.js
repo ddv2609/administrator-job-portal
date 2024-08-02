@@ -15,11 +15,9 @@ const mailer = require("../../utils/mail/mailing");
 const { getErrorMessage } = require("../../utils/errors");
 
 class AuthController {
-  
   // [POST] /auth/login
   async loginWithPassword(req, res) {
     const { email, password, role } = req.body;
-
     const member = await Member.findOneAndUpdate({ email: email }, {
       onlineAt: Date.now(),
     }, { new: true });
@@ -49,12 +47,10 @@ class AuthController {
               payload.uid = candidate.id;
               break;
           }
-
           let token = jwt.sign(payload, keys.jwtSecretKey, { expiresIn: "7d" });
-
           res.cookie("jwt", token, {
             maxAge: 1000 * 60 * 60 * 24 * 7,
-            httpOnly: true
+            httpOnly: true,
           });
 
           return res.json({
@@ -67,16 +63,18 @@ class AuthController {
           });
         }
       });
-
     } else {
       // console.log(member);
       return res.status(401).json({
-        message: member ? (member.hidden ? "Tài khoản của bạn đã bị vô hiệu hóa!" : (
-          member.verifiedAt ? "Email hoặc password không chính xác!" : "Tài khoản của bạn chưa được xác minh"
-        )) : "Email hoặc password không chính xác!",
+        message: member
+          ? member.hidden
+            ? "Tài khoản của bạn đã bị vô hiệu hóa!"
+            : member.verifiedAt
+            ? "Email hoặc password không chính xác!"
+            : "Tài khoản của bạn chưa được xác minh"
+          : "Email hoặc password không chính xác!",
       });
     }
-
   }
 
   // [POST] /auth/sign-up/candidate
@@ -85,49 +83,68 @@ class AuthController {
     if (info.password !== info["confirm-password"]) {
       return res.status(409).json({
         message: "Mật khẩu xác nhận không khớp!",
-      })
+      });
     }
-    
-    await bcrypt.hash(info.password, keys.BCRYPT_SALT_ROUND)
-        .then((hashPassword) => info = { ...info, password: hashPassword })
 
-      const session = await mongoose.startSession();
-      session.startTransaction();
-      try {
-        const newMember = (await Member.create([{
-          ...info,
-          role: "candidate"
-        }], { session }))[0];
-        
-        await Candidate.create([{
-          member: newMember.id,
-        }], { session })
+    await bcrypt
+      .hash(info.password, keys.BCRYPT_SALT_ROUND)
+      .then((hashPassword) => (info = { ...info, password: hashPassword }));
 
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const newMember = (
+        await Member.create(
+          [
+            {
+              ...info,
+              role: "candidate",
+            },
+          ],
+          { session }
+        )
+      )[0];
 
-        await session.commitTransaction();
-        session.endSession();
+      await Candidate.create(
+        [
+          {
+            member: newMember.id,
+          },
+        ],
+        { session }
+      );
 
-        const emailTemplatePath = path.join(__dirname, '../../resources/views/form-verify.html');
-        const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
-        await bcrypt.hash(info.email, keys.BCRYPT_SALT_ROUND)
-          .then((hashEmail) => {
-            const emailContent = emailTemplate.replace('{{verificationLink}}', `${process.env.APP_URL}/auth/verify?email=${info.email}&token=${hashEmail}`);
-            mailer.sendMail(info.email, "Verify Email", emailContent);
-          })
+      await session.commitTransaction();
+      session.endSession();
 
-        console.log("Email Sent!");
+      const emailTemplatePath = path.join(
+        __dirname,
+        "../../resources/views/form-verify.html"
+      );
+      const emailTemplate = fs.readFileSync(emailTemplatePath, "utf8");
+      await bcrypt
+        .hash(info.email, keys.BCRYPT_SALT_ROUND)
+        .then((hashEmail) => {
+          const emailContent = emailTemplate.replace(
+            "{{verificationLink}}",
+            `${process.env.APP_URL}/auth/verify?email=${info.email}&token=${hashEmail}`
+          );
+          mailer.sendMail(info.email, "Verify Email", emailContent);
+        });
 
-        return res.sendStatus(200);
-      } catch (error) {
-        console.log(error);
-        await session.abortTransaction();
-        session.endSession();
+      console.log("Email Sent!");
 
-        const msg = getErrorMessage(error);
-        return res.status(500).json({
-          message: msg,
-        })
-      }
+      return res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      await session.abortTransaction();
+      session.endSession();
+
+      const msg = getErrorMessage(error);
+      return res.status(500).json({
+        message: msg,
+      });
+    }
   }
 
   // [POST] /auth/send-mail
@@ -137,13 +154,18 @@ class AuthController {
 
     if (member) {
       if (member.verifiedAt === null) {
-        const emailTemplatePath = path.join(__dirname, '../../resources/views/form-verify.html');
-        const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
-        await bcrypt.hash(email, keys.BCRYPT_SALT_ROUND)
-          .then((hashEmail) => {
-            const emailContent = emailTemplate.replace('{{verificationLink}}', `${process.env.APP_URL}/auth/verify?email=${email}&token=${hashEmail}`);
-            mailer.sendMail(email, "Verify Email", emailContent);
-          })
+        const emailTemplatePath = path.join(
+          __dirname,
+          "../../resources/views/form-verify.html"
+        );
+        const emailTemplate = fs.readFileSync(emailTemplatePath, "utf8");
+        await bcrypt.hash(email, keys.BCRYPT_SALT_ROUND).then((hashEmail) => {
+          const emailContent = emailTemplate.replace(
+            "{{verificationLink}}",
+            `${process.env.APP_URL}/auth/verify?email=${email}&token=${hashEmail}`
+          );
+          mailer.sendMail(email, "Verify Email", emailContent);
+        });
 
         console.log("Email Sent!");
         return res.sendStatus(200);
@@ -165,49 +187,74 @@ class AuthController {
     if (info.password !== info["confirm-password"]) {
       return res.status(409).json({
         message: "Mật khẩu xác nhận không khớp!",
-      })
+      });
     }
-    await bcrypt.hash(info.password, keys.BCRYPT_SALT_ROUND)
-      .then((hashPassword) => info = { ...info, password: hashPassword })
+    await bcrypt
+      .hash(info.password, keys.BCRYPT_SALT_ROUND)
+      .then((hashPassword) => (info = { ...info, password: hashPassword }));
 
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
+      const newMember = (
+        await Member.create(
+          [
+            {
+              fullName: info.fullName,
+              email: info.email,
+              password: info.password,
+              tel: info.tel,
+              gender: info.gender,
+              role: "employer",
+            },
+          ],
+          { session }
+        )
+      )[0];
 
-      const newMember = (await Member.create([{
-        fullName: info.fullName,
-        email: info.email,
-        password: info.password,
-        tel: info.tel,
-        gender: info.gender,
-        role: "employer",
-      }], { session }))[0];
+      const newCompany = (
+        await Company.create(
+          [
+            {
+              name: info.company,
+              address: {
+                province: info.province,
+                district: info.district,
+                ward: info.ward,
+              },
+            },
+          ],
+          { session }
+        )
+      )[0];
 
-      const newCompany = (await Company.create([{
-        name: info.company,
-        address: {
-          province: info.province,
-          district: info.district,
-          ward: info.ward,
-        }
-      }], { session }))[0];
-
-      await Employer.create([{
-        member: newMember.id,
-        company: newCompany.id,
-      }], { session });
-
+      await Employer.create(
+        [
+          {
+            member: newMember.id,
+            company: newCompany.id,
+          },
+        ],
+        { session }
+      );
 
       await session.commitTransaction();
       session.endSession();
 
-      const emailTemplatePath = path.join(__dirname, '../../resources/views/form-verify.html');
-      const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf8');
-      await bcrypt.hash(info.email, keys.BCRYPT_SALT_ROUND)
+      const emailTemplatePath = path.join(
+        __dirname,
+        "../../resources/views/form-verify.html"
+      );
+      const emailTemplate = fs.readFileSync(emailTemplatePath, "utf8");
+      await bcrypt
+        .hash(info.email, keys.BCRYPT_SALT_ROUND)
         .then((hashEmail) => {
-          const emailContent = emailTemplate.replace('{{verificationLink}}', `${process.env.APP_URL}/auth/verify?email=${info.email}&token=${hashEmail}`);
+          const emailContent = emailTemplate.replace(
+            "{{verificationLink}}",
+            `${process.env.APP_URL}/auth/verify?email=${info.email}&token=${hashEmail}`
+          );
           mailer.sendMail(info.email, "Verify Email", emailContent);
-        })
+        });
 
       return res.sendStatus(200);
     } catch (error) {
@@ -218,7 +265,7 @@ class AuthController {
       const msg = getErrorMessage(error);
       return res.status(500).json({
         message: msg,
-      })
+      });
     }
   }
 
@@ -230,9 +277,12 @@ class AuthController {
         const member = await Member.findOne({ email: email });
 
         if (member && member.verifiedAt === null) {
-          await Member.updateOne({ email: email }, {
-            verifiedAt: new Date(),
-          })
+          await Member.updateOne(
+            { email: email },
+            {
+              verifiedAt: new Date(),
+            }
+          );
 
           return res.redirect(`${process.env.URL_CLIENT}/verify/success`);
         }
@@ -253,4 +303,4 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController;
+module.exports = new AuthController();

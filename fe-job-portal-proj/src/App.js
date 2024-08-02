@@ -64,6 +64,7 @@ function App() {
           <Route path="/candidate" element={<CandidateIndex />}>
             <Route path="cv-management" element={<CVManagementPage />} />
           </Route>
+
           <Route path="/employer" element={<Employer />}>
             <Route path="company-profile" index element={<CompanyProflie />} />
             <Route

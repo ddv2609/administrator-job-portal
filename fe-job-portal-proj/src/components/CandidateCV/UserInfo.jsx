@@ -6,7 +6,7 @@ const userInfoStyle = {
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 20,
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' 
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
 };
 
 const UserInfo = ({ user }) => {
@@ -24,7 +24,7 @@ const UserInfo = ({ user }) => {
                 <p><strong>Địa chỉ:</strong> {user.address}</p>
                 <p><strong>Chuyên ngành:</strong> {user.major}</p>
             </div>
-            
+
         </div>
     );
 };
