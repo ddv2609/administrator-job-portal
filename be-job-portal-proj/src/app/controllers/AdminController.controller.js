@@ -246,8 +246,12 @@ class AdminController {
             },
             options: { skip: (page - 1) * size, limit: size },
             select: excludeFields,
+          }).populate({
+            path: "company",
+            select: "-_id name",
           });
           members = employers.filter(candidate => candidate.member !== null);
+          console.log(members);
           break;
         case "admin":
           const admins = await Admin.find({}).populate({
@@ -720,6 +724,47 @@ class AdminController {
       console.log(error);
       return res.status(500).json({
         message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [POST] /api/admin/member/info/:mid
+  async updateMemberInfo(req, res) {
+    const { mid } = req.params;
+    const info = req.body;
+    console.log(info);
+    try {
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
+      const candidate = await Candidate.findOneAndUpdate({ member: mid }, {
+        education: info.education,
+      }, { new: true }).select("-__v")
+
+      delete info.resumes;
+      delete info.avatar;
+      delete info.education;
+
+      const member = await Member.findOneAndUpdate({ _id: mid }, {
+        ...info,
+      }, { new: true }).select("-updatedAt -password -role -hidden -__v");
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return res.json({
+        info: { 
+          ...candidate.toObject(), 
+          member,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      await session.abortTransaction();
+      session.endSession();
+
+      return res.json(500).json({
+        message: error.toString(),
       });
     }
   }

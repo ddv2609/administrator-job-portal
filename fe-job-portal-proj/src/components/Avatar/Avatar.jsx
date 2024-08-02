@@ -139,7 +139,7 @@ function Avatar({ API, user=null, handleUpdateMember }) {
             ) }
           </div>
           <Dropdown
-            menu={{ items: member.avatar === "/avatar.png" || !avatar ? [editOptions[0]] : editOptions }}
+            menu={{ items: member.avatar === "/avatar.png" || avatar === "/avatar.png" ? [editOptions[0]] : editOptions }}
             open={openDropdown}
             trigger="click"
             onOpenChange={(open) => setOpenDropdown(open)}

@@ -1,4 +1,4 @@
-import { Col, ConfigProvider, DatePicker, Form, Input, Modal, Radio, Row } from "antd";
+import { Col, ConfigProvider, DatePicker, Form, Input, message, Modal, Radio, Row } from "antd";
 
 import moment from "moment";
 import axios from "axios";
@@ -26,19 +26,47 @@ const formatDate = (date) => {
 
 const primaryColor = "#00b14f";
 
-function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=>{} }) {
+function ModalUpdate({ children=null, apiUpdate, data, setModalData, handleUpdateMember=()=>{} }) {
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [form] = Form.useForm();
 
   const handleUpdate = () => {
     form
       .validateFields()
-      .then(values => console.log(values))
+      .then(async (values) => {
+        setLoading(true);
+        values.address = `${values.detail || "Không xác định"}, ${values.ward}, ${values.district}, ${values.province}`;
+        await axios.post(apiUpdate, values, {
+          withCredentials: true,
+        })
+          .then(res => {
+            const info = res.data.info;
+            handleUpdateMember({
+              uid: info._id,
+              ...info.member,
+              education: info.education,
+              status: info.member?.verifiedAt ? true : false,
+            });
+            messageApi.success("Cập nhật thành công!");
+          })
+          .catch(err => {
+            console.error(err);
+            messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
+          })
+          .finally(() => {
+            setLoading(false);
+            setModalData(null);
+          })
+      })
       .catch(error => {
         console.error('Validate Failed:', error);
+        messageApi.error(`Có lỗi xảy ra: ${error.message}`);
       });
   }
 
@@ -60,7 +88,7 @@ function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=
         setCities(cities);
       })
   }, []);
-
+  
   const handleSelectCitites = (_, option) => {
     setDistricts([]);
     setWards([]);
@@ -105,6 +133,7 @@ function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=
         }
       }}
     >
+      { contextHolder }
       <Modal
         title={<div className={styles.avatarWrapper}>
           <Avatar user={data} API={{
@@ -137,6 +166,7 @@ function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=
         okText="Cập nhật"
         onCancel={handleCancelForm}
         onOk={handleUpdate}
+        confirmLoading={loading}
       // footer={null}
       >
         <Form
@@ -190,6 +220,7 @@ function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=
             <Col lg={12}>
               <Address
                 label="Tỉnh/thành phố"
+                initialValue={data.address ? data.address.split(", ")[3] : "Không xác định"}
                 type="province" suffixIcon={<PiBuildingApartmentBold />}
                 options={cities}
                 required={false}
@@ -200,6 +231,7 @@ function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=
             <Col lg={12}>
               <Address
                 label="Quận/huyện"
+                initialValue={data.address ? data.address.split(", ")[2] : "Không xác định"}
                 type="district"
                 options={districts} suffixIcon={<HiBuildingOffice2 />}
                 required={false}
@@ -210,6 +242,7 @@ function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=
             <Col lg={12}>
               <Address
                 label="Xã/phường"
+                initialValue={data.address ? data.address.split(", ")[1] : "Không xác định"}
                 type="ward"
                 options={wards} suffixIcon={<TbBuildingCommunity />}
                 required={false}
@@ -220,11 +253,12 @@ function ModalUpdate({ children=null, data, setModalData, handleUpdateMember=()=
               <Form.Item
                 label={<span className={styles.lbUpdateFrm}>Địa chỉ chi tiết</span>}
                 name="detail"
-                initialValue={data?.address}
+                initialValue={data.address ? data.address.split(", ")[0] : ""}
               >
                 <Input placeholder="Địa chỉ chi tiết" />
               </Form.Item>
             </Col>
+            { children }
           </Row>
         </Form>
         { data?.resumes 

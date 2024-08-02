@@ -30,7 +30,8 @@ module.exports.runMessageService = (server) => {
   const io = new Server(server, {
     cors: {
       origin: ["http://127.0.0.1:3000", "http://localhost:3000", 
-        "http://127.0.0.1:5000", "http://localhost:5000"],
+        "http://127.0.0.1:5000", "http://localhost:5000", 
+        "http://127.0.0.1:7000", "http://localhost:7000"],
     },
     connectionStateRecovery: {
       maxDisconnectionDuration: 2 * 60 * 1000,
