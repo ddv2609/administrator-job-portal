@@ -71,7 +71,23 @@
 .infoLabel {
   font-weight: bold;
   white-space: nowrap;
-  
+
+}
+
+.infoItem1 {
+  display: flex;
+  flex-direction: column; /* Thay đổi hướng của flex container thành cột */
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.infoLabel1 {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.infoItem span {
+  display: block; /* Đảm bảo các span nằm trên các dòng khác nhau */
 }
 
 .jobActions {

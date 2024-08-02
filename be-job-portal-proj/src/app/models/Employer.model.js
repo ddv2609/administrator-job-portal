@@ -8,13 +8,13 @@ const EmployerSchema = new Schema({
     type: Schema.Types.ObjectId, 
     ref: "Member",
     unique: true,
-    require: true,
+    required: true,
   },
   company: { 
     type: Schema.Types.ObjectId, 
     ref: "Company",
     unique: true,
-    require: true,
+    required: true,
   }
 });
 

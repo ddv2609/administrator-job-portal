@@ -110,7 +110,7 @@ function Companies() {
       withCredentials: true,
     })
       .then(res => {
-        console.log(res.data.companies, pos);
+        // console.log(res.data.companies, pos);
         setData(res.data.companies?.map((data) => ({
           uid: data._id,
           companyId: data.company._id,
@@ -235,11 +235,11 @@ function Companies() {
       title: "Hành động",
       render: (record) => (
         <Space size="small" align="start">
-          <Tooltip title="Chỉnh sửa" placement="topRight">
+          {/* <Tooltip title="Chỉnh sửa" placement="topRight">
             <span className={styles.update} >
               <FaRegPenToSquare />
             </span>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title="Ẩn" placement="topRight">
             <Popconfirm title="Ẩn công ty" description="Bạn chắc chắn muốn ẩn công ty này?" placement="topRight"
               icon={<QuestionCircleOutlined style={{ color: "#ff4d4f" }} />} open={openConfirmHidden === record._id}

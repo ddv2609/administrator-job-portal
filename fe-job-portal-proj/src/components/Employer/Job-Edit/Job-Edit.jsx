@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Job-Edit.module.css';
 import { useNavigate } from 'react-router-dom';
+import { Col, Row } from "antd";
+import Address from "../../Address/Address";
+import axios from "axios";
+import { Select } from "antd";
 
 function JobEdit() {
   const navigate = useNavigate();
@@ -11,7 +15,7 @@ function JobEdit() {
   const [minSalary, setMinSalary] = useState('8');
   const [maxSalary, setMaxSalary] = useState('25');
   const [salaryOption, setSalaryOption] = useState('');
-  const [location, setLocation] = useState('Hà Nội');
+  const [location, setLocation] = useState('116 Hà Nội');
   const [experience, setExperience] = useState('Không yêu cầu kinh nghiệm');
   const [deadline, setDeadline] = useState('2024-08-11');
   const [jobDescription, setJobDescription] = useState(`Tìm kiếm khách hàng, tư vấn các sản phẩm của công ty tới khách hàng. Báo giá, đàm phán, ký kết và triển khai hợp đồng. Chăm sóc các khách hàng, đối tác đã và đang sử dụng sản phẩm của công ty. Thực hiện các công việc khác theo yêu cầu của cấp trên/người quản lý trực tiếp trên cơ sở phù hợp với công việc chung của công ty.`);
@@ -24,6 +28,78 @@ function JobEdit() {
   const [numberOfVacancies, setNumberOfVacancies] = useState('5');
   const [employmentType, setEmploymentType] = useState('Toàn thời gian');
   const [gender, setGender] = useState('Không yêu cầu');
+  const [cities, setCities] = useState('Hà Nội');
+  const [districts, setDistricts] = useState('Hà Đông');
+  const [wards, setWards] = useState('Mỗ Lao');
+  const [selectedCategories, setSelectedCategories] = useState(['2', '3', '4', '5']);
+
+
+  useEffect(() => {
+    axios.get("https://vapi.vnappmob.com/api/province/")
+      .then(res => {
+        const cities = res.data.results.map((city, index) => ({
+          id: index,
+          key: city.province_id,
+          label: city.province_name,
+          value: city.province_name,
+        }));
+  
+        setCities(cities);
+  
+        // Set initial selected city based on current value
+        const selectedCity = cities.find(city => city.value === 'Hà Nội');
+        if (selectedCity) {
+          handleSelectCitites(selectedCity, { key: selectedCity.key });
+        }
+      })
+  }, []);
+  
+  const handleSelectCitites = (selectedCity, option) => {
+    setLocation(selectedCity.value); // Update location based on selected city
+    setDistricts([]);
+    setWards([]);
+  
+    axios.get(`https://vapi.vnappmob.com/api/province/district/${option.key}`)
+      .then(res => {
+        const districts = res.data.results.map((district, index) => ({
+          id: index,
+          key: district.district_id,
+          label: district.district_name,
+          value: district.district_name,
+        }));
+  
+        setDistricts(districts);
+  
+        // Set initial selected district based on current value
+        const selectedDistrict = districts.find(district => district.value === 'Hà Đông');
+        if (selectedDistrict) {
+          handleSelectDistricts(selectedDistrict, { key: selectedDistrict.key });
+        }
+      })
+  }
+  
+  const handleSelectDistricts = (selectedDistrict, option) => {
+    setWards([]);
+  
+    axios.get(`https://vapi.vnappmob.com/api/province/ward/${option.key}`)
+      .then(res => {
+        const wards = res.data.results.map((ward, index) => ({
+          id: index,
+          key: ward.ward_id,
+          label: ward.ward_name,
+          value: ward.ward_name,
+        }));
+  
+        setWards(wards);
+  
+        // Set initial selected ward based on current value
+        const selectedWard = wards.find(ward => ward.value === 'Mỗ Lao');
+        if (selectedWard) {
+          setWards([selectedWard]);
+        }
+      })
+  }
+  
 
   const handleSave = () => {
     // Handle save logic
@@ -33,6 +109,7 @@ function JobEdit() {
 
   return (
     <div className={styles.container}>
+      <h1>Sửa công việc</h1>
       <div className={styles.formGroup}>
         <label className={styles.label}>Tiêu đề công việc</label>
         <input
@@ -111,6 +188,38 @@ function JobEdit() {
         />
       </div>
 
+      <Row gutter={[32, 0]}>
+        <Col lg={12}>
+          <Address
+            label="Địa điểm làm việc"
+            type="province" size="large" 
+            options={cities}
+            message="Vui lòng chọn tỉnh/thành phố làm việc"
+            placeholder="Chọn tỉnh/thành phố"
+            onSelect={handleSelectCitites}
+          />
+        </Col>
+        <Col lg={12}>
+          <Address
+            label="Quận/huyện"
+            type="district" size="large"
+            options={districts} 
+            message="Vui lòng chọn quận/huyện làm việc"
+            placeholder="Chọn quận/huyện"
+            onSelect={handleSelectDistricts}
+          />
+        </Col>
+        <Col lg={12}>
+          <Address
+            label="Xã/phường"
+            type="ward" size="large"
+            options={wards}
+            message="Vui lòng chọn xã/phường làm việc"
+            placeholder="Chọn xã/phường"
+          />
+        </Col>
+      </Row>
+
       <div className={styles.formGroup}>
         <label className={styles.label}>Kinh nghiệm</label>
         <select
@@ -118,7 +227,7 @@ function JobEdit() {
           value={experience}
           onChange={(e) => setExperience(e.target.value)}
         >
-          <option value="Chưa có kinh nghiệm">Chưa có kinh nghiệm</option>
+          <option value="Không yêu cầu kinh nghiệm">Không yêu cầu kinh nghiệm</option>
           <option value="Dưới 1 năm">Dưới 1 năm</option>
           <option value="1 năm">1 năm</option>
           <option value="2 năm">2 năm</option>
@@ -200,14 +309,10 @@ function JobEdit() {
           value={level}
           onChange={(e) => setLevel(e.target.value)}
         >
-          <option value="Thực tập sinh">Thực tập sinh</option>
-          <option value="Giám đốc">Giám đốc</option>
-          <option value="Phó giám đốc">Phó giám đốc</option>
-          <option value="Trưởng chi nhánh">Trưởng chi nhánh</option>
-          <option value="Quản lí / Giám sát">Quản lí / Giám sát</option>
-          <option value="Trưởng / Phó phòng">Trưởng / Phó phòng</option>
-          <option value="Trưởng nhóm">Trưởng nhóm</option>
           <option value="Nhân viên">Nhân viên</option>
+          <option value="Trưởng nhóm">Trưởng nhóm</option>
+          <option value="Quản lý">Quản lý</option>
+          <option value="Giám đốc">Giám đốc</option>
         </select>
       </div>
 
@@ -222,7 +327,7 @@ function JobEdit() {
       </div>
 
       <div className={styles.formGroup}>
-        <label className={styles.label}>Hình thức làm việc</label>
+        <label className={styles.label}>Loại hình công việc</label>
         <select
           className={styles.input}
           value={employmentType}
@@ -241,13 +346,31 @@ function JobEdit() {
           value={gender}
           onChange={(e) => setGender(e.target.value)}
         >
-          <option value="">Chọn giới tính</option>
+          <option value="Không yêu cầu">Không yêu cầu</option>
           <option value="Nam">Nam</option>
           <option value="Nữ">Nữ</option>
-          <option value="Không yêu cầu">Không yêu cầu</option>
         </select>
       </div>
 
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Danh mục</label>
+        <Select
+          mode="multiple"
+          allowClear
+          style={{ width: '100%' }}
+          placeholder="Chọn danh mục"
+          value={selectedCategories}
+          onChange={(value) => setSelectedCategories(value)}
+        >
+          <Select.Option value="1">Danh mục 1</Select.Option>
+          <Select.Option value="2">Danh mục 2</Select.Option>
+          <Select.Option value="3">Danh mục 3</Select.Option>
+          <Select.Option value="4">Danh mục 4</Select.Option>
+          <Select.Option value="5">Danh mục 5</Select.Option>
+          <Select.Option value="6">Danh mục 6</Select.Option>
+          <Select.Option value="7">Danh mục 7</Select.Option>
+        </Select>
+      </div>
       <div className={styles.formActions}>
         <button className={styles.saveButton} onClick={handleSave}>Lưu</button>
         <button className={styles.cancelButton} onClick={() => navigate('/employer/companyjob')}>Hủy</button>

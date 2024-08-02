@@ -7,7 +7,8 @@ const candidateController = require("../app/controllers/CandidateController.cont
 router.get("/applied", uploadImage.single("file"), candidateController.getJobApplied);
 router.delete("/resume/:resumeId", candidateController.deleteResume);
 router.post("/resumes/", uploadResume.single("file"), candidateController.updateResumes);
-router.post("/avatar/", candidateController.updateAvatar);
+router.delete("/avatar/", candidateController.deleteAvatar);
+router.post("/avatar/", uploadImage.single("file"), candidateController.updateAvatar);
 router.post("/info/", candidateController.updateInfo);
 router.get("/info/", candidateController.getInfo);
 
