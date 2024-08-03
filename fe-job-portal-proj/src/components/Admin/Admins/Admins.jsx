@@ -127,7 +127,7 @@ function Admins() {
   ];
 
   useEffect(() => {
-    getAdmins(1, 10, "Admins.jsx");
+    getAdmins(1, 10, false, "Admins.jsx");
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

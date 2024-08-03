@@ -10,7 +10,7 @@ module.exports.sendMail = (to, subject, htmlContent) => {
     secure: false,
     auth: {
       user: keys.mailUsername,
-      pass: "tjis evdv sewx uxai",
+      pass: keys.appPassword,
     },
   });
 
