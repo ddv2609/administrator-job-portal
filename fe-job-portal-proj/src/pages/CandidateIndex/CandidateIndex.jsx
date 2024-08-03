@@ -147,21 +147,7 @@ function CandidateIndex(props) {
                             paddingBottom: "30px",
                         }}
                     >
-                        <Select
-                            showSearch
-                            placeholder="Select a person"
-                            filterOption={(input, option) =>
-                                (option?.label ?? "")
-                                    .toLowerCase()
-                                    .includes(input.toLowerCase())
-                            }
-                            options={[
-                                { value: "1", label: "Địa điểm" },
-                                { value: "2", label: "Mức Lương" },
-                                { value: "3", label: "Kinh nghiệm " },
-                                { value: "4", label: "Ngành nghề" },
-                            ]}
-                        />
+
                     </div>
                     <div
                         className={styles.list_job_content}

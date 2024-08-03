@@ -3,11 +3,11 @@ const Job = require("../models/Job.model");
 class JobController {
   // [GET] /api/job/suggestion?page=<number>&size=<number>
   async getAllJobs(req, res) {
-    const { page = 1, size = 0 } = req.query;
+    const { page, size } = req.query;
 
     try {
       const total = await Job.countDocuments();
-      const jobs = await Job.find({ hidden: false })
+      const jobs = await Job.find()
         .skip((page - 1) * size)
         .limit(size)
         .select("-__v -updatedAt -hiddenAt -hiddenBy")
@@ -33,7 +33,7 @@ class JobController {
   async getJobInfo(req, res) {
     const { jobId } = req.params;
     try {
-      const job = await Job.findOne({ 
+      const job = await Job.findOne({
         _id: jobId,
         hidden: false,
       }).select("-__v -updatedAt -hiddenAt -hiddenBy");
@@ -50,4 +50,4 @@ class JobController {
   }
 }
 
-module.exports = new JobController;
+module.exports = new JobController();

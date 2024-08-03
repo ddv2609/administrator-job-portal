@@ -6,6 +6,7 @@ import UserInfo from '../../components/CandidateCV/UserInfo';
 import Footer from "../../components/FooterMain/Footer";
 import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
 
+
 const { Sider, Content } = Layout;
 
 const contentStyle = {

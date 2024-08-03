@@ -10,8 +10,8 @@ module.exports.sendMail = (to, subject, htmlContent) => {
     secure: false,
     auth: {
       user: keys.mailUsername,
-      pass: keys.appPassword,
-    }
+      pass: "tjis evdv sewx uxai",
+    },
   });
 
   const options = {
@@ -19,7 +19,7 @@ module.exports.sendMail = (to, subject, htmlContent) => {
     to: to,
     subject: subject,
     html: htmlContent,
-  }
+  };
 
   return transport.sendMail(options);
-}
+};
