@@ -3,6 +3,7 @@ const { bucket, getDownloadURL } = require("../../config/firebase");
 
 const Member = require("../models/Member.model");
 const Employer = require("../models/Employer.model");
+const Job = require("../models/Job.model");
 
 class EmployerController {
   // [GET] /api/employer/info/
@@ -107,6 +108,29 @@ class EmployerController {
       console.log(error);
       return res.status(500).json({
         message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [POST] /api/employer/job/:jobId
+  async updateJobInfo(req, res) {
+    const { jobId } = req.params;
+    const info = req.body;
+    try {
+      const { company } = await Employer.findById(req.user.uid);
+
+      const job = await Job.findOneAndUpdate({
+        _id: jobId,
+        company: company,
+      }, info, { new: true }).select("-__v -updatedAt -hiddenAt -hiddenBy");
+
+      return res.json({
+        info: job,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: error.toString(),
       });
     }
   }

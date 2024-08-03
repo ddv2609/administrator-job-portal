@@ -251,7 +251,6 @@ class AdminController {
             select: "-_id name",
           });
           members = employers.filter(candidate => candidate.member !== null);
-          console.log(members);
           break;
         case "admin":
           const admins = await Admin.find({}).populate({
