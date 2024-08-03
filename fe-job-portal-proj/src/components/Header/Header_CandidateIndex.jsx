@@ -14,7 +14,9 @@ function Header_CandidateIndex(props) {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/candidate/info/');
+                const response = await axios.get('http://localhost:8000/api/candidate/info/'
+                    , { withCredentials: true }
+                );
                 const userData = response.data.info.member;
                 setUser({
                     name: userData.fullName,
@@ -78,7 +80,7 @@ function Header_CandidateIndex(props) {
                                     <ul style={{ textDecoration: "none", listStyleType: "none" }}>
 
                                         <li>
-                                            <Link to="/cv-management">
+                                            <Link to="/candidate/cv-management">
                                                 <span className="material-symbols-outlined">
                                                     publish
                                                 </span>
