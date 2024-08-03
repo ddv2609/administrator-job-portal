@@ -1,10 +1,31 @@
 import { Layout } from "antd";
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import styles from "./Header.module.css";
 
 
 function Header_CandidateIndex(props) {
+    const [user, setUser] = useState({
+        name: '',
+        avatar: 'https://www.w3schools.com/howto/img_avatar.png',
+    });
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/api/candidate/info/');
+                const userData = response.data.info.member;
+                setUser({
+                    name: userData.fullName,
+                    avatar: userData.avatar || 'https://www.w3schools.com/howto/img_avatar.png',
+                });
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
     return (
         <div>
             <Layout>
@@ -90,9 +111,9 @@ function Header_CandidateIndex(props) {
 
                         </div>
                         <div className={styles.header_profile}>
-                            <a href="#profile" >
+                            <a href="#profile">
                                 <img
-                                    src="https://www.w3schools.com/howto/img_avatar.png"
+                                    src={user.avatar}
                                     alt="profile"
                                     style={{
                                         width: "40px",
@@ -104,7 +125,7 @@ function Header_CandidateIndex(props) {
                             <div className={styles.functuon_profile}>
                                 <div className={styles.profile_inf}>
                                     <img
-                                        src="https://www.w3schools.com/howto/img_avatar.png"
+                                        src={user.avatar}
                                         alt="profile"
                                         style={{
                                             width: "40px",
@@ -112,19 +133,17 @@ function Header_CandidateIndex(props) {
                                             borderRadius: "50%",
                                         }}
                                     />
-                                    <p style={{
-                                        marginLeft: "20px",
-                                    }}>Phạm Thanh Tú</p>
+                                    <p style={{ marginLeft: "20px" }}>{user.name}</p>
                                 </div>
                                 <div className={styles.function_list_profile}>
                                     <div className={styles.edit_inf}>
-                                        <span class="material-symbols-outlined">
+                                        <span className="material-symbols-outlined">
                                             edit_document
                                         </span>
                                         <a href="#edit">Chỉnh sửa thông tin</a>
                                     </div>
                                     <div className={styles.logout}>
-                                        <span class="material-symbols-outlined">
+                                        <span className="material-symbols-outlined">
                                             logout
                                         </span>
                                         <a href="#logout">Đăng xuất</a>
@@ -135,7 +154,6 @@ function Header_CandidateIndex(props) {
                     </div>
                 </div>
             </Layout >
-            <Outlet />
         </div >
     );
 }

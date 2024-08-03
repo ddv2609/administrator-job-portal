@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "../FooterMain/Footer.module.css";
 import { Link } from "react-router-dom";
+import styles from "../FooterMain/Footer.module.css";
 function Footer(props) {
   return (
     <div className={styles.footer_content}>
@@ -21,7 +21,7 @@ function Footer(props) {
               color: "brown",
             }}
           >
-            Poral
+            Portal
           </h1>
         </div>
 

@@ -19,6 +19,7 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import VerifyEmail from "./pages/VerifyEmail/VerifyEmail";
 
+import History from "./components/Admin/History/History";
 import CompanyCandidateList from "./components/Employer/Candidate-List/Candidate-List";
 import CompanyCandidateProflie from "./components/Employer/Candidate-Profile/Candidate-Profile";
 import CompanyChat from "./components/Employer/Chat/Chat";
@@ -29,14 +30,13 @@ import EmployerProfile from "./components/Employer/Employer-Profile/Employer-Pro
 import CompanyJobDetail from "./components/Employer/Job-Detail/Job-Detail";
 import CompanyJobEdit from "./components/Employer/Job-Edit/Job-Edit";
 import CompanyJobPost from "./components/Employer/Job-Post/Job-Post";
-import History from "./components/Admin/History/History";
 import CompanyJob from "./components/Employer/Job/Job";
 import CandidateIndex from "./pages/CandidateIndex/CandidateIndex";
 
 import { ConfigProvider } from "antd";
-import { themes } from "./helper";
 import Account from "./components/Admin/Account/Account";
 import Chat from "./components/Admin/Chat/Chat";
+import { themes } from "./helper";
 
 const socket = socketClient("http://127.0.0.1:8000", {
   reconnectionAttempts: 5,
@@ -61,9 +61,8 @@ function App() {
           <Route path="/employer/index" element={<EmployeerIndex />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
           <Route path="/company/company-profile" element={<CompanyProfile />} />
-          <Route path="/candidate" element={<CandidateIndex />}>
-            <Route path="cv-management" element={<CVManagementPage />} />
-          </Route>
+          <Route path="/candidate" element={<CandidateIndex />} />
+          <Route path="/candidate/cv-management" element={<CVManagementPage />} />
           <Route path="/employer" element={<Employer />}>
             <Route path="company-profile" index element={<CompanyProflie />} />
             <Route
