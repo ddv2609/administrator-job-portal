@@ -18,11 +18,20 @@ class AuthController {
   // [POST] /auth/login
   async loginWithPassword(req, res) {
     const { email, password, role } = req.body;
-    const member = await Member.findOneAndUpdate({ email: email }, {
-      onlineAt: Date.now(),
-    }, { new: true });
+    const member = await Member.findOneAndUpdate(
+      { email: email },
+      {
+        onlineAt: Date.now(),
+      },
+      { new: true }
+    );
 
-    if (member && !member.hidden && member.verifiedAt !== null && member.role === role) {
+    if (
+      member &&
+      !member.hidden &&
+      member.verifiedAt !== null &&
+      member.role === role
+    ) {
       bcrypt.compare(password, member.password, async (err, result) => {
         if (result) {
           const payload = {
@@ -294,10 +303,13 @@ class AuthController {
 
   // [GET] /auth/logout
   async logout(req, res) {
-    await Member.updateOne({ email: req.user.email }, { 
-      online: false,
-      onlineAt: Date.now(),
-    });
+    await Member.updateOne(
+      { email: req.user.email },
+      {
+        online: false,
+        onlineAt: Date.now(),
+      }
+    );
     res.clearCookie("jwt");
     res.sendStatus(200);
   }

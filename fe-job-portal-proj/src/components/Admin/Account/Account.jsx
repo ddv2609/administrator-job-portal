@@ -56,7 +56,7 @@ function Account() {
 
   return (
     <div className={styles.account}>
-      { contextHolder }
+      {contextHolder}
       <ConfigProvider
         theme={{
           components: {
@@ -82,18 +82,18 @@ function Account() {
           />
         </div>
         <div className={styles.info}>
-          <p className={styles.address}><IoLocationSharp /><span>{ admin.address || "Không xác định" }</span></p>
+          <p className={styles.address}><IoLocationSharp /><span>{admin.address || "Không xác định"}</span></p>
           <Row justify="center" align="middle" gutter={[24, 0]}>
             <Col>
-              <p className={styles.tel}><BsFillTelephoneFill /><span>{ admin.tel || "Không xác định" }</span></p>
+              <p className={styles.tel}><BsFillTelephoneFill /><span>{admin.tel || "Không xác định"}</span></p>
             </Col>
             <Col>
-              <p className={styles.email}><TfiEmail /><span>{ admin.email || "Không xác định" }</span></p>
+              <p className={styles.email}><TfiEmail /><span>{admin.email || "Không xác định"}</span></p>
             </Col>
             <Col>
-              <p className={styles.dob}><FaBirthdayCake /><span>{ admin.dob 
-                ?  formatDate(admin.dob)
-                : "Không xác định" }</span></p>
+              <p className={styles.dob}><FaBirthdayCake /><span>{admin.dob
+                ? formatDate(admin.dob)
+                : "Không xác định"}</span></p>
             </Col>
           </Row>
         </div>
