@@ -1,7 +1,7 @@
 
 import { Avatar } from 'antd';
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 const userInfoStyle = {
     backgroundColor: '#fff',
@@ -58,7 +58,12 @@ const UserInfo = () => {
     return (
         <div style={userInfoStyle}>
             <div>
-                <Avatar size={64} src={user.avatar} /> <span>{user.name}</span>
+            <Avatar
+                API={{
+                    upload: "http://localhost:8000/api/candidate/avatar",
+                    delete: "http://localhost:8000/api/candidate/avatar"
+                }}
+            /> <span>{user.name}</span>
                 <p>Chào mừng bạn trở lại, {user.name}. Hãy làm nổi bật hồ sơ của mình nhé!</p>
             </div>
             <div>

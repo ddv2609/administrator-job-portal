@@ -136,6 +136,24 @@ class CandidateController {
     }
   }
 
+  // [GET] /api/candidate/resumes
+  async getResumes(req, res) {
+    try {
+        const candidate = await Candidate.findById(req.user.uid).select('resumes');
+        if (!candidate) {
+            return res.status(404).json({ message: 'Ứng viên không tìm thấy' });
+        }
+        res.json({
+            resumes: candidate.resumes,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: `Có lỗi xảy ra: ${error.message}`,
+        });
+    }
+  }
+
   // [POST] /api/candidate/resumes/
   async updateResumes(req, res) {
     try {

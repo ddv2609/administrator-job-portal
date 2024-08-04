@@ -5,6 +5,7 @@ const { uploadImage, uploadResume } = require("../config/multer");
 const candidateController = require("../app/controllers/CandidateController.controller");
 
 router.get("/applied", uploadImage.single("file"), candidateController.getJobApplied);
+router.get("/resumes/", candidateController.getResumes)
 router.delete("/resume/:resumeId", candidateController.deleteResume);
 router.post("/resumes/", uploadResume.single("file"), candidateController.updateResumes);
 router.delete("/avatar/", candidateController.deleteAvatar);
