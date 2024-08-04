@@ -1,7 +1,7 @@
-import { Layout } from "antd";
+import { Layout, message } from "antd";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from "./Header.module.css";
 
 
@@ -10,6 +10,8 @@ function Header_CandidateIndex(props) {
         name: '',
         avatar: 'https://www.w3schools.com/howto/img_avatar.png',
     });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -29,6 +31,20 @@ function Header_CandidateIndex(props) {
 
         fetchUserData();
     }, []);
+
+    const handleLogout = async () => {
+        try {
+            await axios.get('http://localhost:8000/auth/logout', 
+                { withCredentials: true }
+            );
+            message.success('Đăng xuất thành công');
+            navigate('/login'); // Redirect to login page after logout
+        } catch (error) {
+            console.error('Error logging out:', error);
+            message.error('Có lỗi xảy ra khi đăng xuất');
+        }
+    };
+
     
     return (
         <div>
@@ -145,10 +161,8 @@ function Header_CandidateIndex(props) {
                                         <a href="/candidate/update-info">Chỉnh sửa thông tin</a>
                                     </div>
                                     <div className={styles.logout}>
-                                        <span className="material-symbols-outlined">
-                                            logout
-                                        </span>
-                                        <a href="">Đăng xuất</a>
+                                        <span className="material-symbols-outlined">logout</span>
+                                        <a href="#logout" onClick={handleLogout}>Đăng xuất</a>
                                     </div>
                                 </div>
                             </div>
