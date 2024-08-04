@@ -1,14 +1,13 @@
 import { Button, Dropdown, Image, message, Space, Spin, Upload } from "antd";
 
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
 
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { LoadingOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, LoadingOutlined } from "@ant-design/icons";
 
-import styles from "./Avatar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminInfo } from "../../actions";
+import styles from "./Avatar.module.css";
 
 function Avatar({ API, user=null, handleUpdateMember }) {
   const member = useSelector(state => state.memberReducer);
@@ -49,7 +48,7 @@ function Avatar({ API, user=null, handleUpdateMember }) {
 
   const beforeUpload = (file) => {
     if (!file.type.match(/image.*/)) {
-      messageApi.error("Bạn chỉ có thể tải file ảnh nên!");
+      messageApi.error("Bạn chỉ có thể tải file ảnh lên!");
     } else {
       setUpLoad(true);
     }
