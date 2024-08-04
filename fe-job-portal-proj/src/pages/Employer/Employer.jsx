@@ -18,7 +18,7 @@ function Employer() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
 
-  const admin = useSelector(state => state.memberReducer);
+  const employer = useSelector(state => state.memberReducer);
   const dispatch = useDispatch();
 
   const nav = useNavigate();
@@ -26,7 +26,7 @@ function Employer() {
   return (
     <div className={styles.adminPage}>
         <Layout>
-        <AdminSider collapsed={collapsed} />
+        {/* <AdminSider collapsed={collapsed} /> */}
         <Layout
           style={{
             maxHeight: '100vh',
@@ -41,7 +41,7 @@ function Employer() {
             <HeaderAdmin
               collapsed={collapsed}
               setCollapsed={setCollapsed}
-              admin={admin}
+              employer={employer}
             />
           </Header>
           <Content

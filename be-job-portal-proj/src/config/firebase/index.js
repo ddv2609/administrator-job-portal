@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const { getDownloadURL } = require("firebase-admin/storage");
+const { getDownloadURL, ref } = require("firebase-admin/storage");
 
 const serviceAccount = require("../secrets/firebase/service-account.json");
 
@@ -10,4 +10,4 @@ admin.initializeApp({
 
 const bucket = admin.storage().bucket();
 
-module.exports = { bucket, getDownloadURL };
+module.exports = { bucket, getDownloadURL, ref: admin.storage.ref };

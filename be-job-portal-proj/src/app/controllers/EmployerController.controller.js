@@ -4,6 +4,8 @@ const { bucket, getDownloadURL } = require("../../config/firebase");
 const Member = require("../models/Member.model");
 const Employer = require("../models/Employer.model");
 const Job = require("../models/Job.model");
+const Application = require("../models/Application.model");
+const Candidate = require("../models/Candidate.model");
 
 class EmployerController {
   // [GET] /api/employer/info/
@@ -126,6 +128,38 @@ class EmployerController {
 
       return res.json({
         info: job,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: error.toString(),
+      });
+    }
+  }
+
+  // [GET] api/employer/job/applied/:jobId
+  async getListCandidateApplied(req, res) {
+    const { jobId } = req.params;
+    try {
+      const applications = await Application.find({
+        job: jobId
+      })
+        .populate({
+          path: "candidate",
+          select: "-__v",
+          populate: {
+            path: "member",
+            select: "-updatedAt -password -role -hidden -__v",
+          }
+        });
+
+      // const candidates = await Promise.all(applications.map(application => Candidate.findById(application.candidate).select("-__v").populate({
+      //   path: "member",
+      //   select: "-updatedAt -password -role -hidden -__v"
+      // })));
+
+      return res.json({
+        applications,
       });
     } catch (error) {
       console.log(error);
