@@ -1,8 +1,8 @@
 import { Layout } from "antd";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import styles from "./Header.module.css";
 import { Link } from 'react-router-dom';
+import styles from "./Header.module.css";
 
 
 function Header_CandidateIndex(props) {
@@ -29,6 +29,7 @@ function Header_CandidateIndex(props) {
 
         fetchUserData();
     }, []);
+    
     return (
         <div>
             <Layout>
@@ -141,13 +142,13 @@ function Header_CandidateIndex(props) {
                                         <span className="material-symbols-outlined">
                                             edit_document
                                         </span>
-                                        <a href="#edit">Chỉnh sửa thông tin</a>
+                                        <a href="/candidate/update-info">Chỉnh sửa thông tin</a>
                                     </div>
                                     <div className={styles.logout}>
                                         <span className="material-symbols-outlined">
                                             logout
                                         </span>
-                                        <a href="#logout">Đăng xuất</a>
+                                        <a href="">Đăng xuất</a>
                                     </div>
                                 </div>
                             </div>
