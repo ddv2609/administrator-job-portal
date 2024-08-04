@@ -37,6 +37,7 @@ import { ConfigProvider } from "antd";
 import Account from "./components/Admin/Account/Account";
 import Chat from "./components/Admin/Chat/Chat";
 import { themes } from "./helper";
+import UpdateCandidateInfo from "./pages/CVManagement/UpdateCandidateInfo";
 
 const socket = socketClient("http://127.0.0.1:8000", {
   reconnectionAttempts: 5,
@@ -63,6 +64,7 @@ function App() {
           <Route path="/company/company-profile" element={<CompanyProfile />} />
           <Route path="/candidate" element={<CandidateIndex />} />
           <Route path="/candidate/cv-management" element={<CVManagementPage />} />
+          <Route path="/candidate/update-info" element={<UpdateCandidateInfo />} />
           <Route path="/employer" element={<Employer />}>
             <Route path="company-profile" index element={<CompanyProflie />} />
             <Route

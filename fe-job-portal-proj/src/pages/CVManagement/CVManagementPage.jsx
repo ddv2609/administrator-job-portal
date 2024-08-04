@@ -41,13 +41,6 @@ const CVManagementPage = () => {
         setCvs(prevCvs => prevCvs.filter(cv => cv.id !== cvId));
     };
 
-    const user = {
-        name: "Dương Hồng Đức",
-        email: "hongduc20062002@gmail.com",
-        phone: "0339230195",
-        address: "PX, Hà Nội",
-        major: "CNTT"
-    };
     return (
         <Layout style={layoutStyle}>
             <HeaderCadidateIdex />
@@ -61,7 +54,7 @@ const CVManagementPage = () => {
                 </Content>
                 <Sider width="30%" style={siderStyle}>
                     <div>
-                        <UserInfo user={user} />
+                        <UserInfo />
                     </div>
                 </Sider>
             </Layout>
