@@ -11,7 +11,11 @@ class JobController {
         .skip((page - 1) * size)
         .limit(size)
         .select("-__v -updatedAt -hiddenAt -hiddenBy")
-        .populate("categories");
+        .populate("categories")
+        .populate({
+          path: "company",
+          select: "_id name logo companySize field address website",
+        });
 
       return res.json({
         jobs,

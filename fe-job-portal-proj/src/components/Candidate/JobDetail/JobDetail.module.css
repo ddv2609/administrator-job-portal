@@ -1,0 +1,72 @@
+.viewDetailJob {
+  background-color: var(--container-color);
+  width: 100%;
+  min-height: 100vh;
+}
+
+.viewDetailJob .detailWrapper {
+  margin: 0 32px;
+  padding: 24px 16px;
+}
+
+.viewDetailJob .detailWrapper .generalInfo,
+.viewDetailJob .detailWrapper .detailInfo,
+.viewDetailJob .detailWrapper .companyInfo,
+.viewDetailJob .detailWrapper .jobInfo,
+.viewDetailJob .detailWrapper .extraInfo {
+  background-color: #FFF;
+  border-radius: 8px;
+}
+
+.viewDetailJob .detailWrapper .generalInfo,
+.viewDetailJob .detailWrapper .detailInfo {
+  padding: 20px 24px;
+}
+
+.viewDetailJob .detailWrapper .companyInfo,
+.viewDetailJob .detailWrapper .jobInfo,
+.viewDetailJob .detailWrapper .extraInfo {
+  padding: 20px;
+}
+
+.viewDetailJob .generalInfo .title {
+  margin-bottom: 24px;
+}
+
+.viewDetailJob .generalInfo .item {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 12px;
+}
+
+.viewDetailJob .generalInfo .item .icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
+  background-color: var(--title-color);
+  padding: 6px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.viewDetailJob .generalInfo .item .salary,
+.viewDetailJob .generalInfo .item .location,
+.viewDetailJob .generalInfo .item .experience {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  gap: 6px;
+}
+
+.viewDetailJob .generalInfo .item .label {
+  color: var(--text-secondary);
+}
+
+.viewDetailJob .generalInfo .item .value {
+  font-weight: 500;
+}

@@ -12,7 +12,7 @@ const { roleVerify } = require("../app/middlewares/roleMiddleware");
 
 module.exports = (app) => {
   app.use("/api/application", verifyJwt, applicationRoute);
-  app.use("/api/job", verifyJwt, jobRoute);
+  app.use("/api/job", jobRoute);
   app.use("/api/job-category", jobCategoryRoute);
   app.use("/api/company", verifyJwt, roleVerify("employer"), companyRoute);
   app.use("/api/employer", verifyJwt, roleVerify("employer"), employerRoute);
