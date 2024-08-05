@@ -5,7 +5,6 @@ const Member = require("../models/Member.model");
 const Employer = require("../models/Employer.model");
 const Job = require("../models/Job.model");
 const Application = require("../models/Application.model");
-const Candidate = require("../models/Candidate.model");
 
 class EmployerController {
   // [GET] /api/employer/info/
@@ -69,6 +68,7 @@ class EmployerController {
     }
   }
 
+  // [POST] api/employer/avatar
   async updateAvatar(req, res) {
     try {
       if (!req.file)
@@ -114,6 +114,25 @@ class EmployerController {
     }
   }
 
+  // [DELETE] api/employer/avatar
+  async deleteAvatar(req, res) {
+    try {
+      const [files] = await bucket.getFiles({ prefix: `employer/${req.user.id}/avatar` });
+      await Promise.all(files.map(file => file.delete()));
+
+      await Member.updateOne({ _id: req.user.id }, {
+        avatar: null,
+      });
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
   // [POST] /api/employer/job/:jobId
   async updateJobInfo(req, res) {
     const { jobId } = req.params;
@@ -124,7 +143,9 @@ class EmployerController {
       const job = await Job.findOneAndUpdate({
         _id: jobId,
         company: company,
-      }, info, { new: true }).select("-__v -updatedAt -hiddenAt -hiddenBy");
+      }, info, { new: true }).select("-__v -updatedAt -hiddenAt -hiddenBy").populate({
+        path: "categories"
+      });
 
       return res.json({
         info: job,

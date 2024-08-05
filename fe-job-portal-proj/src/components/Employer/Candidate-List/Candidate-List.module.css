@@ -98,3 +98,39 @@
 .resume .iconDocFile {
   color: #4285F4;
 }
+
+.titleWrapper {
+  position: relative;
+}
+
+.heading {
+  text-align: center;
+}
+
+.back {
+  font-size: 24px;
+  font-weight: 500;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  padding: 4px 24px;
+  cursor: pointer;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 16px;
+}
+
+.back:hover {
+  background-color: var(--bg-blur);
+  color: var(--title-color);
+}
+
+.refresh {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 28px;
+}

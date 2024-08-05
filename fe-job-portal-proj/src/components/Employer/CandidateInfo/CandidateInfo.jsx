@@ -1,16 +1,8 @@
-import { Col, ConfigProvider, DatePicker, Form, Input, message, Modal, Radio, Row } from "antd";
+import { Col, ConfigProvider, DatePicker, Input, Modal, Radio, Row } from "antd";
 
 import moment from "moment";
-import axios from "axios";
 
-import { BsFillTelephoneFill, BsFiletypeDocx, BsFiletypeDoc } from "react-icons/bs";
-import { TfiEmail } from "react-icons/tfi";
-import { FaBirthdayCake } from "react-icons/fa";
-import { IoLocationSharp } from "react-icons/io5";
-import { PiBuildingApartmentBold } from "react-icons/pi";
-import { HiBuildingOffice2 } from "react-icons/hi2";
-import { TbBuildingCommunity } from "react-icons/tb";
-import { LuInbox } from "react-icons/lu";
+import { BsFiletypeDocx, BsFiletypeDoc } from "react-icons/bs";
 import { CiInboxOut } from "react-icons/ci";
 import { FaFilePdf } from "react-icons/fa6";
 import { MdOutlineMessage } from "react-icons/md";

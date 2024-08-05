@@ -1,12 +1,11 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Avatar, Button, ConfigProvider, Dropdown, Menu, Space } from "antd";
+import { Avatar, ConfigProvider, Dropdown, Menu, Space } from "antd";
 
 import { AiOutlineLogout, AiOutlineMail, AiOutlineSetting, AiOutlineUser } from "react-icons/ai";
-import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
+import { FaCheckToSlot, FaEyeSlash } from "react-icons/fa6";
 import { IoMdChatbubbles } from "react-icons/io";
-import { RiUserSearchFill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { PiBellRingingBold } from "react-icons/pi";
 import { ImProfile } from "react-icons/im";
@@ -23,6 +22,7 @@ function Header({ collapsed, setCollapsed, employer }) {
   const [fullScreen, setFullScreen] = useState(false);
   const nav = useNavigate();
   const dispatch = useDispatch();
+  // const [selectedKeys, setSelectedKeys] = useState(["1.1"]);
 
   const handleLogout = () => {
     axios.get("http://localhost:8000/auth/logout", {
@@ -73,27 +73,41 @@ function Header({ collapsed, setCollapsed, employer }) {
 
   const itemsMenu = [
     {
-      key: '1',
+      key: "1",
       label: <span className={styles.lbMenu}>Jobs</span>,
-      nav: '/employer/companyjob',
-      icon: <FaClipboardList />
+      // nav: "/employer/posted-jobs",
+      icon: <FaClipboardList />,
+      children: [
+        {
+          label: <span className={styles.lbchildMenu}>Active Jobs</span>,
+          key: "1.1",
+          icon: <FaCheckToSlot />,
+          nav: "/employer/posted-jobs?hidden=false",
+        },
+        {
+          label: <span className={styles.lbchildMenu}>Hidden Jobs</span>,
+          key: "1.2",
+          icon: <FaEyeSlash />,
+          nav: "/employer/posted-jobs?hidden=true"
+        },
+      ],
     },
     {
-      key: '2',
+      key: "2",
       label: <span className={styles.lbMenu}>Company Profile</span>,
-      nav: '/employer/company-profile',
+      nav: "/employer/company-profile",
       icon: <ImProfile />
     },
+    // {
+    //   key: "3",
+    //   label: <span className={styles.lbMenu}>Post</span>,
+    //   nav: "/employer/post-job",
+    //   icon: <RiUserSearchFill />
+    // },
     {
-      key: '3',
-      label: <span className={styles.lbMenu}>Post</span>,
-      nav: '/employer/companyjob-post',
-      icon: <RiUserSearchFill />
-    },
-    {
-      key: '4',
+      key: "4",
       label: <span className={styles.lbMenu}>Chat</span>,
-      nav: '/employer/chat',
+      nav: "/employer/chat",
       icon: <IoMdChatbubbles />
     },
   ];
@@ -124,8 +138,12 @@ function Header({ collapsed, setCollapsed, employer }) {
           <Menu
             mode="horizontal"
             items={itemsMenu}
-            defaultSelectedKeys={["1"]}
-            onClick={(item) => nav(item.item.props.nav)}
+            defaultSelectedKeys={["1.1"]}
+            onClick={(item) => {
+              // setSelectedKeys([item.item.props.key]);
+              nav(item.item.props.nav);
+            }}
+            // selectedKeys={selectedKeys}
           />
         </ConfigProvider>
       </div>

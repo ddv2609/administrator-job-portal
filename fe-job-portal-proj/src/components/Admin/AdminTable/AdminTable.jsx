@@ -15,10 +15,11 @@ const primaryColor = "#00b14f";
 function AdminTable({ title="", columns=[], hidden=true, isRowSelection=true, selectedRowKeys=[], 
   onSelectChange=null, data=[], tableParams={}, loading=false, handleTableChange=null, 
   columnSearches = [], handleRefresh=null, uses = [], handleConfirmHiddenSelected=null, 
-  handleConfirmEnableSelected=null, handleConfirmVerifySelected=null, handleConfirmDeleteSelected=null }) {
+  handleConfirmEnableSelected=null, handleConfirmVerifySelected=null, handleConfirmDeleteSelected=null,
+  handleAddNew=null }) {
   const actions = [
     { code: 1, key: "refresh", icon: <MdRefresh />, tooltip: "Làm mới", onClick: handleRefresh },
-    { code: 2, key: "add", icon: <FaPlus />, tooltip: "Thêm mới" },
+    { code: 2, key: "add", icon: <FaPlus />, tooltip: "Thêm mới", onClick: handleAddNew },
     { code: 3, 
       key: hidden ? "delete" : "verify", 
       icon: hidden ? <RiDeleteBin6Line/> : <MdOutlineMarkEmailRead />, 
