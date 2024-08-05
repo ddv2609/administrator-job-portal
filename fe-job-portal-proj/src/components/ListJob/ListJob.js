@@ -48,6 +48,7 @@ const App = () => {
           { withCredentials: true }
         );
         const data = await res.data;
+        console.log(data);
         setJobs(data.jobs);
       } catch (error) {
         console.error(error);
@@ -93,7 +94,7 @@ const App = () => {
               height={150}
               style={{ marginLeft: "500px", position: "absolute" }}
               alt="logo"
-              src={item.imgLogo}
+              src={item.company.logo}
             />
           }
         >
