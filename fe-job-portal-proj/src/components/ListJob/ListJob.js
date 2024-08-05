@@ -10,12 +10,35 @@ const IconText = ({ icon, text }) => (
     {text}
   </Space>
 );
-
 const App = () => {
   const [page, setPage] = useState(1);
   const [jobs, setJobs] = useState([]);
   const [pageSize, setPageSize] = useState(3);
   const totalItems = 20;
+
+  const [company, setCompany] = useState({
+    name: "",
+    address: "",
+  });
+
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/company/info/",
+          { withCredentials: true }
+        );
+        const companyData = response.data.info.company;
+        setCompany({
+          name: companyData.name,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCompanyData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +92,7 @@ const App = () => {
             <img
               width={240}
               height={150}
-              style={{ marginLeft: "200px" }}
+              style={{ marginLeft: "500px", position: "absolute" }}
               alt="logo"
               src={item.company.logo}
             />
@@ -81,15 +104,15 @@ const App = () => {
             }
             title={
               <a className={styles.title_job} href={item.href}>
-                {item["Job Title"]}
+                {item.title}
               </a>
             }
             company={item["Name Company"]}
           />
           {item.content}
-          <p>Lương: {item.Wage} </p>
+          <p>Lương: {item.salary} </p>
           <p>Địa chỉ: {item["Company Address"]}</p>
-          Công ty: {item["Name Company"]}
+          Công ty: {company.name}
         </List.Item>
       )}
     />
