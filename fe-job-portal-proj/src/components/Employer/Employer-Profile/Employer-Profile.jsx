@@ -1,42 +1,79 @@
 import React from 'react';
+import { useEffect, useState } from "react";
 import styles from './Employer-Profile.module.css';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import axios from 'axios';
 
 const CompanyProfile = () => {
-
     const navigate = useNavigate();
+    const[avatar, setAvatar] = useState(null);
+    const[id,setId] = useState(null);
+    const[name, setName] = useState(null);
+    const[dob, setDob] = useState(null);
+//    const[address, setAddress] = useState(null);
+    const[sex, setSex] = useState(null);
+    const[email, setEmail] = useState(null);
+    const[phone, setPhone] = useState(null);
+
+    const getEmployer = () => {
+        axios.get(`http://localhost:8000/api/employer/info`, {
+            withCredentials: true,
+        })
+            .then(res => {
+                setName(res.data.info.member.fullName);
+                setAvatar(res.data.info.member.avatar);
+                setId(res.data.info.member._id);
+                setSex(res.data.info.member.gender);
+                setDob(res.data.info.member.dob);
+                setEmail(res.data.info.member.email);
+                setPhone(res.data.info.member.tel);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    }
+    useEffect(() => {
+        getEmployer();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);   
+
     return (
         <div>
 
         <div className={styles.container}>
             <div className={styles.header}>
-                <img
-                    src="/email.png"
-                    alt="Company Logo"
-                    className={styles.logo}
-                />
-                <h1 className={styles.companyName}>Ptit</h1>
+                {avatar ? (
+                    <img 
+                        style={{width:"200px", height:"200px"}} 
+                        src={avatar} alt='anh'
+                    />
+                ):(
+                    <p></p>
+                )}
+                <h1 className={styles.companyName}>{name}</h1>
             </div>
-            <div className={styles.details}>   
-            <div>
+            
+            <div className={styles.details}> 
+                <div>
+                    <span className={styles.address}>Uid: </span>
+                    <span>{id}</span>
+                </div>                  
+                <div>
                     <span className={styles.gender}>Giới Tính: </span>
-                    <span>Nam</span>
+                    <span>{sex}</span>
                 </div>
                 <div>
                     <span className={styles.dob}>Ngày Sinh: </span>
-                    <span>11/04/2000</span>
+                    <span></span>
                 </div>             
-                <div>
-                    <span className={styles.address}>Địa chỉ: </span>
-                    <span>123 Đường ABC, Quận 1, Thành phố Hồ Chí Minh</span>
-                </div>
+
                 <div>
                     <span className={styles.email}>Email: </span>
-                    <span>1@gmail.com</span>
+                    <span>{email}</span>
                 </div>
                 <div>
                     <span className={styles.phonenumber}>Số điện thoại: </span>
-                    <span>2323232323</span>
+                    <span>{phone}</span>
                 </div>
             </div>
             <div className={styles.jobActions}>
