@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Avatar, message, Modal, Space, Table, Tooltip } from 'antd';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Avatar, Button, message, Space, Table, Tooltip } from 'antd';
 
 import axios from 'axios';
 
 import { AiOutlineUser } from "react-icons/ai";
+import { LoadingOutlined } from "@ant-design/icons";
 import { FaEye } from "react-icons/fa6";
 import { BsFiletypeDocx, BsFiletypeDoc } from "react-icons/bs";
 import { FaFilePdf } from "react-icons/fa6";
+import { IoReturnDownBackOutline } from "react-icons/io5";
 
 import styles from './Candidate-List.module.css';
 import CandidateInfo from '../CandidateInfo/CandidateInfo';
+import { MdRefresh } from 'react-icons/md';
 
-function CandidateList({ jobId = null }) {
+function CandidateList() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { jobId } = useParams();
   const nav = useNavigate();
   const [candidates, setCandidates] = useState([]);
   const [candidateInfo, setCandidateInfo] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -23,8 +30,9 @@ function CandidateList({ jobId = null }) {
   //   nav('/employer/candidate-profile', { state: { candidate } });
   // };
 
-  useEffect(() => {
-    axios.get(`http://localhost:8000/api/employer/job/applied/66ae5d64f3ca2d78340f6d18`, {
+  const getCandidatesApplied = () => {
+    setLoading(true);
+    axios.get(`http://localhost:8000/api/employer/job/applied/${jobId}`, {
       withCredentials: true,
     })
       .then(res => {
@@ -40,13 +48,18 @@ function CandidateList({ jobId = null }) {
         else
           messageApi.error(err.response.data.toString());
       })
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    getCandidatesApplied();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const columns = [
     {
       title: "Avatar",
-      dataIndex: "avatar",
+      dataIndex: ["candidate", "member", "avatar"],
       render: (avatar) => <div style={{ textAlign: "center" }}>
         <Avatar
           size="small"
@@ -61,6 +74,7 @@ function CandidateList({ jobId = null }) {
     {
       title: "Họ tên",
       dataIndex: ["candidate", "member", "fullName"],
+      sorter: (a, b) => `${a.candidate.member.fullName}`.localeCompare(`${b.candidate.member.fullName}`),
       key: "name",
     },
     {
@@ -133,19 +147,42 @@ function CandidateList({ jobId = null }) {
   return (
     <div className={styles.candidateList}>
       {contextHolder}
-      <button className={styles.backButton} onClick={() => nav('/employer/companyjob-detail')}>← Quay lại</button>
-      <h2>Danh sách ứng viên</h2>
+      {/* <button className={styles.backButton} onClick={() => nav('/employer/posted-jobs')}>← Quay lại</button> */}
       <Table
+        title={() => (
+          <div className={styles.titleWrapper}>
+            <h3 className={styles.heading}>Danh sách ứng viên đã nộp hồ sơ</h3>
+            <div className={styles.back} title="Quay lại" onClick={() => {
+              if (searchParams.get("prev") === "hidden")
+                nav("/employer/posted-jobs?hidden=true");
+              else
+                nav("/employer/posted-jobs?hidden=false");
+            }}><IoReturnDownBackOutline /></div>
+            <div className={styles.refresh} title="Quay lại">
+              <Tooltip title="Làm mới" >
+                <Button
+                  icon={<MdRefresh />}
+                  shape="circle"
+                  onClick={getCandidatesApplied}
+                />
+              </Tooltip>
+            </div>
+          </div>
+        )}
         columns={columns}
         dataSource={candidates}
         pagination={false}
+        loading={{
+          spinning: loading,
+          indicator: <LoadingOutlined style={{ color: "#01be56" }} spin />
+        }}
       />
 
-      { 
+      {
         candidateInfo && <CandidateInfo
           data={candidateInfo}
           setModalData={setCandidateInfo}
-        ></CandidateInfo> 
+        ></CandidateInfo>
       }
     </div>
   );

@@ -6,6 +6,10 @@ const memberReducer = (state={}, action) => {
       return {};
     case "SET_ADMIN_INFO":
       return action.payload;
+    case "SET_EMPLOYER_INFO":
+      return action.payload;
+    case "SET_CANDIDATE_INFO":
+      return action.payload;
     default:
       return state;
   }

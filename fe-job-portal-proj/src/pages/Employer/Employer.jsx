@@ -2,10 +2,10 @@ import { Layout } from "antd";
 import { useEffect, useState } from "react";
 import { Content, Header } from "antd/es/layout/layout";
 
-import AdminSider from "../../components/Admin/AdminSider/AdminSider";
+// import AdminSider from "../../components/Admin/AdminSider/AdminSider";
 import HeaderAdmin from "../../components/Employer/Header/Header";
 
-import { setAdminInfo } from "../../actions";
+import { setEmployerInfo } from "../../actions";
 
 import axios from "axios";
 
@@ -22,6 +22,29 @@ function Employer() {
   const dispatch = useDispatch();
 
   const nav = useNavigate();
+
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/employer/info/", {
+      withCredentials: true,
+    })
+      .then(res => {
+        const info = res.data.info;
+        dispatch(setEmployerInfo({
+          companyId: info.company,
+          uid: info._id,
+          ...info.member,
+        }))
+        nav("/employer/posted-jobs");
+      })
+      .catch(err => {
+        console.error(err);
+
+        const code = err?.response?.status;
+        if (400 <= code && code < 500)
+          nav("/login");
+      })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className={styles.adminPage}>

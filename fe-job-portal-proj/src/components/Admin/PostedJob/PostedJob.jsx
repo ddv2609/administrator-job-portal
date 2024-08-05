@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { MdHideSource, MdOutlineSettingsBackupRestore } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { FaRegPenToSquare, FaCheckToSlot } from "react-icons/fa6";
+import { FaCheckToSlot } from "react-icons/fa6";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./PostedJob.module.css";
@@ -38,7 +38,7 @@ function PostedJob() {
   const handleConfirmHidden = async (postedJobs) => {
     setConfirmHiddenLoading(true);
     const jobIds = postedJobs.map(job => job._id);
-    await axios.post(`http://localhost:8000/api/admin//posted-job/hidden`, {
+    await axios.post(`http://localhost:8000/api/admin/posted-job/hidden`, {
       jobs: jobIds,
       adminId: admin.id,
     }, {

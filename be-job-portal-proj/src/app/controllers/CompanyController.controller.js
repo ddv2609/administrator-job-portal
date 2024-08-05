@@ -1,6 +1,9 @@
 const Company = require("../models/Company.model");
 const Job = require("../models/Job.model");
 
+const path = require("path");
+const { bucket, getDownloadURL } = require("../../config/firebase");
+
 class CompanyController {
   // [GET] /api/company/info/
   async getCompanyInfo(req, res) {
@@ -44,17 +47,24 @@ class CompanyController {
     }
   }
 
-  //[GET] /api/company/jobs?page=<number>&size=<number>
+  // [GET] /api/company/jobs?hidden=<boolean>&page=<number>&size=<number>
   async getJobsOfCompany(req, res) {
     const companyId = req.user.companyId;
-    const { page = 1, size = 0 } = req.query;
+    const { page = 1, size = 0, hidden = "false" } = req.query;
 
     try {
-      const total = await Job.countDocuments({ company: companyId });
-      const jobs = await Job.find({ company: companyId })
+      const total = await Job.countDocuments({ 
+        company: companyId,
+        hidden: hidden === "true",
+      });
+
+      const jobs = await Job.find({ 
+        company: companyId,
+        hidden: hidden === "true",
+      })
         .skip((page - 1) * size)
         .limit(size)
-        .select("-updatedAt -hiddenAt -hiddenBy -__v")
+        .select("-hiddenAt -hiddenBy -__v")
         .populate("categories");
 
       return res.json({
@@ -95,14 +105,14 @@ class CompanyController {
     }
   }
 
-  // [POST] /api/company/hidden-job/:jobId
-  async hiddenJob(req, res) {
+  // [POST] /api/company/hidden-job/
+  async hiddenPostedJobs(req, res) {
     const companyId = req.user.companyId;
-    const { jobId } = req.params;
+    const { jobs } = req.body;
 
     try {
-      await Job.updateOne({
-        _id: jobId,
+      await Job.updateMany({
+        _id: { $in: jobs },
         company: companyId,
       }, {
         hidden: true,
@@ -118,7 +128,91 @@ class CompanyController {
     }
   }
 
-  // [GET] /api/company/application/:jobId
+  // [POST] /api/compnay/enable-job/
+  async enablePostedJobs(req, res) {
+    const companyId = req.user.companyId;
+    const { jobs } = req.body;
+
+    try {
+      await Job.updateMany({ _id: { $in: jobs }, company: companyId }, {
+        hidden: false,
+        hiddenAt: null,
+        hiddenBy: null,
+      })
+
+      return res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: ${error.code ? "Error code <" + error.code + ">" : error.message}`,
+      })
+    }
+  }
+
+  // [POST] /api/company/log
+  async updateCompanyLogo(req, res) {
+    try {
+      if (!req.file)
+        return res.status(400).json({
+          message: "Chưa có file nào được tải lên!",
+        });
+      
+      const fileName = "logo" + path.extname(req.file.originalname);
+
+      const [files] = await bucket.getFiles({ prefix: `employer/${req.user.id}/company/` });
+      await Promise.all(files.map(file => file.delete()));
+
+      const blob = bucket.file(`employer/${req.user.id}/company/${fileName}`);
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        }
+      });
+
+      blobStream.on("error", (err) => {
+        return res.status(500).json({
+          message: err,
+        })
+      });
+
+      blobStream.on("finish", async () => {
+        const url = await getDownloadURL(blob);
+        await Company.updateOne({ _id: req.user.company }, {
+          logo: url,
+        });
+
+        return res.json({
+          url,
+        });
+      });
+
+      blobStream.end(req.file.buffer);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
+
+  // [DELETE] api/company/logo
+  async deleteCompanyLogo(req, res) {
+    try {
+      const [files] = await bucket.getFiles({ prefix: `employer/${req.user.id}/company` });
+      await Promise.all(files.map(file => file.delete()));
+
+      await Company.updateOne({ _id: req.user.company }, {
+        avatar: null,
+      });
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: `Có lỗi xảy ra: Error code <${error.code}>`,
+      });
+    }
+  }
 }
 
 module.exports = new CompanyController;

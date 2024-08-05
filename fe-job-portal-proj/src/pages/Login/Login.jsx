@@ -41,7 +41,7 @@ function CandidateLogin() {
               nav("/admin/dashboard");
               break;
             case "employer":
-              nav("/employer/companyjob");
+              nav("/employer/posted-jobs");
               break;
             default:
               nav("/candidate");
