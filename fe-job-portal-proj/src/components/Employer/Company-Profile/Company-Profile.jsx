@@ -14,6 +14,7 @@ function CompanyProflie() {
     const [taxCode, setTaxCode] = useState(null);
     const [companySize, setCompanySize] = useState(null); 
     const [address, setAddress] = useState();
+    const [avatar, setAvatar] = useState(null);
 
     const getCompany = () => {
         setLoading(true);
@@ -26,7 +27,7 @@ function CompanyProflie() {
                 setCompanySize(res.data.info.companySize);
                 setTaxCode(res.data.info.taxCode);
                 setWebSite(res.data.info.website);
-                //setAddress(res.data.info.address);
+                setAvatar(res.data.info.logo);
             })
             .catch(err => {
                 console.error(err);
@@ -44,12 +45,17 @@ function CompanyProflie() {
 
         <div className={styles.container}>
             <div className={styles.header}>
-                <img
-                    src="/email.png"
-                    alt="Company Logo"
-                    className={styles.logo}
-                />
-                <h1 className={styles.companyName}> {companyName}</h1>
+            {avatar ? (
+                    <img 
+                        style={{width:"200px", height:"200px"}} 
+                        src={avatar} alt='anh'
+                    />
+                ):(
+                    <p></p>
+                )}
+                <h1 className={styles.companyName}> 
+                    {companyName}
+                </h1>
             </div>
             <div className={styles.details}>
                 <div className={styles.h}>
