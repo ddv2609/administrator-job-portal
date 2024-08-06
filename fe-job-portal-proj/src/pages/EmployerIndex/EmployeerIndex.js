@@ -9,6 +9,11 @@ import { useState } from "react";
 function EmployeerIndex(changeRole) {
   const [selectedRole, setSelectedRole] = useState("all");
   const [selectedRoleJob, setSelectedRoleJob] = useState("all");
+  const [searchValue, setSearchValue] = useState({
+    jobName: "",
+    location: "all",
+    category: "all",
+  });
 
   const roles = [
     { label: "Tất cả tỉnh/thành phố", value: "all" },
@@ -36,10 +41,10 @@ function EmployeerIndex(changeRole) {
   ];
 
   const handleChange = (value) => {
-    setSelectedRole(value); // Cập nhật trạng thái khi có sự thay đổi
+    setSearchValue({ ...searchValue, location: value });
   };
   const handleChangeJob = (value) => {
-    setSelectedRoleJob(value); // Cập nhật trạng thái khi có sự thay đổi
+    setSearchValue({ ...searchValue, category: value });
   };
 
   return (
@@ -72,6 +77,13 @@ function EmployeerIndex(changeRole) {
                   <Input
                     placeholder="Vị trí tuyển dụng"
                     className={styles.search_job_input}
+                    value={searchValue.jobName}
+                    onChange={(e) =>
+                      setSearchValue({
+                        ...searchValue,
+                        jobName: e.target.value,
+                      })
+                    }
                   ></Input>
                 </div>
                 <div
@@ -83,21 +95,19 @@ function EmployeerIndex(changeRole) {
                     paddingLeft: "15px",
                   }}
                 >
-                  <Form.Item>
-                    <Select
-                      defaultValue="all"
-                      value={selectedRole}
-                      onChange={handleChange}
-                      className={styles.search_location}
-                      style={{ width: "200px" }}
-                    >
-                      {roles.map((role) => (
-                        <Select.Option key={role.value} value={role.value}>
-                          {role.label}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+                  <Select
+                    defaultValue="all"
+                    value={searchValue.location}
+                    onChange={handleChange}
+                    className={styles.search_location}
+                    style={{ width: "200px" }}
+                  >
+                    {roles.map((role) => (
+                      <Select.Option key={role.value} value={role.value}>
+                        {role.label}
+                      </Select.Option>
+                    ))}
+                  </Select>
                 </div>
                 <div
                   className={styles.search_job}
@@ -108,21 +118,19 @@ function EmployeerIndex(changeRole) {
                     paddingLeft: "15px",
                   }}
                 >
-                  <Form.Item>
-                    <Select
-                      defaultValue="all"
-                      value={selectedRoleJob}
-                      onChange={handleChangeJob}
-                      className={styles.search_location}
-                      style={{ width: "200px" }}
-                    >
-                      {rolesJob.map((role) => (
-                        <Select.Option key={role.value} value={role.value}>
-                          {role.label}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+                  <Select
+                    defaultValue="all"
+                    value={searchValue.category}
+                    onChange={handleChangeJob}
+                    className={styles.search_location}
+                    style={{ width: "200px" }}
+                  >
+                    {rolesJob.map((role) => (
+                      <Select.Option key={role.value} value={role.value}>
+                        {role.label}
+                      </Select.Option>
+                    ))}
+                  </Select>
                 </div>
                 <div className={styles.search_sub}>
                   <Button
@@ -131,6 +139,7 @@ function EmployeerIndex(changeRole) {
                       cursor: "pointer",
                     }}
                     className={styles.btn_search_sub}
+                    onClick={() => console.log(123)}
                   >
                     <span class="icon_search material-symbols-outlined">
                       search
@@ -184,7 +193,7 @@ function EmployeerIndex(changeRole) {
                 paddingBottom: "30px",
               }}
             >
-              <ListJob />
+              <ListJob searchValue={searchValue} />
             </div>
           </div>
           <div

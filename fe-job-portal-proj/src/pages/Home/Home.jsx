@@ -7,6 +7,11 @@ import { useState } from "react";
 function Home() {
   const [selectedRole, setSelectedRole] = useState("all");
   const [selectedRoleJob, setSelectedRoleJob] = useState("all");
+  const [searchValue, setSearchValue] = useState({
+    jobName: "",
+    location: "all",
+    category: "all",
+  });
 
   const roles = [
     { label: "Tất cả tỉnh/thành phố", value: "all" },
@@ -34,10 +39,10 @@ function Home() {
   ];
 
   const handleChange = (value) => {
-    setSelectedRole(value); // Cập nhật trạng thái khi có sự thay đổi
+    setSearchValue({ ...searchValue, location: value });
   };
   const handleChangeJob = (value) => {
-    setSelectedRoleJob(value); // Cập nhật trạng thái khi có sự thay đổi
+    setSearchValue({ ...searchValue, category: value });
   };
 
   return (
@@ -70,6 +75,10 @@ function Home() {
                   <Input
                     placeholder="Vị trí tuyển dụng"
                     className={styles.search_job_input}
+                    onChange={(e) =>
+                      setSearchValue({ ...searchValue, jobName: e.target.value })
+
+                    }
                   ></Input>
                 </div>
                 <div
@@ -84,7 +93,7 @@ function Home() {
                   <Form.Item>
                     <Select
                       defaultValue="all"
-                      value={selectedRole}
+                      value={searchValue.location}
                       onChange={handleChange}
                       className={styles.search_location}
                       style={{ width: "200px" }}
@@ -109,7 +118,8 @@ function Home() {
                   <Form.Item>
                     <Select
                       defaultValue="all"
-                      value={selectedRoleJob}
+                      value={searchValue.category}
+
                       onChange={handleChangeJob}
                       className={styles.search_location}
                       style={{ width: "200px" }}
@@ -129,10 +139,12 @@ function Home() {
                       cursor: "pointer",
                     }}
                     className={styles.btn_search_sub}
+                  // onClick={}
                   >
                     <span class="icon_search material-symbols-outlined">
                       search
                     </span>
+
                     Tìm kiếm
                   </Button>
                 </div>
@@ -178,7 +190,7 @@ function Home() {
                 paddingBottom: "30px",
               }}
             >
-              <ListJob />
+              <ListJob searchValue={searchValue} />
             </div>
           </div>
           <div
