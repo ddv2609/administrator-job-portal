@@ -35,6 +35,10 @@ function ModalApply({ title, open = false, setOpenModalApply, messageApi, jobId 
       return;
     }
     if (typeResume === "upladed-resume") {
+      if (!chooseCV) {
+        messageApi.error("Bạn chưa chọn hồ sơ để ứng tuyển");
+        return;
+      }
       await axios.post("http://localhost:8000/api/application/apply/uploaded-resume", {
         job: jobId,
         resume: chooseCV,
@@ -53,6 +57,10 @@ function ModalApply({ title, open = false, setOpenModalApply, messageApi, jobId 
             messageApi.error(err.response.data?.message || err.response.data.toString());
         })
     } else {
+      if (!fileUpload) {
+        messageApi.error("Bạn chưa chọn hồ sơ để ứng tuyển");
+        return;
+      }
       await axios.post("http://localhost:8000/api/application/apply/new-resume", {
         job: jobId,
         file: fileUpload,
@@ -164,10 +172,10 @@ function ModalApply({ title, open = false, setOpenModalApply, messageApi, jobId 
                   >
                     <div className={styles.contentUpload}>
                       <Row justify="center" align="middle">
-                        <Col span={3}>
+                        <Col span={4}>
                           <span className={styles.iconUpload}><FaCloudUploadAlt /></span>
                         </Col>
-                        <Col span={14}>
+                        <Col span={15}>
                           <strong>Tải lên CV từ máy tính, chọn hoặc kéo thả</strong>
                         </Col>
                         <Col span={24}>

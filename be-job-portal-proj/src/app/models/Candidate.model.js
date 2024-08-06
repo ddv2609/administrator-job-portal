@@ -19,7 +19,12 @@ const CandidateSchema = new Schema({
     ref: "Member",
     unique: true,
     require: true,
-  }
+  },
+  saveJobs: [{ 
+    type: Schema.Types.ObjectId, 
+    ref: "Job",
+    unique: true,
+  }]
 });
 
 module.exports = mongoose.model("Candidate", CandidateSchema, "tblCandidate");

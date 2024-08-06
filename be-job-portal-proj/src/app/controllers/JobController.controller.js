@@ -7,7 +7,9 @@ class JobController {
 
     try {
       const total = await Job.countDocuments();
-      const jobs = await Job.find()
+      const jobs = await Job.find({
+        hidden: false,
+      })
         .skip((page - 1) * size)
         .limit(size)
         .select("-__v -updatedAt -hiddenAt -hiddenBy")
