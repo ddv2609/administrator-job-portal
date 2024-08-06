@@ -1,5 +1,6 @@
 import { Button, Empty, message } from 'antd';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
 import React, { useEffect, useState } from 'react';
 
 const CVList = () => {
@@ -37,6 +38,18 @@ const CVList = () => {
         }
     };
 
+    const handleDownload = async (cv) => {
+        try {
+            const response = await axios.get(cv.resume, {
+                responseType: 'blob',
+            });
+            saveAs(response.data, cv.name);
+        } catch (error) {
+            console.error('Error downloading CV:', error);
+            message.error('Có lỗi xảy ra khi tải CV');
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
 
     return (
@@ -55,9 +68,8 @@ const CVList = () => {
                                 {cv.name}
                             </a>
                             <Button
-                                type="link"
-                                href={cv.resume}
-                                download
+                                type="primary"
+                                onClick={() => handleDownload(cv)}
                                 style={{ marginRight: 10 }}
                             >
                                 Tải xuống
