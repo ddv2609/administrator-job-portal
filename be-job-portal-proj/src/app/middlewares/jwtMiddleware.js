@@ -21,7 +21,7 @@ module.exports.verifyJwt = (req, res, next) => {
       return next();
     }
   }
-
+  
   return res.sendStatus(403);
 
 }

@@ -1,5 +1,5 @@
 
-import { Avatar } from 'antd';
+import Avatar from "../Avatar/Avatar";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 

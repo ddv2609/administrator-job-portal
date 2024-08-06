@@ -3,6 +3,7 @@ import { LikeOutlined, StarOutlined } from "@ant-design/icons";
 import { Avatar, List, Space } from "antd";
 import axios from "axios";
 import styles from "./ListJob.module.css";
+import { useNavigate } from "react-router-dom";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -11,6 +12,7 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 const App = () => {
+  const nav = useNavigate();
   const [page, setPage] = useState(1);
   const [jobs, setJobs] = useState([]);
   const [pageSize, setPageSize] = useState(3);
@@ -103,9 +105,15 @@ const App = () => {
               <Avatar src="https://www.w3schools.com/howto/img_avatar.png" />
             }
             title={
-              <a className={styles.title_job} href={item.href}>
-                {item.title}
-              </a>
+              // <a className={styles.title_job} href={item.href}>
+              //   {item.title}
+              // </a>
+              <span className={styles.title_job}
+                onClick={() => {
+                  // window.open(`/candidate/view-detail-job/${item._id}`, "_blank");
+                  nav(`/candidate/view-detail-job/${item._id}`);
+                }}
+              >{item.title}</span>
             }
             company={item["Name Company"]}
           />
