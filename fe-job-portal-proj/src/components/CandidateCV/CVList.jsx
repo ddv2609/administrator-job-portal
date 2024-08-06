@@ -12,7 +12,7 @@ const CVList = () => {
     useEffect(() => {
         const fetchCVs = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/candidate/resumes', 
+                const response = await axios.get('http://localhost:8000/api/candidate/resumes',
                     { withCredentials: true }
                 );
                 setCvs(response.data.resumes);

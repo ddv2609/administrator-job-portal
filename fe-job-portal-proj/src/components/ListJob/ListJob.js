@@ -12,7 +12,7 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 
-const App = () => {
+const App = ({ searchValue }) => {
   const nav = useNavigate();
   const [page, setPage] = useState(1);
   const [jobs, setJobs] = useState([]);
@@ -78,7 +78,6 @@ const App = () => {
         },
       }}
       dataSource={jobs}
-
       renderItem={(item) => {
         const company = item.company;
         return (
@@ -125,7 +124,6 @@ const App = () => {
           </List.Item>
         );
       }}
-
     />
   );
 };

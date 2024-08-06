@@ -3,7 +3,7 @@ const Job = require("../models/Job.model");
 class JobController {
   // [GET] /api/job/suggestion?page=<number>&size=<number>
   async getAllJobs(req, res) {
-    const { page=1, size=0 } = req.query;
+    const { page = 1, size = 0 } = req.query;
 
     try {
       const total = await Job.countDocuments();
@@ -13,10 +13,6 @@ class JobController {
         .skip((page - 1) * size)
         .limit(size)
         .select("-__v -updatedAt -hiddenAt -hiddenBy")
-<<<<<<< HEAD
-        .populate("company")
-        .populate("categories");
-=======
         .populate("categories")
         .populate({
           path: "company",
@@ -41,28 +37,32 @@ class JobController {
 
   // [GET] api/job/search?q=<string>&location=<string>&category=<ObjectId>&page=<number>&size=<number>
   async searchJobs(req, res) {
-    const { page=1, size=0, q="", location, category } = req.query;
+    const { page = 1, size = 0, q = "", location, category } = req.query;
     console.log(q);
-    
+
     try {
       const total = await Job.countDocuments({
         $or: [
-          { title: { $regex: q, $options: 'i' }, },
-          { locations: {
-            $elemMatch: { province: location }
-          }, },
-          { categories: category }
-        ]
+          { title: { $regex: q, $options: "i" } },
+          {
+            locations: {
+              $elemMatch: { province: location },
+            },
+          },
+          { categories: category },
+        ],
       });
 
       const jobs = await Job.find({
         $or: [
-          { title: { $regex: q, $options: 'i' }, },
-          { locations: {
-            $elemMatch: { province: location }
-          }, },
-          { categories: category }
-        ]
+          { title: { $regex: q, $options: "i" } },
+          {
+            locations: {
+              $elemMatch: { province: location },
+            },
+          },
+          { categories: category },
+        ],
       })
         .skip((page - 1) * size)
         .limit(size)
@@ -72,7 +72,6 @@ class JobController {
           path: "company",
           select: "_id name logo companySize field address website",
         });
->>>>>>> 157da4a858e9971758abd4dbfe7dcabf8e140453
 
       return res.json({
         jobs,
