@@ -11,6 +11,7 @@ class JobController {
         .skip((page - 1) * size)
         .limit(size)
         .select("-__v -updatedAt -hiddenAt -hiddenBy")
+        .populate("company")
         .populate("categories");
 
       return res.json({

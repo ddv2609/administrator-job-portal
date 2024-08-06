@@ -7,6 +7,7 @@ const { bucket, getDownloadURL } = require("../../config/firebase");
 class CompanyController {
   // [GET] /api/company/info/
   async getCompanyInfo(req, res) {
+    console.log(req.user);
     const companyId = req.user.companyId;
 
     try {
@@ -14,7 +15,7 @@ class CompanyController {
 
       return res.json({
         info: company,
-      })
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -32,13 +33,17 @@ class CompanyController {
       delete info.logo;
       delete info.license;
 
-      const company = await Company.findByIdAndUpdate(companyId, {
-        ...info
-      }, { new: true }).select("-__v");
+      const company = await Company.findByIdAndUpdate(
+        companyId,
+        {
+          ...info,
+        },
+        { new: true }
+      ).select("-__v");
 
       return res.json({
         info: company,
-      })
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -53,12 +58,12 @@ class CompanyController {
     const { page = 1, size = 0, hidden = "false" } = req.query;
 
     try {
-      const total = await Job.countDocuments({ 
+      const total = await Job.countDocuments({
         company: companyId,
         hidden: hidden === "true",
       });
 
-      const jobs = await Job.find({ 
+      const jobs = await Job.find({
         company: companyId,
         hidden: hidden === "true",
       })
@@ -73,8 +78,8 @@ class CompanyController {
           total,
           page,
           size,
-        }
-      })
+        },
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -95,8 +100,8 @@ class CompanyController {
       });
 
       return res.json({
-        info: job
-      })
+        info: job,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -111,13 +116,16 @@ class CompanyController {
     const { jobs } = req.body;
 
     try {
-      await Job.updateMany({
-        _id: { $in: jobs },
-        company: companyId,
-      }, {
-        hidden: true,
-        hiddenAt: Date.now(),
-      });
+      await Job.updateMany(
+        {
+          _id: { $in: jobs },
+          company: companyId,
+        },
+        {
+          hidden: true,
+          hiddenAt: Date.now(),
+        }
+      );
 
       return res.sendStatus(200);
     } catch (error) {
@@ -134,18 +142,23 @@ class CompanyController {
     const { jobs } = req.body;
 
     try {
-      await Job.updateMany({ _id: { $in: jobs }, company: companyId }, {
-        hidden: false,
-        hiddenAt: null,
-        hiddenBy: null,
-      })
+      await Job.updateMany(
+        { _id: { $in: jobs }, company: companyId },
+        {
+          hidden: false,
+          hiddenAt: null,
+          hiddenBy: null,
+        }
+      );
 
       return res.sendStatus(200);
     } catch (error) {
       console.log(error);
       return res.status(500).json({
-        message: `Có lỗi xảy ra: ${error.code ? "Error code <" + error.code + ">" : error.message}`,
-      })
+        message: `Có lỗi xảy ra: ${
+          error.code ? "Error code <" + error.code + ">" : error.message
+        }`,
+      });
     }
   }
 
@@ -156,30 +169,35 @@ class CompanyController {
         return res.status(400).json({
           message: "Chưa có file nào được tải lên!",
         });
-      
+
       const fileName = "logo" + path.extname(req.file.originalname);
 
-      const [files] = await bucket.getFiles({ prefix: `employer/${req.user.id}/company/` });
-      await Promise.all(files.map(file => file.delete()));
+      const [files] = await bucket.getFiles({
+        prefix: `employer/${req.user.id}/company/`,
+      });
+      await Promise.all(files.map((file) => file.delete()));
 
       const blob = bucket.file(`employer/${req.user.id}/company/${fileName}`);
       const blobStream = blob.createWriteStream({
         metadata: {
           contentType: req.file.mimetype,
-        }
+        },
       });
 
       blobStream.on("error", (err) => {
         return res.status(500).json({
           message: err,
-        })
+        });
       });
 
       blobStream.on("finish", async () => {
         const url = await getDownloadURL(blob);
-        await Company.updateOne({ _id: req.user.company }, {
-          logo: url,
-        });
+        await Company.updateOne(
+          { _id: req.user.company },
+          {
+            logo: url,
+          }
+        );
 
         return res.json({
           url,
@@ -198,12 +216,17 @@ class CompanyController {
   // [DELETE] api/company/logo
   async deleteCompanyLogo(req, res) {
     try {
-      const [files] = await bucket.getFiles({ prefix: `employer/${req.user.id}/company` });
-      await Promise.all(files.map(file => file.delete()));
-
-      await Company.updateOne({ _id: req.user.company }, {
-        avatar: null,
+      const [files] = await bucket.getFiles({
+        prefix: `employer/${req.user.id}/company`,
       });
+      await Promise.all(files.map((file) => file.delete()));
+
+      await Company.updateOne(
+        { _id: req.user.company },
+        {
+          avatar: null,
+        }
+      );
 
       res.sendStatus(200);
     } catch (error) {
@@ -215,4 +238,4 @@ class CompanyController {
   }
 }
 
-module.exports = new CompanyController;
+module.exports = new CompanyController();
