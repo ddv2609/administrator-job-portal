@@ -2,6 +2,7 @@ import { Layout, message } from "antd";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Avatar from "../Avatar/Avatar";
 import styles from "./Header.module.css";
 
 
@@ -142,13 +143,19 @@ function Header_CandidateIndex(props) {
                             </a>
                             <div className={styles.functuon_profile}>
                                 <div className={styles.profile_inf}>
-                                    <img
+                                    {/* <img
                                         src={user.avatar}
                                         alt="profile"
                                         style={{
                                             width: "40px",
                                             height: "40px",
                                             borderRadius: "50%",
+                                        }}
+                                    /> */}
+                                    <Avatar
+                                        API={{
+                                            upload: "http://localhost:8000/api/candidate/avatar",
+                                            delete: "http://localhost:8000/api/candidate/avatar"
                                         }}
                                     />
                                     <p style={{ marginLeft: "20px" }}>{user.name}</p>
