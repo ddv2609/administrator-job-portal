@@ -11,6 +11,8 @@
   overflow: hidden;
   overflow-y: auto;
   padding: 0 32px;
+  border-top: 2px solid var(--container-color);
+  border-bottom: 2px solid var(--container-color);
 }
 
 .applyFormWrapper .title {
