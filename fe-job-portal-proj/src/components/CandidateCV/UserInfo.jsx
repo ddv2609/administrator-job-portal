@@ -1,7 +1,7 @@
 
-import { Avatar } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Avatar from "../Avatar/Avatar";
 
 const userInfoStyle = {
     backgroundColor: '#fff',
@@ -14,7 +14,6 @@ const UserInfo = () => {
 
     const [user, setUser] = useState({
         name: '',
-        avatar: '',
         email: '',
         phone: '',
         address: '',
@@ -33,7 +32,6 @@ const UserInfo = () => {
                     email: userData.email,
                     phone: userData.tel,
                     address: userData.address,
-                    avatar: userData.avatar,
                 });
             } catch (error) {
                 if (error.response) {
@@ -63,8 +61,8 @@ const UserInfo = () => {
                     upload: "http://localhost:8000/api/candidate/avatar",
                     delete: "http://localhost:8000/api/candidate/avatar"
                 }}
-            /> <span>{user.name}</span>
-                <p>Chào mừng bạn trở lại, {user.name}. Hãy làm nổi bật hồ sơ của mình nhé!</p>
+            /> <span style={{ fontSize: '24px' }}>{user.name}</span>
+                <p>Chào mừng bạn trở lại, <strong style={{ color: "#00CC00" }}>{user.name}</strong>. Hãy làm nổi bật hồ sơ của mình nhé!</p>
             </div>
             <div>
                 <h2>Thông tin cá nhân</h2>

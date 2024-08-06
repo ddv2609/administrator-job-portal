@@ -5,6 +5,9 @@ const Member = require("../models/Member.model");
 const Employer = require("../models/Employer.model");
 const Job = require("../models/Job.model");
 const Application = require("../models/Application.model");
+const Candidate = require("../models/Candidate.model");
+
+const mongoose = require("mongoose");
 
 class EmployerController {
   // [GET] /api/employer/info/
@@ -181,6 +184,47 @@ class EmployerController {
 
       return res.json({
         applications,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: error.toString(),
+      });
+    }
+  }
+
+  // [GET] api/employer/candidate-applied
+  async getAllCandidateApplied(req, res) {
+    const { companyId } = req.user;
+    try {
+      console.log(companyId);
+
+      const jobs = await Job.find({
+        company: companyId,
+      });
+
+      const jobIds = jobs.map(job => job._id);
+      console.log(jobIds);
+
+      const candidateIds = await Application.distinct("candidate", {
+        job: { $in: jobIds }
+      });
+
+      const candidates = await Candidate.find({
+        _id: { $in: candidateIds }
+      })
+        .populate({
+          path: "member",
+          select: "-updatedAt -password -role -hidden -__v"
+        });
+
+      return res.json({
+        candidates: candidates.map(candidate => ({
+          _id: candidate.member._id,
+          uid: candidate._id,
+          fullName: candidate.member.fullName,
+          avatar: candidate.member.avatar
+        })),
       });
     } catch (error) {
       console.log(error);

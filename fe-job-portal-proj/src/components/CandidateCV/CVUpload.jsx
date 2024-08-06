@@ -1,12 +1,16 @@
-import { message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, message, Upload } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
+import styles from './CVUpload.module.css'; // CSS module
 
 const CVUpload = ({ onUploadSuccess }) => {
     const [selectedFile, setSelectedFile] = useState(null);
+    const [fileName, setFileName] = useState('');
 
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
+    const handleFileChange = ({ file }) => {
+        setSelectedFile(file);
+        setFileName(file.name); // Cập nhật tên file
     };
 
     const handleUpload = async () => {
@@ -18,10 +22,11 @@ const CVUpload = ({ onUploadSuccess }) => {
                 const response = await axios.post('http://localhost:8000/api/candidate/resumes/', 
                     formData,
                     { withCredentials: true },
-                    );
+                );
 
                 onUploadSuccess(response.data.resume);
                 setSelectedFile(null);
+                setFileName(''); // Xóa tên file sau khi tải lên thành công
                 message.success('Tải CV lên thành công');
             } catch (error) {
                 console.error('Error uploading CV:', error);
@@ -31,17 +36,31 @@ const CVUpload = ({ onUploadSuccess }) => {
     };
 
     return (
-        <>
-            <div>
-                <h2>Tải CV lên</h2>
-            </div>
-            <div>
-                <input type="file" onChange={handleFileChange} />
-                <button onClick={handleUpload} disabled={!selectedFile}>
-                    Upload CV
-                </button>
-            </div>
-        </>
+        <div className={styles.cvUploadContainer}>
+            <h2 className={styles.title}>Tải CV lên</h2>
+            <Upload
+                beforeUpload={() => false} // Prevent auto upload
+                onChange={handleFileChange}
+                showUploadList={false}
+                className={styles.uploadInput}
+            >
+                <Button icon={<UploadOutlined />}>Chọn CV</Button>
+            </Upload>
+            {fileName && (
+                <div className={styles.fileNameContainer}>
+                    <p className={styles.fileNameText}>File đã chọn: {fileName}</p>
+                </div>
+            )}
+            <Button
+                type="primary"
+                icon={<UploadOutlined />}
+                onClick={handleUpload}
+                disabled={!selectedFile}
+                className={styles.uploadButton}
+            >
+                Tải CV lên
+            </Button>
+        </div>
     );
 };
 

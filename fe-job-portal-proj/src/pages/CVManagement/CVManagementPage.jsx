@@ -10,7 +10,7 @@ import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
 const { Sider, Content } = Layout;
 
 const contentStyle = {
-    padding: 10,
+    padding: 30,
     borderRadius: 8,
     backgroundColor: '#fff',
     margin: '20px 10px 20px 100px',
@@ -48,7 +48,9 @@ const CVManagementPage = () => {
                 <Content style={contentStyle}>
                     <div>
                         <h1>Hồ sơ & CV</h1>
-                        <CVUpload onUploadSuccess={handleUploadSuccess} />
+                        <CVUpload onUploadSuccess={handleUploadSuccess} />                     
+                    </div>
+                    <div style={{ marginTop: "30px"}}>
                         <CVList cvs={cvs} onDelete={handleDelete} />
                     </div>
                 </Content>
