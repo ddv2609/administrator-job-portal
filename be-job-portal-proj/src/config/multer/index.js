@@ -32,7 +32,7 @@ const uploadResume = multer({
     const allowedMimeTypes  =  ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     const mime = allowedMimeTypes.includes(file.mimetype);
-
+    
     if (mime && extname)
       return cb(null, true);
     else
