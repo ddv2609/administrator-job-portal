@@ -6,7 +6,7 @@ import { useState } from "react";
 import { EditOutlined, EyeOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setAdminInfo } from "../../actions";
+import { setAdminInfo, setCandidateInfo, setEmployerInfo } from "../../actions";
 import styles from "./Avatar.module.css";
 
 function Avatar({ API, user=null, handleUpdateMember }) {
@@ -67,8 +67,19 @@ function Avatar({ API, user=null, handleUpdateMember }) {
       .then(res => {
         setAvatar(res.data.url);
         messageApi.success("Cập nhật ảnh đại diện thành công");
-        if (!user)
-          dispatch(setAdminInfo({ ...member, avatar: res.data.url }));
+        if (!user) {
+          switch (member.role) {
+            case "admin":
+              dispatch(setAdminInfo({ ...member, avatar: res.data.url }));
+              break;
+            case "employer":
+              dispatch(setEmployerInfo({ ...member, avatar: res.data.url }));
+              break;
+            default:
+              dispatch(setCandidateInfo({ ...member, avatar: res.data.url }));
+            break;
+          }
+        }
         else
           handleUpdateMember({
             ...user,

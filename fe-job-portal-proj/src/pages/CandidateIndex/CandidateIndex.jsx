@@ -1,6 +1,6 @@
 import { Button, Form, Input, Select } from "antd";
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
 import Footer from "../../components/FooterMain/Footer";
 import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
 import ListJob from "../../components/ListJob/ListJob";
@@ -158,18 +158,18 @@ function CandidateIndex(props) {
                         <ListJob />
                     </div>
                 </div>
-                <div
-                    className={styles.footer_main}
-                    style={{
-                        width: "1150px",
-                        height: "170px",
-                        margin: "0 auto",
-                    }}
-                >
-                    <Footer />
-                </div>
             </div>
             <Outlet />
+            <div
+                className={styles.footer_main}
+                style={{
+                    width: "1150px",
+                    height: "170px",
+                    margin: "0 auto",
+                }}
+            >
+                <Footer />
+            </div>
         </div>
     );
 }

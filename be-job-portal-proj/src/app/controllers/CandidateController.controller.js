@@ -1,10 +1,14 @@
 const Member = require("../models/Member.model");
 const Candidate = require("../models/Candidate.model");
 const Application = require("../models/Application.model");
+const Employer = require("../models/Employer.model");
+const Company = require("../models/Company.model");
+const Job = require("../models/Job.model");
 
 const mongoose = require("mongoose");
 const path = require("path");
 const { bucket, getDownloadURL } = require("../../config/firebase");
+const { application } = require("express");
 
 class CandidateController {
 
@@ -248,6 +252,87 @@ class CandidateController {
       
       return res.json({
         applicants,
+      })
+    } catch (error) {
+      console.log(error);
+      return res.json(500).json({
+        message: error.toString(),
+      });
+    }
+  }
+
+  // [POST] /api/candidate/save-job/
+  async saveJob(req, res) {
+    const { uid } = req.user;
+    const { jobId } = req.body;
+
+    try {
+      await Candidate.updateOne({
+        _id: uid
+      }, {
+        $push: {
+          saveJobs: jobId,
+        }
+      });
+
+      return res.status(200);
+    } catch (error) {
+      console.log(error);
+      return res.json(500).json({
+        message: error.toString(),
+      });
+    }
+  }
+
+  // [GET] /api/candidate/all-saved-jobs
+  async getAllSavedJobs(req, res) {
+    const { uid } = req.user;
+
+    try {
+      const savedJobs = await Candidate.findById(uid).populate({
+        path: "saveJobs"
+      });
+      
+      return res.json({
+        savedJobs,
+      })
+    } catch (error) {
+      console.log(error);
+      return res.json(500).json({
+        message: error.toString(),
+      });
+    }
+  }
+
+  // [GET] /api/candidate/company-applied
+  async getCompanyApplied(req, res) {
+    const { uid } = req.user;
+
+    try {
+      const applications = await Application.find({
+        candidate: uid,
+      });
+      
+      const jobs = applications.map(application => application.job);
+      
+      const companies = await Job.distinct("company", {
+        _id: { $in: jobs }
+      });
+
+      const employers = await Employer.find({
+        company: {
+          $in: companies,
+        }
+      }).populate({
+        path: "member",
+        select: "-updatedAt -password -role -hidden -__v"
+      })
+        .populate({
+          path: "company",
+        });
+      
+      return res.json({
+        employers,
       })
     } catch (error) {
       console.log(error);

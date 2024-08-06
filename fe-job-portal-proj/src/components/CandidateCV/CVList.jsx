@@ -1,6 +1,9 @@
+import { DeleteOutlined, DownloadOutlined, FileOutlined } from '@ant-design/icons';
 import { Button, Empty, message } from 'antd';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
 import React, { useEffect, useState } from 'react';
+import styles from './CVList.module.css';
 
 const CVList = () => {
     const [cvs, setCvs] = useState([]);
@@ -37,37 +40,56 @@ const CVList = () => {
         }
     };
 
+    const handleDownload = async (cv) => {
+        try {
+            const response = await axios.get(cv.resume, {
+                responseType: 'blob',
+            });
+            saveAs(response.data, cv.name);
+        } catch (error) {
+            console.error('Error downloading CV:', error);
+            message.error('Có lỗi xảy ra khi tải CV');
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
 
     return (
-        <div>
-            <h2>CV đã tải lên</h2>
+        <div className={styles.cvListContainer}>
+            <h2 className={styles.title}>CV đã tải lên</h2>
             {cvs.length === 0 ? (
-                <div style={{ textAlign: 'center' }}>
+                <div className={styles.emptyContainer}>
                     <Empty />
                     <p>Bạn chưa tải lên CV nào.</p>
                 </div>
             ) : (
-                <ul>
+                <ul className={styles.cvList}>
                     {cvs.map(cv => (
-                        <li key={cv._id} style={{ marginBottom: 10 }}>
-                            <a href={cv.resume} target="_blank" rel="noopener noreferrer" style={{ marginRight: 10 }}>
-                                {cv.name}
-                            </a>
-                            <Button
-                                type="link"
-                                href={cv.resume}
-                                download
-                                style={{ marginRight: 10 }}
-                            >
-                                Tải xuống
-                            </Button>
-                            <Button
-                                type="danger"
-                                onClick={() => handleDelete(cv._id)}
-                            >
-                                Xóa
-                            </Button>
+                        <li key={cv._id} className={styles.cvListItem}>
+                            <div className={styles.cvName}>
+                                <FileOutlined className={styles.fileIcon} />
+                                <a href={cv.resume} target="_blank" rel="noopener noreferrer">
+                                    {cv.name}
+                                </a>
+                            </div>
+                            <div className={styles.cvActions}>
+                                <Button
+                                    type="primary"
+                                    icon={<DownloadOutlined />}
+                                    onClick={() => handleDownload(cv)}
+                                    className={styles.downloadButton}
+                                >
+                                    Tải xuống
+                                </Button>
+                                <Button
+                                    type="danger"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => handleDelete(cv._id)}
+                                    className={styles.deleteButton}
+                                >
+                                    Xóa
+                                </Button>
+                            </div>
                         </li>
                     ))}
                 </ul>

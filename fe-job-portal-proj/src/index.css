@@ -362,6 +362,7 @@ template {
   --error-color: #ff4d4f;
   --admin-box-shadow: -8px 12px 18px #00b15022;
   --msg-color: #00e266;
+  --container-color: #F4F5F5;
 }
 
 * {

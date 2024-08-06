@@ -3,6 +3,7 @@ import { LikeOutlined, StarOutlined } from "@ant-design/icons";
 import { Avatar, List, Space } from "antd";
 import axios from "axios";
 import styles from "./ListJob.module.css";
+import { useNavigate } from "react-router-dom";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -10,7 +11,9 @@ const IconText = ({ icon, text }) => (
     {text}
   </Space>
 );
-const App = ({ searchValue }) => {
+
+const App = () => {
+  const nav = useNavigate();
   const [page, setPage] = useState(1);
   const [jobs, setJobs] = useState([]);
   const [pageSize, setPageSize] = useState(3);
@@ -25,6 +28,7 @@ const App = ({ searchValue }) => {
           { withCredentials: true }
         );
         const data = await res.data;
+        console.log(data);
         setJobs(data.jobs);
       } catch (error) {
         console.error(error);
@@ -74,6 +78,7 @@ const App = ({ searchValue }) => {
         },
       }}
       dataSource={jobs}
+
       renderItem={(item) => {
         const company = item.company;
         return (
@@ -120,6 +125,7 @@ const App = ({ searchValue }) => {
           </List.Item>
         );
       }}
+
     />
   );
 };

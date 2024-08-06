@@ -28,7 +28,7 @@ import CompanyEditProflie from "./components/Employer/Company-EditProfile/Compan
 import CompanyProflie from "./components/Employer/Company-Profile/Company-Profile";
 import EmployerEditProfile from "./components/Employer/Employer-EditProfile/Employer-EditProfile";
 import EmployerProfile from "./components/Employer/Employer-Profile/Employer-Profile";
-import CompanyJobDetail from "./components/Employer/Job-Detail/Job-Detail";
+// import CompanyJobDetail from "./components/Employer/Job-Detail/Job-Detail";
 import CompanyJobEdit from "./components/Employer/Job-Edit/Job-Edit";
 // import CompanyJobPost from "./components/Employer/Job-Post/Job-Post";
 // import CompanyJob from "./components/Employer/Job/Job";
@@ -39,6 +39,8 @@ import Account from "./components/Admin/Account/Account";
 import Chat from "./components/Admin/Chat/Chat";
 import { themes } from "./helper";
 import UpdateCandidateInfo from "./pages/CVManagement/UpdateCandidateInfo";
+import ViewDetailJob from "./components/Candidate/JobDetail/JobDetail";
+// import JobDetail from "./components/Employer/Job-Detail/Job-Detail";
 
 const socket = socketClient("http://127.0.0.1:8000", {
   reconnectionAttempts: 5,
@@ -66,12 +68,13 @@ function App() {
           <Route path="/candidate" element={<CandidateIndex />} />
           <Route path="/candidate/cv-management" element={<CVManagementPage />} />
           <Route path="/candidate/update-info" element={<UpdateCandidateInfo />} />
+          <Route path="/candidate/view-detail-job/:jobId" element={<ViewDetailJob />}/>
           <Route path="/employer" element={<Employer />}>
             <Route index element={<PostedJobsOfCompany />} />
             <Route path="posted-jobs" element={<PostedJobsOfCompany />} />
             <Route path="company-profile" element={<CompanyProflie />} />
             <Route path="company-editprofile" element={<CompanyEditProflie />} />
-            <Route path="companyjob-detail" element={<CompanyJobDetail />} />
+            {/* <Route path="companyjob-detail" element={<CompanyJobDetail />} /> */}
             <Route path="companyjob-edit" element={<CompanyJobEdit />} />
             {/* <Route path="post-job" element={<CompanyJobPost />} /> */}
             {/* <Route path="companyjob" element={<CompanyJob />} /> */}
