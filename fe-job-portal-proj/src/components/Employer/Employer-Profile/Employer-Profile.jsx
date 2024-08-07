@@ -1,8 +1,11 @@
 import React from 'react';
 import { useEffect, useState } from "react";
 import styles from './Employer-Profile.module.css';
-import {useNavigate} from 'react-router-dom';
+import {Outlet, useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import Header from "../Header/Header";
+import { setEmployerInfo } from "../../../actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const CompanyProfile = () => {
     const navigate = useNavigate();
@@ -15,6 +18,9 @@ const CompanyProfile = () => {
     const[email, setEmail] = useState(null);
     const[phone, setPhone] = useState(null);
 
+    const employer = useSelector(state => state.memberReducer);
+    const dispatch = useDispatch();
+
     const getEmployer = () => {
         axios.get(`http://localhost:8000/api/employer/info`, {
             withCredentials: true,
@@ -24,9 +30,17 @@ const CompanyProfile = () => {
                 setAvatar(res.data.info.member.avatar);
                 setId(res.data.info.member._id);
                 setSex(res.data.info.member.gender);
-                setDob(res.data.info.member.dob);
                 setEmail(res.data.info.member.email);
                 setPhone(res.data.info.member.tel);
+                const dateStr = res.data.info.member.dob;
+                const date = new Date(dateStr);
+                
+                const formattedDate = date.toISOString().split('T')[0];
+                setDob(formattedDate);                
+ //               console.log(res.data.info);
+                const info = res.data.info;
+                dispatch(setEmployerInfo({...employer, ...res.data.info}))
+
             })
             .catch(err => {
                 console.error(err);
@@ -50,30 +64,29 @@ const CompanyProfile = () => {
                 ):(
                     <p></p>
                 )}
-                <h1 className={styles.companyName}>{name}</h1>
+                <h1 className={styles.companyName}>{employer.fullName}</h1>
             </div>
             
             <div className={styles.details}> 
                 <div>
-                    <span className={styles.address}>Uid: </span>
-                    <span>{id}</span>
+                    <span className={styles.address}>ID người dùng: </span>
+                    <span>{employer._id}</span>
                 </div>                  
                 <div>
                     <span className={styles.gender}>Giới Tính: </span>
-                    <span>{sex}</span>
+                    <span>{employer.gender}</span>
+                </div>             
+                <div>
+                    <span className={styles.gender}>Ngày sinh: </span>
+                    <span>{dob}</span>
                 </div>
                 <div>
-                    <span className={styles.dob}>Ngày Sinh: </span>
-                    <span></span>
-                </div>             
-
-                <div>
                     <span className={styles.email}>Email: </span>
-                    <span>{email}</span>
+                    <span>{employer.email}</span>
                 </div>
                 <div>
                     <span className={styles.phonenumber}>Số điện thoại: </span>
-                    <span>{phone}</span>
+                    <span>{employer.tel}</span>
                 </div>
             </div>
             <div className={styles.jobActions}>
