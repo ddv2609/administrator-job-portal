@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { adminTableThemes } from "../../../helper/themes";
 import TextArea from "antd/es/input/TextArea";
 import ModalApply from "../ModalApply/ModalApply";
+import { useSelector } from "react-redux";
 
 const getDate = (date) => {
   const dob = new Date(date);
@@ -32,9 +33,12 @@ const primaryColor = "#00b14f";
 function JobDetail() {
   const { jobId } = useParams();
 
+  const candidate = useSelector(state => state.memberReducer);
+
   const [jobInfo, setJobInfo] = useState(null);
   const [openModalApply, setOpenModalApply] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+
 
   const items = [
     {
@@ -81,7 +85,7 @@ function JobDetail() {
   return (
     <>
       <ConfigProvider theme={adminTableThemes}>
-        { contextHolder }
+        {contextHolder}
         {
           jobInfo ? (
             <div className={styles.viewDetailJob}>
@@ -129,21 +133,23 @@ function JobDetail() {
                               <span>Hạn nộp hồ sơ: {jobInfo?.deadlineForSubmission && getDate(jobInfo.deadlineForSubmission)}</span>
                             </Space>
                           </div>
-                          <div className={styles.actions}>
-                            <Button type="primary" icon={<FiSend />} size="large" className={styles.btnApply}
-                              onClick={() => setOpenModalApply(true)}
-                            >Ứng tuyển ngay</Button>
-                            <ConfigProvider theme={{
-                              components: {
-                                Button: {
-                                  defaultBorderColor: primaryColor,
-                                  defaultColor: primaryColor
+                          {candidate.role ? (
+                            <div className={styles.actions}>
+                              <Button type="primary" icon={<FiSend />} size="large" className={styles.btnApply}
+                                onClick={() => setOpenModalApply(true)}
+                              >Ứng tuyển ngay</Button>
+                              <ConfigProvider theme={{
+                                components: {
+                                  Button: {
+                                    defaultBorderColor: primaryColor,
+                                    defaultColor: primaryColor
+                                  }
                                 }
-                              }
-                            }}>
-                              <Button icon={<FaRegHeart />} size="large" className={styles.btnSave}>Lưu tin</Button>
-                            </ConfigProvider>
-                          </div>
+                              }}>
+                                <Button icon={<FaRegHeart />} size="large" className={styles.btnSave}>Lưu tin</Button>
+                              </ConfigProvider>
+                            </div>
+                          ) : (<></>)}
                         </div>
                       </Col>
                       <Col span={24}>
@@ -167,28 +173,32 @@ function JobDetail() {
                               <p key={index}>- {getAddress(location)}</p>
                             ))}
                           </div>
-                          <div className={styles.description}>
-                            <h3 className={styles.title}>Cách thức ứng tuyển</h3>
-                            <p>Ứng viên nộp hồ sơ trực tuyến bằng cách bấm <strong>Ứng tuyển</strong> ngay dưới đây.</p>
-                          </div>
-                          <div className={styles.actions}>
-                            <p className={styles.deadlineForSubmission}>Hạn nộp hồ sơ: {getDate(jobInfo?.deadlineForSubmission)}</p>
-                            <Space size={"large"}>
-                              <Button type="primary" size="large" className={styles.btnApply}
-                                onClick={() => setOpenModalApply(true)}
-                              >Ứng tuyển ngay</Button>
-                              <ConfigProvider theme={{
-                                components: {
-                                  Button: {
-                                    defaultBorderColor: primaryColor,
-                                    defaultColor: primaryColor
-                                  }
-                                }
-                              }}>
-                                <Button size="large" className={styles.btnSave}>Lưu tin</Button>
-                              </ConfigProvider>
-                            </Space>
-                          </div>
+                          {candidate.role ? (
+                            <>
+                              <div className={styles.description}>
+                                <h3 className={styles.title}>Cách thức ứng tuyển</h3>
+                                <p>Ứng viên nộp hồ sơ trực tuyến bằng cách bấm <strong>Ứng tuyển</strong> ngay dưới đây.</p>
+                              </div>
+                              <div className={styles.actions}>
+                                <p className={styles.deadlineForSubmission}>Hạn nộp hồ sơ: {getDate(jobInfo?.deadlineForSubmission)}</p>
+                                <Space size={"large"}>
+                                  <Button type="primary" size="large" className={styles.btnApply}
+                                    onClick={() => setOpenModalApply(true)}
+                                  >Ứng tuyển ngay</Button>
+                                  <ConfigProvider theme={{
+                                    components: {
+                                      Button: {
+                                        defaultBorderColor: primaryColor,
+                                        defaultColor: primaryColor
+                                      }
+                                    }
+                                  }}>
+                                    <Button size="large" className={styles.btnSave}>Lưu tin</Button>
+                                  </ConfigProvider>
+                                </Space>
+                              </div>
+                            </>
+                          ) : (<></>)}
                         </div>
                       </Col>
                     </Row>
