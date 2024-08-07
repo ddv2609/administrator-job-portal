@@ -26,6 +26,11 @@ function HeaderAdmin({ collapsed, setCollapsed, admin, socket }) {
         dispatch(logout());
         nav("/login");
       })
+      .catch(err => {
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
+      })
   }
 
   const handleFullScreen = () => {

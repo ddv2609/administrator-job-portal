@@ -12,12 +12,14 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./Candidates.module.css";
 import ManagementTable from "../ManagementTable/ManagementTable";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import ModalUpdate from "../ModalUpdate/ModalUpdate";
 import TextArea from "antd/es/input/TextArea";
 
 function Candidates() {
   const { admin } = useOutletContext();
+
+  const nav = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -70,6 +72,9 @@ function Candidates() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmHiddenLoading(false);
@@ -92,6 +97,9 @@ function Candidates() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmEnableLoading(false);
@@ -118,6 +126,9 @@ function Candidates() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmVerifyLoading(false);
@@ -140,6 +151,9 @@ function Candidates() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmDeleteLoading(false);
@@ -165,6 +179,9 @@ function Candidates() {
       .catch(err => {
         console.error(err);
         messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => setLoading(false))
   }

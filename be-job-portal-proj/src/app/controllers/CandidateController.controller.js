@@ -19,7 +19,7 @@ class CandidateController {
     try {
       const candidate = await Candidate.findOne({ member: mid }).select("-__v").populate({
         path: "member",
-        select: "-updatedAt -password -role -hidden -__v"
+        select: "-updatedAt -password -hidden -__v"
       })
 
       return res.json({

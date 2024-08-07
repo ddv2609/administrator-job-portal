@@ -6,8 +6,10 @@ import { AiOutlineUser } from "react-icons/ai";
 import { FaUserShield } from "react-icons/fa";
 
 import ManagementTable from "../ManagementTable/ManagementTable";
+import { useNavigate } from "react-router-dom";
 
 function Admins() {
+  const nav = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState();
   const [tableParams, setTableParams] = useState({
@@ -37,6 +39,9 @@ function Admins() {
       .catch(err => {
         console.error(err);
         messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => setLoading(false))
   }

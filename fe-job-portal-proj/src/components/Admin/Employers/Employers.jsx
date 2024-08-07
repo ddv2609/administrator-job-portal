@@ -12,11 +12,13 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./Employers.module.css";
 import ManagementTable from "../ManagementTable/ManagementTable";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import ModalUpdate from "../ModalUpdate/ModalUpdate";
 
 function Employers() {
   const { admin } = useOutletContext();
+
+  const nav = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -69,6 +71,9 @@ function Employers() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmHiddenLoading(false);
@@ -91,6 +96,9 @@ function Employers() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmEnableLoading(false);
@@ -116,6 +124,9 @@ function Employers() {
       .catch(err => {
         console.error(err);
         messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => setLoading(false))
   }
@@ -138,7 +149,12 @@ function Employers() {
       })
       .catch(err => {
         console.log(err);
-        messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
+        else
+          messageApi.error(err.response?.data?.message);
+
       })
       .finally(() => {
         setConfirmVerifyLoading(false);
@@ -160,7 +176,11 @@ function Employers() {
       })
       .catch(err => {
         console.log(err);
-        messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
+        else
+          messageApi.error(err.response?.data?.message);
       })
       .finally(() => {
         setConfirmDeleteLoading(false);

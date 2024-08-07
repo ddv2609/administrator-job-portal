@@ -5,16 +5,17 @@ import axios from "axios";
 import { PiTrademarkRegisteredFill } from "react-icons/pi";
 import { MdHideSource, MdOutlineSettingsBackupRestore } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { FaRegPenToSquare } from "react-icons/fa6";
 import { FaUserTie } from "react-icons/fa";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./Companies.module.css";
 import ManagementTable from "../ManagementTable/ManagementTable";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 function Companies() {
   const { admin } = useOutletContext();
+
+  const nav = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -53,6 +54,9 @@ function Companies() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmHiddenLoading(false);
@@ -75,6 +79,9 @@ function Companies() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmEnableLoading(false);
@@ -97,6 +104,9 @@ function Companies() {
       .catch(err => {
         console.log(err);
         messageApi.error(err.response?.data?.message);
+        const code = err?.response?.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => {
         setConfirmDeleteLoading(false);
@@ -123,6 +133,9 @@ function Companies() {
       .catch(err => {
         console.error(err);
         messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => setLoading(false))
   }

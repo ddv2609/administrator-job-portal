@@ -19,7 +19,7 @@ function Header(props) {
     <div>
       <Layout>
         <div className={styles.headerEmployeer_index}>
-          <div className={styles.headerEmployeer_logo}>
+          <div className={styles.headerEmployeer_logo} onClick={() => navigate("/")}>
             <img src="/logo.png" alt="logo" />
             <h1>Portal</h1>
           </div>

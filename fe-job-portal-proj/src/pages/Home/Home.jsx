@@ -2,7 +2,8 @@ import Header from "../../components/Header/Header";
 import styles from "./Home.module.css";
 import { ConfigProvider } from "antd";
 import Footer from "../../components/FooterMain/Footer";
-import SearchJob from "../../components/Candidate/Search/SearchJob";
+// import SearchJob from "../../components/Candidate/Search/SearchJob";
+import { Outlet } from "react-router-dom";
 function Home() {
 
   return (
@@ -20,22 +21,18 @@ function Home() {
     >
       <div>
         <Header />
-        <div className={styles.pages_job_search}>
-          <div className={styles.section_header}>
-            <div className={styles.content}>
-              <SearchJob />
-            </div>
-          </div>
-          <div
-            className={styles.footer_main}
-            style={{
-              width: "1150px",
-              height: "170px",
-              margin: "0 auto",
-            }}
-          >
-            <Footer />
-          </div>
+        <div className={styles.content}>
+          <Outlet />
+        </div>
+        <div
+          className={styles.footer_main}
+          style={{
+            width: "1150px",
+            height: "170px",
+            margin: "0 auto",
+          }}
+        >
+          <Footer />
         </div>
       </div>
     </ConfigProvider>

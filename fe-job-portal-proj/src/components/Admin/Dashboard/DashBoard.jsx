@@ -62,7 +62,7 @@ function Dashboard() {
         console.error(err);
 
         const code = err?.response?.status;
-        if (400 <= code && code < 500)
+        if (code === 401 || code === 403)
           nav("/login");
         else
           messageApi.error(err.response.data.toString());

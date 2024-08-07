@@ -1,34 +1,16 @@
 import { Layout, message } from "antd";
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
-import { logout, setCandidateInfo } from "../../actions";
+import { logout } from "../../actions";
 import styles from "./Header.module.css";
 
 
-function Header_CandidateIndex(props) {
+function Header_CandidateIndex() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.memberReducer);
     const navigate = useNavigate();
-
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/candidate/info/', { withCredentials: true });
-                const userData = response.data.info.member;
-                dispatch(setCandidateInfo({
-                    fullName: userData.fullName,
-                    avatar: userData.avatar || 'https://www.w3schools.com/howto/img_avatar.png',
-                }));
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
-        fetchUserData();
-    }, [dispatch]);
 
     const handleLogout = async () => {
         try {
@@ -42,7 +24,6 @@ function Header_CandidateIndex(props) {
         }
     };
 
-    
     return (
         <div>
             <Layout>

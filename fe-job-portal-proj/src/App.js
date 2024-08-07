@@ -61,12 +61,17 @@ function App() {
     <div className="App">
       <ConfigProvider theme={themes}>
         <Routes>
-          <Route path="/" element={<Home />} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/employer/index" element={<EmployeerIndex />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
           <Route path="/company/company-profile" element={<CompanyProfile />} />
           
+          <Route path="/" element={<Home />}>
+            <Route index element={<SearchJob />} />
+            <Route path="view-detail-job/:jobId" element={<ViewDetailJob />}/>
+          </Route>
+
           <Route path="/candidate" element={<CandidateIndex />}>
             <Route index element={<SearchJob />} />
             <Route path="cv-management" element={<CVManagementPage />} />

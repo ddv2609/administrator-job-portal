@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ListJob.module.css";
+import { useSelector } from "react-redux";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -15,6 +16,8 @@ const IconText = ({ icon, text }) => (
 const App = ({ handleSearchJob, isSearch, jobs, setJobs, messageApi,
   page, setPage, pageSize, setPageSize, totalItems, setTotalItems }) => {
   const nav = useNavigate();
+
+  const candidate = useSelector(state => state.memberReducer);
 
   const getJobsSuggestion = async (page = 1, pageSize = 3) => {
     try {
@@ -95,7 +98,7 @@ const App = ({ handleSearchJob, isSearch, jobs, setJobs, messageApi,
                 <span className={styles.title_job}
                   onClick={() => {
                     // window.open(`/candidate/view-detail-job/${item._id}`, "_blank");
-                    nav(`/candidate/view-detail-job/${item._id}`);
+                    nav(candidate.role ? `/candidate/view-detail-job/${item._id}` : `/view-detail-job/${item._id}`);
                   }}
                 >{item.title}</span>
               }
