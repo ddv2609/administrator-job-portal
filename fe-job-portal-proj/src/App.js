@@ -37,10 +37,11 @@ import CandidateIndex from "./pages/CandidateIndex/CandidateIndex";
 import { ConfigProvider } from "antd";
 import Account from "./components/Admin/Account/Account";
 import Chat from "./components/Admin/Chat/Chat";
+import AppliedJobs from "./components/Candidate/AppliedJobs/AppliedJobs";
 import ViewDetailJob from "./components/Candidate/JobDetail/JobDetail";
+import SearchJob from "./components/Candidate/Search/SearchJob";
 import { themes } from "./helper";
 import UpdateCandidateInfo from "./pages/CVManagement/UpdateCandidateInfo";
-import SearchJob from "./components/Candidate/Search/SearchJob";
 // import JobDetail from "./components/Employer/Job-Detail/Job-Detail";
 
 const socket = socketClient("http://127.0.0.1:8000", {
@@ -77,6 +78,7 @@ function App() {
             <Route path="cv-management" element={<CVManagementPage />} />
             <Route path="update-info" element={<UpdateCandidateInfo />} />
             <Route path="view-detail-job/:jobId" element={<ViewDetailJob />}/>
+            <Route path="applied-jobs" element={<AppliedJobs />} />
           </Route>
           
           <Route path="/employer" element={<Employer />}>

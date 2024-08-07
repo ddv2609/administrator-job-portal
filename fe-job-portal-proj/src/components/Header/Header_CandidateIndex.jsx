@@ -44,7 +44,7 @@ function Header_CandidateIndex() {
                                 <div className={styles.dropdown_items_company}>
                                     <ul style={{ textDecoration: "none", listStyleType: "none" }}>
                                         <li>
-                                            <a href="#danh sách công ty">
+                                            <a href="/candidate/applied-jobs">
                                                 <span class="material-symbols-outlined">
                                                     work
                                                 </span>
@@ -129,7 +129,7 @@ function Header_CandidateIndex() {
                                             borderRadius: "50%",
                                         }}
                                     />
-                                    <p style={{ marginLeft: "20px" }}>{user.name}</p>
+                                    <p style={{ marginLeft: "20px" }}>{user.fullName}</p>
                                 </div>
                                 <div className={styles.function_list_profile}>
                                     <div className={styles.edit_inf}>
