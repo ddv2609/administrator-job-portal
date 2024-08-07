@@ -18,6 +18,7 @@ import styles from "./ModalUpdate.module.css";
 import Address from "../../Address/Address";
 import { useEffect, useState } from "react";
 import { adminTableThemes } from "../../../helper";
+import { useNavigate } from "react-router-dom";
 
 const formatDate = (date) => {
   const d = new Date(date);
@@ -27,6 +28,8 @@ const formatDate = (date) => {
 const primaryColor = "#00b14f";
 
 function ModalUpdate({ children=null, apiUpdate, data, setModalData, handleUpdateMember=()=>{} }) {
+  const nav = useNavigate();
+
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -57,7 +60,11 @@ function ModalUpdate({ children=null, apiUpdate, data, setModalData, handleUpdat
           })
           .catch(err => {
             console.error(err);
-            messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
+            const code = err.response.status;
+            if (code === 401 || code === 403)
+              nav("/login");
+            else
+              messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
           })
           .finally(() => {
             setLoading(false);

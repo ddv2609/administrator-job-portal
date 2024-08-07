@@ -15,6 +15,7 @@ import styles from "./Account.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { setAdminInfo } from "../../../actions";
+import { useNavigate } from "react-router-dom";
 
 const primaryColor = "#00b14f";
 const bgBlur = "#00b14f0a";
@@ -24,6 +25,7 @@ function Account() {
 
   const [updateInfo, setUpdateInfo] = useState(false);
   const [loading, setLoading] = useState(false);
+  const nav = useNavigate();
 
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
@@ -50,6 +52,9 @@ function Account() {
       .catch(err => {
         console.error(err?.response?.data?.message);
         messageApi.error(err?.response?.data?.message || "Cập nhật không thành công");
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
       .finally(() => setLoading(false))
   }

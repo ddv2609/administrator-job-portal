@@ -1,5 +1,5 @@
 import { ConfigProvider, message as notify, Skeleton, Spin } from "antd";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 import clsx from "clsx";
 import axios from "axios";
@@ -43,6 +43,9 @@ function timeDifference(startDate) {
 
 function Chat({ socket }) {
   const { admin } = useOutletContext();
+
+  const nav = useNavigate();
+  
   const [listFriends, setListFriends] = useState(null);
   const [chatWith, setChatWith] = useState(null);
 
@@ -102,6 +105,9 @@ function Chat({ socket }) {
       .catch(err => {
         console.log(err);
         messageApi.error(`Đã có lỗi xảy ra: ${err?.response?.data?.message}`);
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
       })
 
     return () => {

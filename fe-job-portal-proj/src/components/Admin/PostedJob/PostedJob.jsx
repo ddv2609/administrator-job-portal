@@ -9,10 +9,12 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import styles from "./PostedJob.module.css";
 import ManagementTable from "../ManagementTable/ManagementTable";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 function PostedJob() {
   const { admin } = useOutletContext();
+
+  const nav = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -50,7 +52,11 @@ function PostedJob() {
       })
       .catch(err => {
         console.log(err);
-        messageApi.error(err.response?.data?.message);
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
+        else
+          messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
       })
       .finally(() => {
         setConfirmHiddenLoading(false);
@@ -72,7 +78,11 @@ function PostedJob() {
       })
       .catch(err => {
         console.log(err);
-        messageApi.error(err.response?.data?.message);
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
+        else
+          messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
       })
       .finally(() => {
         setConfirmEnableLoading(false);
@@ -94,7 +104,11 @@ function PostedJob() {
       })
       .catch(err => {
         console.log(err);
-        messageApi.error(err.response?.data?.message);
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
+        else
+          messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
       })
       .finally(() => {
         setConfirmDeleteLoading(false);
@@ -114,7 +128,11 @@ function PostedJob() {
       })
       .catch(err => {
         console.error(err);
-        messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
+        const code = err.response.status;
+        if (code === 401 || code === 403)
+          nav("/login");
+        else
+          messageApi.error(err.response?.data?.message || "Có lỗi xảy ra!");
       })
       .finally(() => setLoading(false))
   }
