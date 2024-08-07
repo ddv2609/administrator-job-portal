@@ -1,43 +1,40 @@
 import { Layout, message } from "antd";
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
+import { logout, setCandidateInfo } from "../../actions";
 import styles from "./Header.module.css";
 
 
 function Header_CandidateIndex(props) {
-    const [user, setUser] = useState({
-        name: '',
-        avatar: 'https://www.w3schools.com/howto/img_avatar.png',
-    });
-
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.memberReducer);
     const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/candidate/info/'
-                    , { withCredentials: true }
-                );
+                const response = await axios.get('http://localhost:8000/api/candidate/info/', { withCredentials: true });
                 const userData = response.data.info.member;
-                setUser({
-                    name: userData.fullName,
+                dispatch(setCandidateInfo({
+                    fullName: userData.fullName,
                     avatar: userData.avatar || 'https://www.w3schools.com/howto/img_avatar.png',
-                });
+                }));
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
 
         fetchUserData();
-    }, []);
+    }, [dispatch]);
 
     const handleLogout = async () => {
         try {
-            await axios.get('http://localhost:8000/auth/logout', 
-                { withCredentials: true }
-            );
+            await axios.get('http://localhost:8000/auth/logout', { withCredentials: true });
             message.success('Đăng xuất thành công');
+            dispatch(logout());
             navigate('/login'); // Redirect to login page after logout
         } catch (error) {
             console.error('Error logging out:', error);
