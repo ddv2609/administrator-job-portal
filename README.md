@@ -13,7 +13,7 @@
 ## Cách cài đặt và chạy project:
 1. Clone dự án về từ github
 2. Cài đặt thư viện cho backend và frontend
-3. Đối với back-end:
+3. Đối với backend:
    - Vào folder /job-portal-proj/be-job-portal-proj chạy lệnh: **npm i**
    - Sau khi cài xong toàn bộ thư viện chạy lệnh: **npm start** để khởi chạy server
 5. Đối với frontend:
