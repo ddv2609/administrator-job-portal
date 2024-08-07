@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
 import { LikeOutlined, StarOutlined } from "@ant-design/icons";
 import { Avatar, List, Space } from "antd";
 import axios from "axios";
-import styles from "./ListJob.module.css";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./ListJob.module.css";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -38,31 +38,31 @@ const App = () => {
     fetchData();
   }, [page, pageSize]);
 
-  useEffect(() => {
-    console.log(searchValue);
-    setJobs((prevState) => {
-      const filterJobs = prevState.filter((job) => {
-        return {
-          ...job,
-          title: job.title
-            .toLowerCase()
-            .includes(searchValue.jobName.toLowerCase()),
-          localtion:
-            searchValue.location !== "all" &&
-            job.locations
-              .map((location) => location.province.toLowerCase())
-              .includes(searchValue.location.toLowerCase()),
-          categories:
-            searchValue.category !== "all" &&
-            job.categories
-              .map((category) => category.category.toLowerCase())
-              .includes(searchValue.category.toLowerCase()),
-        };
-      });
-      return filterJobs;
-    });
-    console.log(jobs);
-  }, [searchValue]);
+  // useEffect(() => {
+  //   console.log(searchValue);
+  //   setJobs((prevState) => {
+  //     const filterJobs = prevState.filter((job) => {
+  //       return {
+  //         ...job,
+  //         title: job.title
+  //           .toLowerCase()
+  //           .includes(searchValue.jobName.toLowerCase()),
+  //         localtion:
+  //           searchValue.location !== "all" &&
+  //           job.locations
+  //             .map((location) => location.province.toLowerCase())
+  //             .includes(searchValue.location.toLowerCase()),
+  //         categories:
+  //           searchValue.category !== "all" &&
+  //           job.categories
+  //             .map((category) => category.category.toLowerCase())
+  //             .includes(searchValue.category.toLowerCase()),
+  //       };
+  //     });
+  //     return filterJobs;
+  //   });
+  //   console.log(jobs);
+  // }, [searchValue]);
 
   return (
     <List
