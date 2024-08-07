@@ -5,6 +5,7 @@ import Footer from "../../components/FooterMain/Footer";
 import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
 import ListJob from "../../components/ListJob/ListJob";
 import styles from "./CadidateIndex.module.css";
+
 function CandidateIndex(props) {
     const [selectedRole, setSelectedRole] = useState("all");
     const [selectedRoleJob, setSelectedRoleJob] = useState("all");
@@ -22,6 +23,7 @@ function CandidateIndex(props) {
         { label: "Quảng Ninh", value: "quangninh" },
         { label: "Khác", value: "other" },
     ];
+
     const rolesJob = [
         { label: "Tất cả ngành nghề", value: "all" },
         { label: "IT-Phần mềm", value: "it" },
@@ -35,22 +37,25 @@ function CandidateIndex(props) {
     ];
 
     const handleChange = (value) => {
-        setSelectedRole(value); // Cập nhật trạng thái khi có sự thay đổi
+        setSelectedRole(value);
     };
+
     const handleChangeJob = (value) => {
-        setSelectedRoleJob(value); // Cập nhật trạng thái khi có sự thay đổi
+        setSelectedRoleJob(value);
     };
 
     return (
-
-        <div>
+        <div className={styles.container}>
             <HeaderCadidateIdex />
+            <div className={styles.content}>
+                <Outlet />
+            </div>
             <div className={styles.pages_job_search}>
                 <div className={styles.section_header}>
                     <div className={styles.content}>
                         <h1>Tìm việc làm nhanh 24h, việc làm mới nhất trên toàn quốc</h1>
                         <p>
-                            Tiếp cận <span class={styles.highlight}>40,000+</span> tin tuyển
+                            Tiếp cận <span className={styles.highlight}>40,000+</span> tin tuyển
                             dụng việc làm mỗi ngày từ hàng nghìn doanh nghiệp uy tín tại
                             Việt Nam
                         </p>
@@ -60,7 +65,7 @@ function CandidateIndex(props) {
                                 <Input
                                     placeholder="Vị trí tuyển dụng"
                                     className={styles.search_job_input}
-                                ></Input>
+                                />
                             </div>
                             <div
                                 className={styles.search_job}
@@ -120,7 +125,7 @@ function CandidateIndex(props) {
                                     }}
                                     className={styles.btn_search_sub}
                                 >
-                                    <span class="icon_search material-symbols-outlined">
+                                    <span className="icon_search material-symbols-outlined">
                                         search
                                     </span>
                                     Tìm kiếm
@@ -133,7 +138,6 @@ function CandidateIndex(props) {
                             }}
                             className={styles.img_job_search}
                         >
-
                         </div>
                     </div>
                 </div>
@@ -147,7 +151,6 @@ function CandidateIndex(props) {
                             paddingBottom: "30px",
                         }}
                     >
-
                     </div>
                     <div
                         className={styles.list_job_content}
@@ -159,15 +162,7 @@ function CandidateIndex(props) {
                     </div>
                 </div>
             </div>
-            <Outlet />
-            <div
-                className={styles.footer_main}
-                style={{
-                    width: "1150px",
-                    height: "170px",
-                    margin: "0 auto",
-                }}
-            >
+            <div className={styles.footer_main}>
                 <Footer />
             </div>
         </div>

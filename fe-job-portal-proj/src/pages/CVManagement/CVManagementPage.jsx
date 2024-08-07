@@ -3,32 +3,9 @@ import React, { useState } from 'react';
 import CVList from '../../components/CandidateCV/CVList';
 import CVUpload from '../../components/CandidateCV/CVUpload';
 import UserInfo from '../../components/CandidateCV/UserInfo';
-import Footer from "../../components/FooterMain/Footer";
-import HeaderCadidateIdex from '../../components/Header/Header_CandidateIndex';
-
+import styles from './CVManagementPage.module.css';
 
 const { Sider, Content } = Layout;
-
-const contentStyle = {
-    padding: 30,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    margin: '20px 10px 20px 100px',
-};
-const siderStyle = {
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    margin: '20px 100px 20px 10px',
-    display: 'inline-block',
-};
-
-const layoutStyle = {
-    borderRadius: 8,
-    overflow: 'hidden',
-    minHeight: '100vh',
-};
-
 
 const CVManagementPage = () => {
     const [cvs, setCvs] = useState([]);
@@ -42,25 +19,21 @@ const CVManagementPage = () => {
     };
 
     return (
-        <Layout style={layoutStyle}>
-            <HeaderCadidateIdex />
-            <Layout style={{ paddingTop: 64 }}>
-                <Content style={contentStyle}>
-                    <div>
-                        <h1>Hồ sơ & CV</h1>
-                        <CVUpload onUploadSuccess={handleUploadSuccess} />                     
-                    </div>
-                    <div style={{ marginTop: "30px"}}>
-                        <CVList cvs={cvs} onDelete={handleDelete} />
-                    </div>
-                </Content>
-                <Sider width="30%" style={siderStyle}>
-                    <div>
-                        <UserInfo />
-                    </div>
-                </Sider>
-            </Layout>
-            <Footer />
+        <Layout className={styles.layout}>
+            <Content className={styles.content}>
+                <div>
+                    <h1 className={styles.header}>Hồ sơ & CV</h1>
+                    <CVUpload onUploadSuccess={handleUploadSuccess} />
+                </div>
+                <div className={styles.marginTop}>
+                    <CVList cvs={cvs} onDelete={handleDelete} />
+                </div>
+            </Content>
+            <Sider width="30%" className={styles.sider}>
+                <div>
+                    <UserInfo />
+                </div>
+            </Sider>
         </Layout>
     );
 };

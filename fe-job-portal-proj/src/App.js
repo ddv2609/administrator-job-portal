@@ -37,9 +37,9 @@ import CandidateIndex from "./pages/CandidateIndex/CandidateIndex";
 import { ConfigProvider } from "antd";
 import Account from "./components/Admin/Account/Account";
 import Chat from "./components/Admin/Chat/Chat";
+import ViewDetailJob from "./components/Candidate/JobDetail/JobDetail";
 import { themes } from "./helper";
 import UpdateCandidateInfo from "./pages/CVManagement/UpdateCandidateInfo";
-import ViewDetailJob from "./components/Candidate/JobDetail/JobDetail";
 // import JobDetail from "./components/Employer/Job-Detail/Job-Detail";
 
 const socket = socketClient("http://127.0.0.1:8000", {
@@ -65,9 +65,12 @@ function App() {
           <Route path="/employer/index" element={<EmployeerIndex />} />
           <Route path="/candidate/sign-up" element={<CandidateSignUp />} />
           <Route path="/company/company-profile" element={<CompanyProfile />} />
-          <Route path="/candidate" element={<CandidateIndex />} />
-          <Route path="/candidate/cv-management" element={<CVManagementPage />} />
-          <Route path="/candidate/update-info" element={<UpdateCandidateInfo />} />
+          
+          <Route path="/candidate" element={<CandidateIndex />}>
+            <Route path="cv-management" element={<CVManagementPage />} />
+            <Route path="update-info" element={<UpdateCandidateInfo />} />
+          </Route>
+          
           <Route path="/candidate/view-detail-job/:jobId" element={<ViewDetailJob />}/>
           <Route path="/employer" element={<Employer />}>
             <Route index element={<PostedJobsOfCompany />} />
