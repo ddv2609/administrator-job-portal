@@ -30,9 +30,12 @@ const App = ({ handleSearchJob, isSearch, jobs, setJobs, messageApi,
       setPageSize(data.info.size);
     } catch (err) {
       console.error(err);
-      messageApi.error("Có lối xảy ra: " + err?.response?.data?.message);
+      messageApi.error("Có lối xảy ra: " + err.toString());
     }
   }
+
+  // console.log(messageApi, jobs);
+  
 
   useEffect(() => {
     getJobsSuggestion();
