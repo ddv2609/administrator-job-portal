@@ -2,6 +2,7 @@
   background-color: var(--container-color);
   width: 100%;
   min-height: 100vh;
+  margin-top: 64px;
 }
 
 .viewDetailJob .detailWrapper {

@@ -9,7 +9,7 @@ class JobController {
       const total = await Job.countDocuments();
       const jobs = await Job.find({
         hidden: false,
-      })
+      }).sort({ createdAt: -1 })
         .skip((page - 1) * size)
         .limit(size)
         .select("-__v -updatedAt -hiddenAt -hiddenBy")
@@ -23,8 +23,8 @@ class JobController {
         jobs,
         info: {
           total,
-          page,
-          size,
+          page: Number(page),
+          size: Number(size),
         },
       });
     } catch (error) {
@@ -37,29 +37,31 @@ class JobController {
 
   // [GET] api/job/search?q=<string>&location=<string>&category=<ObjectId>&page=<number>&size=<number>
   async searchJobs(req, res) {
-    const { page=1, size=0, q="", location, category } = req.query;
+    const { page=1, size=0, q=null, location=null, category=null } = req.query;
     console.log(q);
     
     try {
-      const total = await Job.countDocuments({
-        $or: [
-          { title: { $regex: q, $options: 'i' }, },
-          { locations: {
-            $elemMatch: { province: location }
-          }, },
-          { categories: category }
-        ]
-      });
+      const conditions = {};
+      if (q)
+        conditions.title = { $regex: q, $options: 'i' };
+      if (location)
+        conditions.locations = { $elemMatch: { province: location } };
+      if (category)
+        conditions.categories = category;
+      const total = await Job.countDocuments(conditions);
 
-      const jobs = await Job.find({
-        $or: [
-          { title: { $regex: q, $options: 'i' }, },
-          { locations: {
-            $elemMatch: { province: location }
-          }, },
-          { categories: category }
-        ]
-      })
+      // {
+      //   $or: [
+      //     { title: { $regex: q, $options: 'i' }, },
+      //     { locations: {
+      //       $elemMatch: { province: location }
+      //     }, },
+      //     { categories: category }
+      //   ]
+      // }
+
+      const jobs = await Job.find(conditions)
+        .sort({ createdAt: -1 })
         .skip((page - 1) * size)
         .limit(size)
         .select("-__v -updatedAt -hiddenAt -hiddenBy")
