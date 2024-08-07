@@ -220,7 +220,7 @@ const EditCompanyProfile = () => {
 
         <Form.Item
           label="Số lượng nhân lực"
-          name="employees"
+          name="companySize"
         >
           <Input placeholder="Nhập quy mô nhân viên của công ty" />
         </Form.Item>
