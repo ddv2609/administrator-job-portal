@@ -153,7 +153,7 @@ const EditCompanyProfile = () => {
           label="Tên công ty"
           name="name"
         >
-          <Input placeholder="Tên công ty mới" defaultValue={company.name} />
+          <Input placeholder="Tên công ty mới"  />
         </Form.Item>
 
         <Form.Item
@@ -205,10 +205,10 @@ const EditCompanyProfile = () => {
         </Col>
 
         <Form.Item
-          label="Số điện thoại"
-          name="phoneNumber"
+          label="Mã số thuế"
+          name="taxCode"
         >
-          <Input placeholder="Nhập số điện thoại tuyển dụng của công ty" />
+          <Input placeholder="Điền mã số thuế của công ty" />
         </Form.Item>
 
         <Form.Item
