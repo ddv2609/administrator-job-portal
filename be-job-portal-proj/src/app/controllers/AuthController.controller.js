@@ -79,8 +79,8 @@ class AuthController {
           ? member.hidden
             ? "Tài khoản của bạn đã bị vô hiệu hóa!"
             : member.verifiedAt
-            ? "Email hoặc password không chính xác!"
-            : "Tài khoản của bạn chưa được xác minh"
+              ? "Email hoặc password không chính xác!"
+              : "Tài khoản của bạn chưa được xác minh"
           : "Email hoặc password không chính xác!",
       });
     }
@@ -312,6 +312,32 @@ class AuthController {
     );
     res.clearCookie("jwt");
     res.sendStatus(200);
+  }
+
+  // [POST] /auth/navigation
+  async navigation(req, res) {
+    const token = req.cookies.jwt;
+
+    if (token) {
+      let isAllow = true, info;
+      jwt.verify(token, keys.jwtSecretKey, (err, decoded) => {
+        // err.name === "TokenExpiredError"
+
+        if (err) {
+          isAllow = false;
+        }
+
+        info = decoded;
+      })
+
+      if (isAllow) {
+        return res.json({
+          info,
+        })
+      }
+    }
+
+    return res.sendStatus(404);
   }
 }
 

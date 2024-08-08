@@ -42,6 +42,9 @@ import ViewDetailJob from "./components/Candidate/JobDetail/JobDetail";
 import SearchJob from "./components/Candidate/Search/SearchJob";
 import { themes } from "./helper";
 import UpdateCandidateInfo from "./pages/CVManagement/UpdateCandidateInfo";
+import SearchJob from "./components/Candidate/Search/SearchJob";
+import Error404 from "./pages/Error/Error404";
+
 // import JobDetail from "./components/Employer/Job-Detail/Job-Detail";
 
 const socket = socketClient("http://127.0.0.1:8000", {
@@ -110,6 +113,7 @@ function App() {
             <Route path="history" element={<History />} />
           </Route>
           <Route path="/verify/:status" element={<VerifyEmail />} />
+          <Route path='/*' element={<Error404 />} />
         </Routes>
       </ConfigProvider>
     </div>
