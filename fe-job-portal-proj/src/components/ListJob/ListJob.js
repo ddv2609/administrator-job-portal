@@ -2,9 +2,9 @@ import { LikeOutlined, StarOutlined } from "@ant-design/icons";
 import { Avatar, List, Space } from "antd";
 import axios from "axios";
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styles from "./ListJob.module.css";
-import { useSelector } from "react-redux";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -38,7 +38,6 @@ const App = ({ handleSearchJob, isSearch, jobs, setJobs, messageApi,
   }
 
   // console.log(messageApi, jobs);
-  
 
   useEffect(() => {
     getJobsSuggestion();

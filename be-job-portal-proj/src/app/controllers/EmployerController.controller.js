@@ -7,7 +7,6 @@ const Job = require("../models/Job.model");
 const Application = require("../models/Application.model");
 const Candidate = require("../models/Candidate.model");
 
-const mongoose = require("mongoose");
 
 class EmployerController {
   // [GET] /api/employer/info/
