@@ -42,7 +42,6 @@ import ViewDetailJob from "./components/Candidate/JobDetail/JobDetail";
 import SearchJob from "./components/Candidate/Search/SearchJob";
 import { themes } from "./helper";
 import UpdateCandidateInfo from "./pages/CVManagement/UpdateCandidateInfo";
-import SearchJob from "./components/Candidate/Search/SearchJob";
 import Error404 from "./pages/Error/Error404";
 
 // import JobDetail from "./components/Employer/Job-Detail/Job-Detail";
