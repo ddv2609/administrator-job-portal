@@ -42,7 +42,8 @@ function CompanyProflie() {
         getCompany();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+    
+    
     const navigate = useNavigate();
     return (
         <div>
@@ -52,7 +53,7 @@ function CompanyProflie() {
             {avatar ? (
                     <img 
                         style={{width:"200px", height:"200px"}} 
-                        src={avatar} alt='anh'
+                        src={avatar || "/company.png"} alt='anh'
                     />
                 ):(
                     <p></p>

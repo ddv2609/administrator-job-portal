@@ -86,7 +86,7 @@ const App = ({ handleSearchJob, isSearch, jobs, setJobs, messageApi,
                 height={150}
                 style={{ marginLeft: "500px", position: "absolute" }}
                 alt="logo"
-                src={company.logo}
+                src={company.logo || "/company.png"}
               />
             }
           >
